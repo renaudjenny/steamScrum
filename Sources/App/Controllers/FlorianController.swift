@@ -18,7 +18,13 @@ final class FlorianController {
             "🤷🏻‍♂️"
         ]
 
-        let randomIndex = Int(arc4random_uniform(UInt32(sentences.count)))
+        let sentencesCount = sentences.count
+        #if os(Linux)
+            srandom(UInt32(time(nil)))
+            let randomIndex = Int(random() % sentencesCount)
+        #else
+            let randomIndex = Int(arc4random_uniform(UInt32(sentencesCount)))
+        #endif
 
         struct Context: Codable {
             var sentence: String
