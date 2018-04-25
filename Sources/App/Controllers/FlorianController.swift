@@ -8,6 +8,7 @@
 import Vapor
 import HTTP
 import Leaf
+import Random
 
 final class FlorianController {
     
@@ -18,14 +19,8 @@ final class FlorianController {
             "🤷🏻‍♂️"
         ]
 
-        let sentencesCount = sentences.count
-        #if os(Linux)
-            srandom(UInt32(time(nil)))
-            let randomIndex = Int(random() % sentencesCount)
-        #else
-            let randomIndex = Int(arc4random_uniform(UInt32(sentencesCount)))
-        #endif
-
+        let sentencesCount = UInt(sentences.count)
+        let randomIndex: Int = try Int(OSRandom().generate() % sentencesCount)
         struct Context: Codable {
             var sentence: String
         }
