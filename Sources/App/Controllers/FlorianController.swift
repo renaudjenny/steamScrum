@@ -15,6 +15,10 @@ final class FlorianController {
     func whatFlorianSaid(_ req: Request) throws -> Future<View> {
         return FlorianSentence.query(on: req).all().flatMap { (florianSentences: [FlorianSentence]) -> EventLoopFuture<View> in
             let sentencesCount = UInt(florianSentences.count)
+            guard sentencesCount > 0 else {
+                let leaf = try req.make(LeafRenderer.self)
+                return leaf.render("nothingToSay", ["name":"Florian"])
+            }
             let randomIndex: Int = try Int(OSRandom().generate() % sentencesCount)
             struct Context: Codable {
                 var sentence: String
