@@ -13,21 +13,17 @@ import Random
 final class FlorianController {
     
     func whatFlorianSaid(_ req: Request) throws -> Future<View> {
-        let sentences = [
-            "Quel est le vrai problème ?",
-            "Tu as demandé à Olivier ?",
-            "🤷🏻‍♂️"
-        ]
+        return FlorianSentence.query(on: req).all().flatMap { (florianSentences: [FlorianSentence]) -> EventLoopFuture<View> in
+            let sentencesCount = UInt(florianSentences.count)
+            let randomIndex: Int = try Int(OSRandom().generate() % sentencesCount)
+            struct Context: Codable {
+                var sentence: String
+            }
 
-        let sentencesCount = UInt(sentences.count)
-        let randomIndex: Int = try Int(OSRandom().generate() % sentencesCount)
-        struct Context: Codable {
-            var sentence: String
+            let context = Context(sentence: florianSentences[randomIndex].sentence)
+
+            let leaf = try req.make(LeafRenderer.self)
+            return leaf.render("florian", context)
         }
-
-        let context = Context(sentence: sentences[randomIndex])
-
-        let leaf = try req.make(LeafRenderer.self)
-        return leaf.render("florian", context)
     }
 }
