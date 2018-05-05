@@ -13,6 +13,14 @@ public func configure(
     /// Register providers first
     try services.register(FluentPostgreSQLProvider())
 
+    if let url = Environment.get("DATABASE_URL") {
+        let psqlConfig = try PostgreSQLDatabaseConfig(url: url)
+        services.register(psqlConfig)
+    } else {
+        let psqlConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "postgres")
+        services.register(psqlConfig)
+    }
+
     /// Register routes to the router
     let router = EngineRouter.default()
     try routes(router)
