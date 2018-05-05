@@ -10,11 +10,11 @@ public func routes(_ router: Router) throws {
         return "Something will come soon... or later!"
     }
 
-    // Example of configuring a controller
-    let todoController = TodoController()
-    router.get("todos", use: todoController.index)
-    router.post("todos", use: todoController.create)
-    router.delete("todos", Todo.parameter, use: todoController.delete)
+    let florianSentencesController = FlorianSentencesController()
+    router.get("florianSentences", use: florianSentencesController.index)
+    router.post("florianSentences", use: florianSentencesController.create)
+    // TODO: don't provide delete route for now
+    //router.delete("florianSentences", FlorianSentence.parameter, use: florianSentencesController.delete)
 
     let florianController = FlorianController()
     router.get("florian", use: florianController.whatFlorianSaid)
