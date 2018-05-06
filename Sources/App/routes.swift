@@ -15,6 +15,8 @@ public func routes(_ router: Router) throws {
     router.post("florianSentences", use: florianSentencesController.create)
     // TODO: don't provide delete route for now
     //router.delete("florianSentences", FlorianSentence.parameter, use: florianSentencesController.delete)
+    router.get("florianSentenceForm", use: florianSentencesController.florianSentenceForm)
+    router.post("florianSentenceForm", use: florianSentencesController.AddFlorianSentenceFromForm)
 
     let florianController = FlorianController()
     router.get("florian", use: florianController.whatFlorianSaid)

@@ -17,7 +17,7 @@ final class FlorianController {
             let sentencesCount = UInt(florianSentences.count)
             guard sentencesCount > 0 else {
                 let leaf = try req.make(LeafRenderer.self)
-                return leaf.render("nothingToSay", ["name":"Florian"])
+                return leaf.render("nothingToSay", ["name": "Florian"])
             }
             let randomIndex: Int = try Int(OSRandom().generate() % sentencesCount)
             struct Context: Codable {

@@ -13,6 +13,10 @@ struct FlorianSentence: PostgreSQLModel {
     var sentence: String
     var upvoteCount: Int?
     var downvoteCount: Int?
+
+    init(sentence: String) {
+        self.sentence = sentence
+    }
 }
 
 /// Allows `Todo` to be used as a dynamic migration.

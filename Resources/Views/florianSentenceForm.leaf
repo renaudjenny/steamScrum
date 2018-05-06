@@ -1,0 +1,15 @@
+<h1>Ajouter une nouvelle phrase que dirait Florian</h1>
+
+<p>Nombres de phrases déjà enregistrées <strong>#(sentencesCount)/#(maximumSentencesCount)</strong></p>
+
+<form action="" method="post">
+    <label for="sentence">Une phrase de Florian:</label>
+    <input id="sentence" type="text" name="sentence">
+    <input type="submit" value="Submit">
+</form>
+
+#if(newSentence) {
+    <p>Votre nouvelle phrase: <strong>#(newSentence)</strong> a bien été enregistrée<p>
+}
+
+<p><a href="florian">Poser une autre question à Florian</a></p>
