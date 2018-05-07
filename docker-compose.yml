@@ -1,0 +1,19 @@
+version: "3"
+services:
+    postgres:
+        image: postgres:9.4
+        container_name: steam_scrum_postgres
+        ports:
+            - "5432:5432"
+
+    steam_scrum:
+        build: .
+        container_name: steam_scrum_swift
+        ports:
+            - "8081:8080"
+        links:
+            - postgres
+        stdin_open: true
+        tty: true
+        environment:
+            DATABASE_URL: "postgres://postgres@postgres:5432/postgres"
