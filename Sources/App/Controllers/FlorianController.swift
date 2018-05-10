@@ -30,4 +30,8 @@ final class FlorianController {
             return leaf.render("florian", context)
         }
     }
+
+    func nothingToSay(_ req: Request) throws -> Future<View> {
+        return try req.make(LeafRenderer.self).render("nothingToSay", ["name": "Florian"])
+    }
 }

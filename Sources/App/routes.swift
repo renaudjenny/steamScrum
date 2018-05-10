@@ -20,4 +20,5 @@ public func routes(_ router: Router) throws {
 
     let florianController = FlorianController()
     router.get("florian", use: florianController.whatFlorianSaid)
+    router.get("florianNothingToSay", use: florianController.nothingToSay)
 }
