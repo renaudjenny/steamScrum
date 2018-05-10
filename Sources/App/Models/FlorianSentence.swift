@@ -19,11 +19,8 @@ struct FlorianSentence: PostgreSQLModel {
     }
 }
 
-/// Allows `Todo` to be used as a dynamic migration.
 extension FlorianSentence: Migration { }
 
-/// Allows `Todo` to be encoded to and decoded from HTTP messages.
 extension FlorianSentence: Content { }
 
-/// Allows `Todo` to be used as a dynamic parameter in route definitions.
 extension FlorianSentence: Parameter { }
