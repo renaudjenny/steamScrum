@@ -1,14 +1,14 @@
 #set("body") {
 <div class="mdl-grid">
     <div class="mdl-layout-spacer"></div>
-    <div class="mdl-cell mdl-cell--6-col mdl-typography--text-center">
+    <div class="mdl-cell mdl-cell--10-col mdl-typography--text-center">
         <h4>Ajouter une nouvelle phrase que dirait Florian</h4>
     </div>
     <div class="mdl-layout-spacer"></div>
 </div>
 <div class="mdl-grid">
     <div class="mdl-layout-spacer"></div>
-        <div class="mdl-cell mdl-cell--6-col mdl-typography--text-center">
+        <div class="mdl-cell mdl-cell--10-col mdl-typography--text-center">
             <p>Nombres de phrases déjà enregistrées <strong>#(sentencesCount)/#(maximumSentencesCount)</strong></p>
         </div>
     <div class="mdl-layout-spacer"></div>
@@ -16,7 +16,7 @@
 
 <div class="mdl-grid">
     <div class="mdl-layout-spacer"></div>
-    <div class="mdl-cell mdl-cell--6-col mdl-typography--text-center">
+    <div class="mdl-cell mdl-cell--10-col mdl-typography--text-center">
         <form action="" method="post">
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input class="mdl-textfield__input" type="text" id="sentence" name="sentence">
@@ -34,14 +34,16 @@
 #if(newSentence) {
     <div class="mdl-grid">
         <div class="mdl-layout-spacer"></div>
+        <div class="mdl-cell mdl-cell--10-col mdl-typography--text-center">
             <p>Votre nouvelle phrase: <strong>#(newSentence)</strong> a bien été enregistrée<p>
+        </div>
         <div class="mdl-layout-spacer"></div>
     </div>
 }
 
 <div class="mdl-grid">
     <div class="mdl-layout-spacer"></div>
-    <div class="mdl-cell mdl-cell--6-col mdl-typography--text-center">
+    <div class="mdl-cell mdl-cell--10-col mdl-typography--text-center">
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
             onclick="window.location.href='florian'">
             Poser une autre question à Florian
