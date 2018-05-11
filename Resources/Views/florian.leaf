@@ -1,3 +1,5 @@
+#set("title") {Qu'aurait dit Florian ?}
+
 #set("body") {
 <div class="mdl-grid">
     <div class="mdl-layout-spacer"></div>
@@ -10,7 +12,7 @@
     <div class="mdl-layout-spacer"></div>
     <div class="mdl-cell mdl-cell--1-col mdl-typography--text-center">
         <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect"
-            onclick="window.location.href=''">
+            onclick="window.location.href='florian'">
             <i class="material-icons">autorenew</i>
         </button>
     </div>

@@ -1,3 +1,5 @@
+#set("title") {Florian n'a encore rien à dire}
+
 #set("body") {
 <div class="mdl-grid">
     <div class="mdl-layout-spacer"></div>
