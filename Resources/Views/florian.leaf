@@ -5,6 +5,7 @@
     <div class="mdl-layout-spacer"></div>
     <div class="mdl-cell mdl-cell--10-col mdl-typography--text-center">
         <h4>Florian aurait dit : "#(sentence)"</h4>
+        <img src="images/Florian.png" style="max-height: 300px">
     </div>
     <div class="mdl-layout-spacer"></div>
 </div>
