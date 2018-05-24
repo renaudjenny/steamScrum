@@ -35,6 +35,9 @@ public func configure(
     /// Configure migrations
     var migrations = MigrationConfig()
     migrations.add(model: FlorianSentence.self, database: .psql)
+    migrations.add(model: UserStory.self, database: .psql)
+    migrations.add(model: Developer.self, database: .psql)
+    migrations.add(model: GroomingSession.self, database: .psql)
     services.register(migrations)
 
     /// Leaf
