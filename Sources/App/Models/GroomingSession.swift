@@ -10,9 +10,8 @@ import Vapor
 
 struct GroomingSession: PostgreSQLModel {
     var id: Int?
-    var userStories: [UserStory]?
-    var developers: [Developer]?
-    var developersEstimations: [DeveloperEstimation]?
+    var name: String
+    var date: Date
 }
 
 // MARK: - Inner Types

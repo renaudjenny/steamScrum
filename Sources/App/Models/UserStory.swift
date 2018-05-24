@@ -10,7 +10,7 @@ import Vapor
 
 struct UserStory: PostgreSQLModel {
     var id: Int?
-    var estimatedPoints: [EstimatedPoint]?
+    var name: String
 }
 
 // MARK: - Inner Types

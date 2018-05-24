@@ -6,9 +6,8 @@ import Leaf
 ///
 /// [Learn More →](https://docs.vapor.codes/3.0/getting-started/structure/#routesswift)
 public func routes(_ router: Router) throws {
-    router.get { req in
-        return "Something will come soon... or later!"
-    }
+    let reactController = ReactController()
+    router.get("", use: reactController.index)
 
     let florianSentencesController = FlorianSentencesController()
     router.get("florianSentences", use: florianSentencesController.index)
@@ -21,4 +20,8 @@ public func routes(_ router: Router) throws {
     let florianController = FlorianController()
     router.get("florian", use: florianController.whatFlorianSaid)
     router.get("florianNothingToSay", use: florianController.nothingToSay)
+
+    let groomingSessionController = GroomingSessionController()
+    router.get("groomingSessions", use: groomingSessionController.index)
+    router.post("groomingSessions", use: groomingSessionController.create)
 }
