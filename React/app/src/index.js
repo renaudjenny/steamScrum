@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import axios from 'axios';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import FlorianRandomSentence from './components/FlorianRandomSentence';
 import FlorianSentenceForm from './components/FlorianSentenceForm';
 
@@ -24,9 +25,18 @@ class Sessions extends React.Component {
 
   render() {
     return (
-      <div>
-        {this.state.sessions.map((session) => <SessionButton value={session} />)}
-      </div>
+      <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
+        <Grid item>
+          <Link to='/florian'>
+            <Button variant="raised" color="secondary">
+              Poser une question à Florian ?
+            </Button>
+          </Link>
+        </Grid>
+        <div>
+          {this.state.sessions.map((session) => <SessionButton value={session} />)}
+        </div>
+      </Grid>
     )
   }
 }
