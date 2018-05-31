@@ -6,7 +6,7 @@
 //
 
 import Vapor
-import Leaf
+import Random
 
 final class FlorianSentencesController {
 
@@ -23,6 +23,10 @@ final class FlorianSentencesController {
             }
 
             return try req.content.decode(FlorianSentence.self).flatMap(to: FlorianSentence.self) { florianSentence in
+                guard !florianSentence.sentence.isEmpty else {
+                    throw Abort(.badRequest, reason: "Cannot provide empty string.", identifier: nil)
+                }
+
                 return florianSentence.save(on: req)
             }
         })
@@ -34,46 +38,34 @@ final class FlorianSentencesController {
             }.transform(to: .ok)
     }
 
-    func florianSentenceForm(_ req: Request) throws -> Future<View> {
-        return FlorianSentence.query(on: req).count().flatMap { (count) -> EventLoopFuture<View> in
-            let leaf = try req.make(LeafRenderer.self)
+    func context(_ req: Request) throws -> Future<Context> {
+        return FlorianSentence.query(on: req).count().map { (count) -> Context in
             let context = Context(
                 sentencesCount: count,
-                maximumSentencesCount: FlorianSentencesController.maximumSentencesCount,
-                newSentence: nil
+                maximumSentencesCount: FlorianSentencesController.maximumSentencesCount
             )
-            return leaf.render("florianSentenceForm", context)
+            return context
         }
     }
-
-    func AddFlorianSentenceFromForm(_ req: Request) throws -> Future<View> {
-        let florianSentence = try req.content.decode(FormResponse.self).map { (formResponse) -> FlorianSentence in
-            return FlorianSentence(sentence: formResponse.sentence)
-        }
-
-        return florianSentence.save(on: req).flatMap { (florianSentence) -> EventLoopFuture<View> in
-            return FlorianSentence.query(on: req).count().flatMap { (count) -> EventLoopFuture<View> in
-                let leaf = try req.make(LeafRenderer.self)
-                let context = Context(
-                    sentencesCount: count,
-                    maximumSentencesCount: FlorianSentencesController.maximumSentencesCount,
-                    newSentence: florianSentence.sentence
-                )
-                return leaf.render("florianSentenceForm", context)
+    
+    func randomFlorianSentence(_ req: Request) throws -> Future<FlorianSentence> {
+        return FlorianSentence.query(on: req).all().map { (florianSentences: [FlorianSentence]) -> FlorianSentence in
+            let sentencesCount = UInt(florianSentences.count)
+            guard sentencesCount > 0 else {
+                throw Abort(.notFound, reason: "No sentences found.", identifier: nil)
             }
+
+            let randomIndex: Int = try Int(OSRandom().generate() % sentencesCount)
+            let randomFlorianSentence = florianSentences[randomIndex]
+            return randomFlorianSentence
         }
     }
 }
 
 // MARK: - Inner types
 extension FlorianSentencesController {
-    struct Context: Codable {
+    struct Context: Content {
         var sentencesCount: Int
         var maximumSentencesCount: Int
-        var newSentence: String?
-    }
-
-    struct FormResponse: Codable {
-        var sentence: String
     }
 }

@@ -2,100 +2,54 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import axios from 'axios';
-
-function Square(props) {
-  return (
-    <button className="square" onClick={props.onClick}>
-      {props.value}
-    </button>
-  );
-}
-
-class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      squares: Array(9).fill(null),
-      xIsNext: true,
-    };
-  }
-
-  handleClick(i) {
-    const squares = this.state.squares.slice();
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    this.setState({
-      squares: squares,
-      xIsNext: !this.state.xIsNext,
-    });
-  }
-
-  renderSquare(i) {
-    return <Square
-      value={this.state.squares[i]}
-      onClick={() => this.handleClick(i)}
-    />;
-  }
-
-  render() {
-    const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-
-    return (
-      <div>
-        <div className="status">{status}</div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
-  }
-}
+import Button from '@material-ui/core/Button';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import FlorianRandomSentence from './components/FlorianRandomSentence';
+import FlorianSentenceForm from './components/FlorianSentenceForm';
 
 class Sessions extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonNames: props.value
+      sessions: []
     }
   }
 
   componentDidMount() {
     axios.get('/groomingSessions')
-    .then(function (response) {
-      console.log({ response });
-    })
-    .catch(function (error) {
-      console.log(error);
+    .then((response) => {
+      this.setState({ sessions: response.data });
     });
   }
 
   render() {
     return (
       <div>
-        {this.state.buttonNames.map((buttonName) => <SessionButton value={buttonName} />)}
+        {this.state.sessions.map((session) => <SessionButton value={session} />)}
       </div>
     )
   }
 }
 
-function SessionButton(props) {
-  return (<button>{props.value}</button>);
+function SessionButton({ value }) {
+  return (<Button>{value.name}</Button>);
 }
 
 // ========================================
 
+const ReactRouter = () => {
+  return (
+    <Router>
+      <div>
+        <Route exact path="/" component={Sessions} />
+        <Route path='/florian' component={FlorianRandomSentence} />
+        <Route path='/florianSentenceForm' component={FlorianSentenceForm} />
+      </div>
+    </Router>
+  );
+}
+
 ReactDOM.render(
-  <Sessions value={["hello", "is", "there", "someone", "here", "?"]} />,
+  <ReactRouter />,
   document.getElementById('root')
 );

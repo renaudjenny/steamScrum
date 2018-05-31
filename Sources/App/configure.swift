@@ -1,6 +1,5 @@
 import FluentPostgreSQL
 import Vapor
-import Leaf
 
 /// Called before your application initializes.
 ///
@@ -39,7 +38,4 @@ public func configure(
     migrations.add(model: Developer.self, database: .psql)
     migrations.add(model: GroomingSession.self, database: .psql)
     services.register(migrations)
-
-    /// Leaf
-    try services.register(LeafProvider())
 }
