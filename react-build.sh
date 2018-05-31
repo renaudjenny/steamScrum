@@ -1,7 +1,7 @@
 #!/bin/sh
 
+echo "Remove old Public folder"
+rm -rf Public
 cd React/app/
-yarn install && yarn build && cp -r build/* ../../Public/
-echo "Static js and css are copied into Public directory"
-rm -rf build
-echo "Build folder is deleted"
+echo "Install JS depedencies for React build for production and replace Public folder"
+yarn install && yarn build && mv build ../../Public
