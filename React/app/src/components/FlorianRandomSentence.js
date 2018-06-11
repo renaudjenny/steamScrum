@@ -33,9 +33,11 @@ class FlorianRandomSentence extends React.Component {
     return (
       <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
         <Grid item>
-          <Typography variant="headline" component="h3">
-            Florian aurait dit : {this.state.sentence}
-          </Typography>
+          <div className='bubble'>
+            <Typography variant="headline" component="h3" style={{ color: '#505050' }}>
+              {this.state.sentence}
+            </Typography>
+          </div>
         </Grid>
         <Grid item>
           <img src="/images/Florian.png" style={{ maxHeight: 300 + 'px' }} />
