@@ -52,7 +52,7 @@ final class FlorianSentencesController {
         return FlorianSentence.query(on: req).all().map { (florianSentences: [FlorianSentence]) -> FlorianSentence in
             let sentencesCount = UInt(florianSentences.count)
             guard sentencesCount > 0 else {
-                throw Abort(.notFound, reason: "No sentences found.", identifier: nil)
+                return FlorianSentence(sentence: "Je n'ai aucune phrase pour le moment. Utilise le formulaire pour en ajouter une 😊 !")
             }
 
             let randomIndex: Int = try Int(OSRandom().generate() % sentencesCount)

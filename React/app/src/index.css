@@ -1,8 +1,8 @@
 .bubble {
   position: relative;
   width: 425px;
-  height: 80px;
-  padding: 0px;
+  min-height: 80px;
+  padding: 12px;
   background: #eeceff;
   border-radius: 29px;
   text-align: center;
