@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import FlorianRandomSentence from './components/FlorianRandomSentence';
 import FlorianSentenceForm from './components/FlorianSentenceForm';
+import FlorianSentencesList from './components/FlorianSentencesList';
+import FlorianSentenceEdit from './components/FlorianSentenceEdit';
 
 class Sessions extends React.Component {
   constructor(props) {
@@ -54,6 +56,8 @@ const ReactRouter = () => {
         <Route exact path="/" component={Sessions} />
         <Route path='/florian' component={FlorianRandomSentence} />
         <Route path='/florianSentenceForm' component={FlorianSentenceForm} />
+        <Route path='/florianSentencesList' component={FlorianSentencesList} />
+        <Route path='/florianSentenceEdit' component={FlorianSentenceEdit} />
       </div>
     </Router>
   );

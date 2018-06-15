@@ -16,6 +16,17 @@ final class FlorianSentencesController {
         return FlorianSentence.query(on: req).all()
     }
 
+    func patch(_ req: Request) throws -> Future<FlorianSentence> {
+        return try req.parameters.next(FlorianSentence.self).flatMap({ (florianSentence) -> EventLoopFuture<FlorianSentence> in
+            let id = florianSentence.id
+            return try req.content.decode(FlorianSentence.self).flatMap(to: FlorianSentence.self, { (florianSentence) in
+                var newFlorianSentence = florianSentence
+                newFlorianSentence.id = id
+                return newFlorianSentence.update(on: req)
+            })
+        })
+    }
+
     func create(_ req: Request) throws -> Future<FlorianSentence> {
         return FlorianSentence.query(on: req).count().flatMap({ (count) -> EventLoopFuture<FlorianSentence> in
             guard count <= FlorianSentencesController.maximumSentencesCount else {
