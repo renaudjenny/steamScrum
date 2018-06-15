@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -52,11 +58,9 @@ class FlorianSentencesList extends React.Component {
             Nombres de phrases déjà enregistrées <strong>{this.state.sentencesCount}/{this.state.maximumSentencesCount}</strong>
           </Typography>
         </Grid>
-        <Grid container spacing={24} direction='column' alignItems='center' justify='space-between'>
-          <Grid item>
-            {this.state.sentences.map((sentence) => <FlorianSentence value={sentence} />)}
-          </Grid>
-        </Grid>
+        <List style={{ width: '100%', maxWidth: 360 }}>
+          {this.state.sentences.map((sentence) => <FlorianSentence value={sentence} />)}
+        </List>
       </Grid>
     )
   }
@@ -73,19 +77,19 @@ class FlorianSentence extends React.Component {
 
   render() {
     return (
-      <Grid container spacing={24} direction='row' alignItems='center' justify='center'>
-        <Grid item>
-          <Typography component="p">{this.state.florianSentence.sentence}</Typography>
-        </Grid>
-        <Grid item>
-          <Link to={{ 
-            pathname: '/florianSentenceEdit',
-            state: { florianSentence: this.state.florianSentence } 
-            }}>
-            <Button variant="outlined" color="primary">Edit</Button>
-          </Link>
-        </Grid>
-      </Grid>
+      <ListItem>
+        <ListItemText primary={this.state.florianSentence.sentence} />
+        <ListItemSecondaryAction>
+          <IconButton aria-label="Edit">
+            <Link to={{
+              pathname: '/florianSentenceEdit',
+              state: { florianSentence: this.state.florianSentence }
+              }}>
+              <EditIcon />
+            </Link>
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
     )
   }
 }
