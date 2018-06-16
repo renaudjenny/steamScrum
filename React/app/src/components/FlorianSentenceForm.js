@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
@@ -10,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 
 class FlorianSentenceForm extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -75,6 +75,11 @@ class FlorianSentenceForm extends React.Component {
             <Button variant="raised" color="secondary">
               Poser une autre question à Florian
             </Button>
+          </Link>
+        </Grid>
+        <Grid item>
+          <Link to='/florianSentencesList'>
+            <Typography component="a">Toutes les phrases de Florian</Typography>
           </Link>
         </Grid>
       </Grid>

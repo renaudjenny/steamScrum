@@ -1,12 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Modal from '@material-ui/core/Modal';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -35,7 +37,7 @@ class FlorianSentencesList extends React.Component {
       this.setState({ sentences: response.data })
     })
     .catch(() => {
-      this.setState({ sentences: [{ id: -1, sentence: "error1" }, { id: -2, sentence: "error2 with long text" }] })
+      this.setState({ sentences: [{ id: -1, sentence: "error1" }, { id: -2, sentence: "error2 with long text very very very very very long" }] })
     });
   }
 
@@ -45,6 +47,11 @@ class FlorianSentencesList extends React.Component {
       const { sentencesCount, maximumSentencesCount } = response.data
       this.setState({ sentencesCount: sentencesCount, maximumSentencesCount: maximumSentencesCount })
     });
+  }
+
+  handleDeletedSentence(id) {
+    const sentences = this.state.sentences.filter((sentence) => sentence.id !== id);
+    this.setState({ sentences: sentences });
   }
 
   render() {
@@ -59,8 +66,15 @@ class FlorianSentencesList extends React.Component {
           </Typography>
         </Grid>
         <List style={{ width: '100%', maxWidth: 360 }}>
-          {this.state.sentences.map((sentence) => <FlorianSentence value={sentence} />)}
+          {this.state.sentences.map((sentence) => <FlorianSentence key={`sentence${sentence.id}`} value={sentence} history={this.props.history} onDelete={(id) => this.handleDeletedSentence(id)} />)}
         </List>
+        <Grid item>
+          <Link to='/florian'>
+            <Button variant="raised" color="secondary">
+              Poser une autre question à Florian
+            </Button>
+          </Link>
+        </Grid>
       </Grid>
     )
   }
@@ -72,21 +86,64 @@ class FlorianSentence extends React.Component {
     super(props);
     this.state = {
       florianSentence: props.value,
+      openDeleteModal: false,
     }
+
+    this.modalStyle = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 300,
+      backgroundColor: 'white',
+      padding: 12,
+    }
+  }
+
+  handleSentenceClick() {
+    this.props.history.push('/florianSentenceEdit', { florianSentence: this.state.florianSentence });
+  }
+
+  handleDeleteModalOpen() {
+    this.setState({ openDeleteModal: true })
+  }
+
+  handleDeleteModalClose(isDeleteConfirmed) {
+    if (isDeleteConfirmed !== true) {
+      this.setState({ openDeleteModal: false });
+      return;
+    }
+
+    axios.delete(`florianSentences/${this.state.florianSentence.id}`)
+    .then(() => {
+      this.setState({ openDeleteModal: false });
+      this.props.onDelete(this.state.florianSentence.id);
+    });
   }
 
   render() {
     return (
-      <ListItem>
+      <ListItem button onClick={() => this.handleSentenceClick()}>
+        <ListItemIcon>
+          <EditIcon />
+        </ListItemIcon>
         <ListItemText primary={this.state.florianSentence.sentence} />
         <ListItemSecondaryAction>
-          <IconButton aria-label="Edit">
-            <Link to={{
-              pathname: '/florianSentenceEdit',
-              state: { florianSentence: this.state.florianSentence }
-              }}>
-              <EditIcon />
-            </Link>
+          <IconButton>
+            <DeleteIcon onClick={() => { this.handleDeleteModalOpen() }} />
+            <Modal
+              open={this.state.openDeleteModal}
+              onClose={() => this.handleDeleteModalClose()}
+            >
+              <div style={this.modalStyle}>
+                <Typography variant="title">Confirmer la suppression</Typography>
+                <Typography variant="subheading">
+                  {`Supprimer la phrase ${this.state.florianSentence.sentence} ?`}
+                </Typography>
+                <Button onClick={() => this.handleDeleteModalClose(true)}>Supprimer</Button>
+                <Button onClick={() => this.handleDeleteModalClose()}>Annuler</Button>
+              </div>
+            </Modal>
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>

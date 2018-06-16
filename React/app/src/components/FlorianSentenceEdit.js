@@ -1,10 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
@@ -29,7 +27,6 @@ class FlorianSentenceEdit extends React.Component {
     axios.patch(`florianSentences/${this.state.florianSentence.id}`, {
       sentence: this.state.florianSentence.sentence,
     }).then((result) => {
-      console.log('axios result', result);
       this.props.history.push('/florianSentencesList')
     })
   }

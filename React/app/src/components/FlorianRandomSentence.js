@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
@@ -40,7 +39,7 @@ class FlorianRandomSentence extends React.Component {
           </div>
         </Grid>
         <Grid item>
-          <img src="/images/Florian.png" style={{ maxHeight: 300 + 'px' }} />
+          <img src="/images/Florian.png" style={{ maxHeight: 300 + 'px' }} alt='Florian' />
         </Grid>
         <Grid item>
           <Button variant="fab" color="primary" aria-label="refresh" onClick={() => this.refreshSentence()}>
