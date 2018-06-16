@@ -52,6 +52,7 @@ class FlorianSentencesList extends React.Component {
   handleDeletedSentence(id) {
     const sentences = this.state.sentences.filter((sentence) => sentence.id !== id);
     this.setState({ sentences: sentences });
+    this.refreshContext();
   }
 
   render() {
