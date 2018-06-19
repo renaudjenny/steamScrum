@@ -16,7 +16,8 @@ struct GroomingSession: PostgreSQLModel {
 
 // MARK: - Inner Types
 extension GroomingSession {
-    struct DeveloperEstimation: Codable {
+    struct DeveloperEstimation: PostgreSQLModel {
+        var id: Int?
         var developer: Developer
         var userStory: UserStory
     }
@@ -27,3 +28,9 @@ extension GroomingSession: Migration { }
 extension GroomingSession: Content { }
 
 extension GroomingSession: Parameter { }
+
+extension GroomingSession.DeveloperEstimation: Migration { }
+
+extension GroomingSession.DeveloperEstimation: Content { }
+
+extension GroomingSession.DeveloperEstimation: Parameter { }
