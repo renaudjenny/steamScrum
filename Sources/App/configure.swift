@@ -9,16 +9,20 @@ public func configure(
     _ env: inout Environment,
     _ services: inout Services
 ) throws {
-    /// Register providers first
     try services.register(FluentPostgreSQLProvider())
 
+    var databases = DatabasesConfig()
+    let databaseConfig: PostgreSQLDatabaseConfig?
+
     if let url = Environment.get("DATABASE_URL") {
-        let psqlConfig = try PostgreSQLDatabaseConfig(url: url)
-        services.register(psqlConfig)
+        databaseConfig = try PostgreSQLDatabaseConfig(url: url)
     } else {
-        let psqlConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "postgres")
-        services.register(psqlConfig)
+        databaseConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "postgres")
     }
+
+    let database = PostgreSQLDatabase(config: databaseConfig!)
+    databases.add(database: database, as: .psql)
+    services.register(databases)
 
     /// Register routes to the router
     let router = EngineRouter.default()
@@ -38,6 +42,7 @@ public func configure(
     var migrations = MigrationConfig()
     migrations.add(model: FlorianSentence.self, database: .psql)
     migrations.add(model: UserStory.self, database: .psql)
+    migrations.add(model: UserStory.StoryPoint.self, database: .psql)
     migrations.add(model: Developer.self, database: .psql)
     migrations.add(model: GroomingSession.self, database: .psql)
     services.register(migrations)
