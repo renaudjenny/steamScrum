@@ -21,5 +21,5 @@ public func routes(_ router: Router) throws {
 
     let userStoryController = UserStoryController()
     router.post("userStories", use: userStoryController.create)
-    router.post("userStories", Int.parameter, "storyPoints", use: userStoryController.addStoryPoints)
+    router.post("userStories", UserStory.parameter, "storyPoints", use: userStoryController.addStoryPoints)
 }

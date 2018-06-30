@@ -14,7 +14,10 @@ public func configure(
     var databases = DatabasesConfig()
     let databaseConfig: PostgreSQLDatabaseConfig?
 
-    if let url = Environment.get("DATABASE_URL") {
+    if env == .testing {
+        databaseConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "postgres", database: "steamscrumtest")
+    }
+    else if let url = Environment.get("DATABASE_URL") {
         databaseConfig = try PostgreSQLDatabaseConfig(url: url)
     } else {
         databaseConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "postgres")
@@ -46,4 +49,9 @@ public func configure(
     migrations.add(model: Developer.self, database: .psql)
     migrations.add(model: GroomingSession.self, database: .psql)
     services.register(migrations)
+
+    /// Configure extra commands for tests
+    var commandConfig = CommandConfig.default()
+    commandConfig.use(RevertCommand.self, as: "revert")
+    services.register(commandConfig)
 }
