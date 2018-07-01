@@ -3,12 +3,13 @@ import XCTest
 import FluentPostgreSQL
 import Vapor
 
-final class AppTests: XCTestCase {
+final class FlorianSentencesRoutesTests: XCTestCase {
 
     var app: Application!
     var connection: PostgreSQLConnection!
 
     override func setUp() {
+        super.setUp()
         try! Application.reset()
         self.app = try! Application.testable()
         self.connection = try! app.newConnection(to: .psql).wait()
@@ -16,6 +17,7 @@ final class AppTests: XCTestCase {
 
     override func tearDown() {
         self.connection.close()
+        super.tearDown()
     }
 
     func testGetFlorianSentencesRoute() throws {
@@ -145,17 +147,4 @@ final class AppTests: XCTestCase {
         ("testRandomFlorianSentenceRoute", testRandomFlorianSentenceRoute),
         ("testFlorianSentencesContext", testFlorianSentencesContext),
     ]
-
-    /*
-
- router.get("randomFlorianSentence", use: florianSentencesController.randomFlorianSentence)
-
- let groomingSessionController = GroomingSessionController()
- router.get("groomingSessions", use: groomingSessionController.index)
- router.post("groomingSessions", use: groomingSessionController.create)
-
- let userStoryController = UserStoryController()
- router.post("userStories", use: userStoryController.create)
- router.post("userStories", Int.parameter, "storyPoints", use: userStoryController.addStoryPoints)
- */
 }

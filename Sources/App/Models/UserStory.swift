@@ -11,9 +11,6 @@ import Vapor
 struct UserStory: PostgreSQLModel {
     var id: Int?
     var name: String
-    var storyPoints: Children<UserStory, StoryPoint> {
-        return self.children(StoryPoint.idKey)
-    }
 }
 
 // MARK: - Inner Types
@@ -22,6 +19,11 @@ extension UserStory {
         var id: Int?
         var points: Double
         var user: String
+        var userStoryId: UserStory.ID?
+    }
+
+    var storyPoints: Children<UserStory, StoryPoint> {
+        return self.children(\.userStoryId)
     }
 }
 
