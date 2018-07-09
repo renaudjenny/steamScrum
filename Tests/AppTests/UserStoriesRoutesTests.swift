@@ -170,6 +170,31 @@ class UserStoriesRoutesTests: XCTestCase {
         XCTAssertEqual(receivedStoryPoints[0].user, anotherUserStoryPointUser)
     }
 
+    func testPostUserStoriesStoryPointsWithWrongIdRoute() {
+        let routeFirstPart = "/userStories"
+        let routeSecondPart = "storyPoints"
+        let userStoryPointValue = 3.0
+        let userStoryPointUser = "Mario"
+        let userStoryName = "User story test Post of Story Point"
+        let userStoryWrongId = 123
+
+        let userStory = try! UserStory(id: nil, name: userStoryName).save(on: self.connection).wait()
+        let userStoryId = userStory.id!
+
+        var receivedUserStories = try! app.getResponse(to: routeFirstPart, decodeTo: [UserStory].self)
+
+        XCTAssertEqual(receivedUserStories[0].name, userStoryName)
+        let receivedStoryPoints = try! receivedUserStories[0].storyPoints.query(on: self.connection).all().wait()
+        XCTAssertEqual(receivedStoryPoints.count, 0)
+
+        let storyPoint = UserStory.StoryPoint(id: nil, points: userStoryPointValue, user: userStoryPointUser, userStoryId: userStoryWrongId)
+
+
+        XCTAssertThrowsError(
+            try app.getResponse(to: "\(routeFirstPart)/\(userStoryId)/\(routeSecondPart)", method: .POST, headers: ["Content-Type": "application/json"], data: storyPoint, decodeTo: UserStory.self)
+        )
+    }
+
     static let allTests = [
         ("testGetUserStoriesRoute", testGetUserStoriesRoute),
         ("testPostUserStoriesRoute", testPostUserStoriesRoute),
