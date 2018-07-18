@@ -11,6 +11,13 @@ class FlorianSentenceEdit extends React.Component {
 
   constructor(props) {
     super(props);
+    if (props.location == null) {
+      this.state = {
+        florianSentence: { id: 0, sentence: 'Error' },
+        originalSentence: 'Error'
+      }
+      return;
+    }
     this.state = {
       florianSentence: props.location.state.florianSentence,
       originalSentence: props.location.state.florianSentence.sentence

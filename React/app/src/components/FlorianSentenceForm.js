@@ -29,6 +29,9 @@ class FlorianSentenceForm extends React.Component {
     .then((response) => {
       const { sentencesCount, maximumSentencesCount } = response.data
       this.setState({ sentencesCount: sentencesCount, maximumSentencesCount: maximumSentencesCount })
+    })
+    .catch((error) => {
+      console.error(error);
     });
   }
 
