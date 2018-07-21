@@ -21,16 +21,24 @@ class FlorianSentenceForm extends React.Component {
   }
 
   componentDidMount() {
+    this.source = axios.CancelToken.source();
     this.refreshContext();
   }
 
+  componentWillUnmount() {
+    this.source.cancel();
+  }
+
   refreshContext() {
-    axios.get('/florianSentencesContext')
+    axios.get('/florianSentencesContext', { cancelToken: this.source.token })
     .then((response) => {
       const { sentencesCount, maximumSentencesCount } = response.data
       this.setState({ sentencesCount: sentencesCount, maximumSentencesCount: maximumSentencesCount })
     })
     .catch((error) => {
+      if (axios.isCancel(error)) {
+        return;
+      }
       console.error(error);
     });
   }
@@ -82,7 +90,7 @@ class FlorianSentenceForm extends React.Component {
         </Grid>
         <Grid item>
           <Link to='/florianSentencesList'>
-            <Typography component="a">Toutes les phrases de Florian</Typography>
+            <Typography>Toutes les phrases de Florian</Typography>
           </Link>
         </Grid>
       </Grid>

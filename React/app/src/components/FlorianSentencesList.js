@@ -27,16 +27,24 @@ class FlorianSentencesList extends React.Component {
   }
 
   componentDidMount() {
+    this.source = axios.CancelToken.source();
     this.refreshSentences();
     this.refreshContext();
   }
 
+  componentWillUnmount() {
+    this.source.cancel();
+  }
+
   refreshSentences() {
-    axios.get('/florianSentences')
+    axios.get('/florianSentences', { cancelToken: this.source.token })
     .then((response) => {
       this.setState({ sentences: response.data })
     })
-    .catch(() => {
+    .catch((error) => {
+      if (axios.isCancel(error)) {
+        return;
+      }
       this.setState({ sentences: [{ id: -1, sentence: "error1" }, { id: -2, sentence: "error2 with long text very very very very very long" }] })
     });
   }
@@ -46,6 +54,11 @@ class FlorianSentencesList extends React.Component {
     .then((response) => {
       const { sentencesCount, maximumSentencesCount } = response.data
       this.setState({ sentencesCount: sentencesCount, maximumSentencesCount: maximumSentencesCount })
+    })
+    .catch((error) => {
+      if (axios.isCancel(error)) {
+        return;
+      }
     });
   }
 

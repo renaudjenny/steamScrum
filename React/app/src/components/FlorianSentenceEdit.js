@@ -47,7 +47,7 @@ class FlorianSentenceEdit extends React.Component {
         <Grid item>
           <FormControl>
             <InputLabel htmlFor="sentence">La phrase a édité</InputLabel>
-            <Input id="sentence" value={this.state.florianSentence.sentence} onChange={(event) => this.handleSentenceChange(event)} multiline='true' />
+            <Input id="sentence" value={this.state.florianSentence.sentence} onChange={(event) => this.handleSentenceChange(event)} multiline={true} />
             <Button variant="raised" color="primary" onClick={() => this.save()}>Enregistrer</Button>
           </FormControl>
         </Grid>
