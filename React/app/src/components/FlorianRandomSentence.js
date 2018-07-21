@@ -15,17 +15,28 @@ class FlorianRandomSentence extends React.Component {
   }
 
   componentDidMount() {
+    this.source = axios.CancelToken.source();
     this.refreshSentence()
   }
 
-  refreshSentence() {
-    axios.get('/randomFlorianSentence')
+  componentWillUnmount() {
+    this.source.cancel();
+  }
+
+  refreshSentence(completion = () => null) {
+    axios.get('/randomFlorianSentence', { cancelToken: this.source.token })
     .then((response) => {
       this.setState({ sentence: response.data.sentence });
     })
     .catch((error) => {
+      if (axios.isCancel(error)) {
+        return;
+      }
       this.setState({ sentence: "Error" });
-    });
+    })
+    .finally(() => {
+      completion();
+    })
   }
 
   render() {
