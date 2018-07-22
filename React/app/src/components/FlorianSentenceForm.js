@@ -6,6 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios';
 
 class FlorianSentenceForm extends React.Component {
@@ -17,6 +18,7 @@ class FlorianSentenceForm extends React.Component {
       currentSentence: "",
       sentencesCount: 0,
       maximumSentencesCount: 0,
+      isFlorianSentenceDataLoading: false,
     }
   }
 
@@ -30,15 +32,21 @@ class FlorianSentenceForm extends React.Component {
   }
 
   refreshContext() {
+    this.setState({ isFlorianSentenceDataLoading: true});
     axios.get('/florianSentencesContext', { cancelToken: this.source.token })
     .then((response) => {
       const { sentencesCount, maximumSentencesCount } = response.data
-      this.setState({ sentencesCount: sentencesCount, maximumSentencesCount: maximumSentencesCount })
+      this.setState({
+        sentencesCount: sentencesCount,
+        maximumSentencesCount: maximumSentencesCount,
+        isFlorianSentenceDataLoading: false,
+      })
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
         return;
       }
+      this.setState({ isFlorianSentenceDataLoading: false });
       console.error(error);
     });
   }
@@ -59,15 +67,23 @@ class FlorianSentenceForm extends React.Component {
   }
 
   render() {
+    const florianDataContent = () => {
+      if (this.state.isFlorianSentenceDataLoading) {
+        return <LinearProgress style={{ width: 300 }} />
+      } else {
+        return <Typography component="p">
+            Nombres de phrases déjà enregistrées <strong>{this.state.sentencesCount}/{this.state.maximumSentencesCount}</strong>
+          </Typography>
+      }
+    };
+
     return (
       <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
         <Grid item>
           <Typography variant="headline" component="h3">Ajouter une nouvelle phrase que dirait Florian</Typography>
         </Grid>
         <Grid item>
-          <Typography component="p">
-            Nombres de phrases déjà enregistrées <strong>{this.state.sentencesCount}/{this.state.maximumSentencesCount}</strong>
-          </Typography>
+          {florianDataContent()}
         </Grid>
         <Grid item>
           <FormControl>
