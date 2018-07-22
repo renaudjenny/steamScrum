@@ -4,19 +4,21 @@ import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 class FlorianRandomSentence extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sentence: ""
+      sentence: "",
+      isLoadingSentence: false,
     }
   }
 
   componentDidMount() {
     this.source = axios.CancelToken.source();
-    this.refreshSentence()
+    this.refreshSentence();
   }
 
   componentWillUnmount() {
@@ -24,15 +26,22 @@ class FlorianRandomSentence extends React.Component {
   }
 
   refreshSentence(completion = () => null) {
+    this.setState({ isLoadingSentence: true });
     axios.get('/randomFlorianSentence', { cancelToken: this.source.token })
     .then((response) => {
-      this.setState({ sentence: response.data.sentence });
+      this.setState({
+        isLoadingSentence: false,
+        sentence: response.data.sentence
+      });
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
         return;
       }
-      this.setState({ sentence: "Error" });
+      this.setState({
+        isLoadingSentence: false,
+        sentence: "Error"
+      });
     })
     .finally(() => {
       completion();
@@ -40,13 +49,21 @@ class FlorianRandomSentence extends React.Component {
   }
 
   render() {
+    const bubbleContent = () => {
+      if (this.state.isLoadingSentence) {
+        return <CircularProgress size={50} />
+      } else {
+        return <Typography variant="headline" component="h3" style={{ color: '#505050' }}>
+          {this.state.sentence}
+         </Typography>
+      }
+    }
+
     return (
       <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
         <Grid item>
           <div className='bubble'>
-            <Typography variant="headline" component="h3" style={{ color: '#505050' }}>
-              {this.state.sentence}
-            </Typography>
+            {bubbleContent()}
           </div>
         </Grid>
         <Grid item>
