@@ -27,7 +27,7 @@ it('search for a new random sentence', (done) => {
   );
   const florianRandomSentence = wrapper.find(FlorianRandomSentence).instance();
 
-  var mock = new MockAdapter(axios);
+  const mock = new MockAdapter(axios);
   const data = { sentence: "a random sentence from test" };
   mock.onGet('/randomFlorianSentence').reply(200, data);
 
