@@ -8,6 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 class FlorianRandomSentence extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +46,7 @@ class FlorianRandomSentence extends React.Component {
     })
     .finally(() => {
       completion();
-    })
+    });
   }
 
   render() {

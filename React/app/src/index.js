@@ -13,6 +13,7 @@ import FlorianRandomSentence from './components/FlorianRandomSentence';
 import FlorianSentenceForm from './components/FlorianSentenceForm';
 import FlorianSentencesList from './components/FlorianSentencesList';
 import FlorianSentenceEdit from './components/FlorianSentenceEdit';
+import GroomingSessionForm from './components/GroomingSessionForm';
 
 class Sessions extends React.Component {
   constructor(props) {
@@ -44,6 +45,13 @@ class Sessions extends React.Component {
           {this.state.sessions.map((session) => <SessionItem key={`session_${session.id}`} value={session} />)}
         </List>
         <Grid item>
+          <Link to='/groomingSessionForm'>
+            <Button variant="raised" color='primary'>
+              Créer une session de grooming
+            </Button>
+          </Link>
+        </Grid>
+        <Grid>
           <Link to='/florian'>
             <Button variant="raised" color="secondary">
               Poser une question à Florian ?
@@ -74,6 +82,7 @@ const ReactRouter = () => {
         <Route path='/florianSentenceForm' component={FlorianSentenceForm} />
         <Route path='/florianSentencesList' component={FlorianSentencesList} />
         <Route path='/florianSentenceEdit' component={FlorianSentenceEdit} />
+        <Route path='/groomingSessionForm' component={GroomingSessionForm} />
       </div>
     </Router>
   );
