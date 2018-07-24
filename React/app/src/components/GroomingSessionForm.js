@@ -33,12 +33,12 @@ class GroomingSessionForm extends React.Component {
     this.setState({ isGroomingSessionDataLoading: true });
     axios.get('/groomingSessionsContext', { cancelToken: this.source.token })
     .then((response) => {
-      const { groomingSessionsCount, maximumGroomingSessionsCount } = response.data
+      const { groomingSessionsCount, maximumGroomingSessionsCount } = response.data;
       this.setState({
         groomingSessionsCount: groomingSessionsCount,
         maximumGroomingSessionsCount: maximumGroomingSessionsCount,
         isGroomingSessionDataLoading: false,
-      })
+      });
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
@@ -59,15 +59,18 @@ class GroomingSessionForm extends React.Component {
     this.setState({ currentGroomingSession: { date: event.target.value } })
   }
 
-  submit() {
+  submit(completion = () => null) {
     axios.post('/groomingSessions', this.state.currentGroomingSession)
     .then((response) => {
       this.setState({ newGroomingSession: response.data.groomingSession });
-      this.refreshContext();
+      this.refreshContext(() => {
+        completion();
+      });
     })
     .catch((error) => {
       this.setState({ groomingSession: { name: "Error"} });
-    });
+      completion();
+    })
   }
 
   render() {
