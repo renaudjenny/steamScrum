@@ -63,6 +63,25 @@ class GroomingSessionsRoutesTests: XCTestCase {
         XCTAssertEqual(receivedGroomingSessions[0].id, receivedGroomingSession.id)
     }
 
+    func testGetGroomingSessionsContext() {
+        let route = "/groomingSessionsContext"
+        let maximumGroomingSessionsCount = 250
+
+        var context = try! app.getResponse(to: route, decodeTo: GroomingSessionController.Context.self)
+        XCTAssertEqual(context.groomingSessionsCount, 0)
+        XCTAssertEqual(context.maximumGroomingSessionsCount, maximumGroomingSessionsCount)
+
+        _ = try! GroomingSession(id: nil, name: "...", date: Date()).save(on: self.connection).wait()
+        context = try! app.getResponse(to: route, decodeTo: GroomingSessionController.Context.self)
+        XCTAssertEqual(context.groomingSessionsCount, 1)
+
+        for i in 0..<10 {
+            _ = try! GroomingSession(id: nil, name: "... \(i)", date: Date()).save(on: self.connection).wait()
+        }
+        context = try! app.getResponse(to: route, decodeTo: GroomingSessionController.Context.self)
+        XCTAssertEqual(context.groomingSessionsCount, 11)
+    }
+
     static let allTests = [
         ("testGetGroomingSessionsRoute", testGetGroomingSessionsRoute),
         ("testPostGroomingSessionRoute", testPostGroomingSessionRoute),

@@ -19,6 +19,8 @@ public func routes(_ router: Router) throws {
     router.get("groomingSessions", use: groomingSessionController.index)
     router.post("groomingSessions", use: groomingSessionController.create)
 
+    router.get("groomingSessionsContext", use: groomingSessionController.context)
+
     let userStoryController = UserStoryController()
     router.get("userStories", use: userStoryController.index)
     router.post("userStories", use: userStoryController.create)

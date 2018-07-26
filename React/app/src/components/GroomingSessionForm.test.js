@@ -7,6 +7,7 @@ import Enzyme from 'enzyme';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import MockAdapter from 'axios-mock-adapter';
+import moment from 'moment';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -39,6 +40,36 @@ it('retrieve Grooming Sessions context', (done) => {
   });
 });
 
+it('handle name change', () => {
+  const wrapper = mount(
+    <MemoryRouter>
+      <GroomingSessionForm />
+    </MemoryRouter>
+  );
+  const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
+  expect(groomingSessionForm.state.currentGroomingSession.name).toEqual('');
+
+  const name = 'Test';
+  wrapper.find('input#groomingSessionName').simulate('change', { target: { value: name } });
+  expect(groomingSessionForm.state.currentGroomingSession.name).toEqual(name);
+});
+
+it('handle date change', () => {
+  const wrapper = mount(
+    <MemoryRouter>
+      <GroomingSessionForm />
+    </MemoryRouter>
+  );
+  const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
+  const currentGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
+  expect(currentGroomingSessionFormattedDate).toEqual(moment().format('YYYY-MM-DD'));
+
+  const date = moment('23-04-2018', 'YYYY-MM-DD');
+  wrapper.find('input#groomingSessionDate').simulate('change', { target: { value: date.format('YYYY-MM-DD') } });
+  const newGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
+  expect(newGroomingSessionFormattedDate).toEqual(date.format('YYYY-MM-DD'));
+});
+
 it('post the form', (done) => {
   const wrapper = mount(
     <MemoryRouter>
@@ -48,11 +79,11 @@ it('post the form', (done) => {
   const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
 
   const mock = new MockAdapter(axios);
-  const data = { groomingSession: { id: '123', name: 'Posted Grooming Session', date: `${new Date()}` } };
+  const data = { id: '123', name: 'Posted Grooming Session', date: `${new Date()}` };
   mock.onPost('/groomingSessions').reply(201, data);
 
   groomingSessionForm.submit(() => {
-    expect(groomingSessionForm.state.newGroomingSession).toEqual(data.groomingSession);
+    expect(groomingSessionForm.state.newGroomingSession).toEqual(data);
     wrapper.unmount();
     done();
   });

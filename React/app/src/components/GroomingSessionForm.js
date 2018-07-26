@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios';
+import moment from 'moment';
 
 class GroomingSessionForm extends React.Component {
 
@@ -13,7 +14,7 @@ class GroomingSessionForm extends React.Component {
     super(props);
     this.state = {
       newGroomingSession: null,
-      currentGroomingSession: { name: '', date: ''},
+      currentGroomingSession: { name: '', date: new Date() },
       groomingSessionsCount: 0,
       maximumGroomingSessionsCount: 0,
       isGroomingSessionDataLoading: false,
@@ -52,23 +53,30 @@ class GroomingSessionForm extends React.Component {
   }
 
   handleGroomingSessionNameChange(event) {
-    this.setState({ currentGroomingSession: { name: event.target.value } })
+    const currentGroomingSession = this.state.currentGroomingSession;
+    currentGroomingSession.name = event.target.value;
+    this.setState({ currentGroomingSession })
   }
 
   handleGroomingSessionDateChange(event) {
-    this.setState({ currentGroomingSession: { date: event.target.value } })
+    const currentGroomingSession = this.state.currentGroomingSession;
+    currentGroomingSession.date = moment(event.target.value, 'YYYY-MM-DD').toDate();
+    this.setState({ currentGroomingSession })
   }
 
   submit(completion = () => null) {
-    axios.post('/groomingSessions', this.state.currentGroomingSession)
+    axios.post('/groomingSessions', {
+      name: this.state.currentGroomingSession.name,
+      date: moment(this.state.currentGroomingSession.date).format(),
+    })
     .then((response) => {
-      this.setState({ newGroomingSession: response.data.groomingSession });
+      this.setState({ newGroomingSession: response.data });
       this.refreshContext(() => {
         completion();
       });
     })
     .catch((error) => {
-      this.setState({ groomingSession: { name: "Error"} });
+      this.setState({ newGroomingSession: { name: "Error", date: Date() } });
       completion();
     })
   }
@@ -96,7 +104,13 @@ class GroomingSessionForm extends React.Component {
           <TextField id='groomingSessionName' label='Nom de la session' value={this.state.currentGroomingSession.name} onChange={(event) => this.handleGroomingSessionNameChange(event)} />
         </Grid>
         <Grid item>
-          <TextField id='groomingSessionDate' label='Date de la session' value={this.state.currentGroomingSession.date} onChange={(event) => this.handleGroomingSessionDateChange(event)} />
+          <TextField
+            id='groomingSessionDate'
+            label='Date de la session'
+            value={moment(this.state.currentGroomingSession.date).format('YYYY-MM-DD')}
+            onChange={(event) => this.handleGroomingSessionDateChange(event)}
+            type='date'
+          />
         </Grid>
         <Grid>
           <Button variant="raised" color="primary" onClick={() => this.submit()}>Ajouter</Button>
@@ -107,7 +121,7 @@ class GroomingSessionForm extends React.Component {
           </Grid>
         }
         <Grid item>
-          <Link to='/groomingSessionsList'>
+          <Link to='/'>
             <Typography>Les autres sessions</Typography>
           </Link>
         </Grid>
