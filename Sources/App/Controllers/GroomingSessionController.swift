@@ -16,9 +16,17 @@ final class GroomingSessionController {
     }
 
     func create(_ req: Request) throws -> Future<GroomingSession> {
-        return try req.content.decode(GroomingSession.self).flatMap(to: GroomingSession.self) { groomingSession in
+        return GroomingSession.query(on: req).count().flatMap({ (count) -> EventLoopFuture<GroomingSession> in
+            guard count < FlorianSentencesController.maximumSentencesCount else {
+                throw Abort(.badRequest, reason: "Too many data already provided.", identifier: nil)
+            }
+            return try req.content.decode(GroomingSession.self)
+        }).flatMap({ (groomingSession) -> EventLoopFuture<GroomingSession> in
+            guard !groomingSession.name.isEmpty else {
+                throw Abort(.badRequest, reason: "Cannot provide empty string for name.", identifier: nil)
+            }
             return groomingSession.save(on: req)
-        }
+        })
     }
 
     func context(_ req: Request) throws -> Future<Context> {

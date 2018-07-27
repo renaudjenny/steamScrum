@@ -63,6 +63,26 @@ class GroomingSessionsRoutesTests: XCTestCase {
         XCTAssertEqual(receivedGroomingSessions[0].id, receivedGroomingSession.id)
     }
 
+    func testPostMaximumFlorianSentencesRoute() throws {
+        let route = "/groomingSessions"
+        let groomingSessionName = "Grooming test POST"
+        let groomingSessionDate = Date(timeIntervalSince1970: 1.0)
+
+        let groomingSession = GroomingSession(id: nil, name: groomingSessionName, date: groomingSessionDate)
+
+        for _ in 0..<FlorianSentencesController.maximumSentencesCount {
+            _ = try! app.getResponse(to: route, method: .POST, headers: ["Content-Type": "application/json"], data: groomingSession, decodeTo: GroomingSession.self)
+        }
+
+        let receivedGroomingSessions = try! app.getResponse(to: route, decodeTo: [GroomingSession].self)
+
+        XCTAssertEqual(receivedGroomingSessions.count, GroomingSessionController.maximumGroomingSessionsCount)
+
+        XCTAssertThrowsError(
+            try app.getResponse(to: route, method: .POST, headers: ["Content-Type": "application/json"], data: groomingSession, decodeTo: GroomingSession.self)
+        )
+    }
+
     func testGetGroomingSessionsContext() {
         let route = "/groomingSessionsContext"
         let maximumGroomingSessionsCount = 250

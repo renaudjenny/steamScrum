@@ -76,7 +76,6 @@ class GroomingSessionForm extends React.Component {
       });
     })
     .catch((error) => {
-      this.setState({ newGroomingSession: { name: "Error", date: Date() } });
       completion();
     })
   }
@@ -117,7 +116,7 @@ class GroomingSessionForm extends React.Component {
         </Grid>
         {this.state.newGroomingSession !== null &&
           <Grid item>
-            <Typography componenent="p">Votre nouvelle session: <strong>{this.state.newGroomingSession.name}</strong> a bien été enregistrée</Typography>
+            <Typography componenent="p" id='newGroomingSessionInfo'>Votre nouvelle session: <strong>{this.state.newGroomingSession.name}</strong> a bien été enregistrée</Typography>
           </Grid>
         }
         <Grid item>
