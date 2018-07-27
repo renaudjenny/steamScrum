@@ -84,6 +84,8 @@ it('post the form', (done) => {
 
   groomingSessionForm.submit(() => {
     expect(groomingSessionForm.state.newGroomingSession).toEqual(data);
+    wrapper.update();
+    expect(wrapper.find('p#newGroomingSessionInfo>strong').text()).toEqual(data.name);
     wrapper.unmount();
     done();
   });

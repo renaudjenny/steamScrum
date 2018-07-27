@@ -49,6 +49,24 @@ final class FlorianSentencesRoutesTests: XCTestCase {
         XCTAssertEqual(florianSentences[0].id, receivedFlorianSentence.id)
     }
 
+    func testPostMaximumFlorianSentencesRoute() throws {
+        let route = "/florianSentences"
+        let sentence = "Test sentence for POST"
+        let florianSentence = FlorianSentence(sentence: sentence)
+
+        for _ in 0..<FlorianSentencesController.maximumSentencesCount {
+            _ = try! app.getResponse(to: route, method: .POST, headers: ["Content-Type": "application/json"], data: florianSentence, decodeTo: FlorianSentence.self)
+        }
+
+        let florianSentences = try! app.getResponse(to: route, decodeTo: [FlorianSentence].self)
+
+        XCTAssertEqual(florianSentences.count, FlorianSentencesController.maximumSentencesCount)
+
+        XCTAssertThrowsError(
+            try app.getResponse(to: route, method: .POST, headers: ["Content-Type": "application/json"], data: florianSentence, decodeTo: FlorianSentence.self)
+        )
+    }
+
     func testPatchFlorianSentencesRoute() throws {
         let route = "/florianSentences"
         let sentence = "Test sentence for PATCH"

@@ -29,7 +29,7 @@ final class FlorianSentencesController {
 
     func create(_ req: Request) throws -> Future<FlorianSentence> {
         return FlorianSentence.query(on: req).count().flatMap({ (count) -> EventLoopFuture<FlorianSentence> in
-            guard count <= FlorianSentencesController.maximumSentencesCount else {
+            guard count < FlorianSentencesController.maximumSentencesCount else {
                 throw Abort(.badRequest, reason: "Too many data already provided.", identifier: nil)
             }
 
