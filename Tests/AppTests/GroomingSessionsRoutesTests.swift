@@ -102,8 +102,32 @@ class GroomingSessionsRoutesTests: XCTestCase {
         XCTAssertEqual(context.groomingSessionsCount, 11)
     }
 
+    func testDeleteGroomingSession() {
+        let route = "/groomingSessions"
+        let groomingSessionName = "Grooming test DELETE"
+        let groomingSessionDate = Date(timeIntervalSince1970: 1.0)
+
+        let groomingSession = GroomingSession(id: nil, name: groomingSessionName, date: groomingSessionDate)
+        let createdGroomingSession = try! groomingSession.save(on: self.connection).wait()
+
+        var receivedGroomingSessions = try! self.app.getResponse(to: route, decodeTo: [GroomingSession].self)
+
+        XCTAssertEqual(receivedGroomingSessions.count, 1)
+        XCTAssertEqual(receivedGroomingSessions[0].name, groomingSessionName)
+        XCTAssertEqual(receivedGroomingSessions[0].date, groomingSessionDate)
+
+        _ = try! self.app.sendRequest(to: "\(route)/\(createdGroomingSession.id!)", method: .DELETE)
+
+        receivedGroomingSessions = try! self.app.getResponse(to: route, decodeTo: [GroomingSession].self)
+
+        XCTAssertEqual(receivedGroomingSessions.count, 0)
+    }
+
     static let allTests = [
         ("testGetGroomingSessionsRoute", testGetGroomingSessionsRoute),
         ("testPostGroomingSessionRoute", testPostGroomingSessionRoute),
+        ("testGetGroomingSessionsContext", testGetGroomingSessionsContext),
+        ("testPostMaximumFlorianSentencesRoute", testPostMaximumFlorianSentencesRoute),
+        ("testDeleteGroomingSession", testDeleteGroomingSession),
     ]
 }

@@ -29,6 +29,12 @@ final class GroomingSessionController {
         })
     }
 
+    func delete(_ req: Request) throws -> Future<HTTPStatus> {
+        return try req.parameters.next(GroomingSession.self).flatMap({ (groomingSession) -> EventLoopFuture<HTTPStatus> in
+            return groomingSession.delete(on: req).transform(to: .ok)
+        })
+    }
+
     func context(_ req: Request) throws -> Future<Context> {
         return GroomingSession.query(on: req).count().map { (count) -> Context in
             let context = Context(
