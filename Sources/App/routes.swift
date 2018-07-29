@@ -18,6 +18,7 @@ public func routes(_ router: Router) throws {
     let groomingSessionController = GroomingSessionController()
     router.get("groomingSessions", use: groomingSessionController.index)
     router.post("groomingSessions", use: groomingSessionController.create)
+    router.delete("groomingSessions", GroomingSession.parameter, use: groomingSessionController.delete)
 
     router.get("groomingSessionsContext", use: groomingSessionController.context)
 
