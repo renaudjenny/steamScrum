@@ -10,22 +10,23 @@ import GroomingSessionsList from './GroomingSessionsList'
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('Grooming sessions list', () => {
-  it('renders without crashing', () => {
-    const wrapper = mount(
+describe('Grooming Sessions List', () => {
+
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = mount(
       <MemoryRouter>
         <GroomingSessionsList />
       </MemoryRouter>
     );
+  });
+
+  afterEach(() => {
     wrapper.unmount();
   });
 
-  it('retrieve grooming sessions', (done) => {
-    const wrapper = mount(
-      <MemoryRouter>
-        <GroomingSessionsList />
-      </MemoryRouter>
-    );
+  test('retrieve grooming sessions', (done) => {
     const groomingSessionsList = wrapper.find(GroomingSessionsList).instance();
     expect(groomingSessionsList.state.sessions.length).toEqual(0);
 
@@ -35,7 +36,21 @@ describe('Grooming sessions list', () => {
 
     groomingSessionsList.refreshGroomingSessions(() => {
       expect(groomingSessionsList.state.sessions.length).toEqual(2);
-      wrapper.unmount();
+      done();
+    });
+  });
+
+  test('delete a session', (done) => {
+    const groomingSessionsList = wrapper.find(GroomingSessionsList).instance();
+    const sessions = [{ id: '123', name: 'test delete', date: '2018-07-01T06:00:00' }];
+    groomingSessionsList.setState({ sessions });
+    expect(groomingSessionsList.state.sessions.length).toEqual(1);
+
+    const mock = new MockAdapter(axios);
+    mock.onDelete(`/groomingSessions/${sessions[0].id}`).reply(200);
+
+    groomingSessionsList.deleteGroomingSession(sessions[0].id, () => {
+      expect(groomingSessionsList.state.sessions.length).toEqual(0);
       done();
     });
   });
