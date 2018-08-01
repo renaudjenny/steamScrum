@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { MemoryRouter } from 'react-router-dom'
-import GroomingSessionForm from './GroomingSessionForm';
+import GroomingSessionForm from '../../components/GroomingSessionForm';
 import axios from 'axios';
 import Enzyme from 'enzyme';
 import { mount } from 'enzyme';

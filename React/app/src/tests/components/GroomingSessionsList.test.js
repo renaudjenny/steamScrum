@@ -6,7 +6,7 @@ import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import GroomingSessionsList from './GroomingSessionsList'
+import GroomingSessionsList from '../../components/GroomingSessionsList'
 
 Enzyme.configure({ adapter: new Adapter() });
 

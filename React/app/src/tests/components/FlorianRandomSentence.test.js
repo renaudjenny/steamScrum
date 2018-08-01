@@ -6,7 +6,7 @@ import Enzyme from 'enzyme';
 import { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import MockAdapter from 'axios-mock-adapter';
-import FlorianRandomSentence from './FlorianRandomSentence';
+import FlorianRandomSentence from '../../components/FlorianRandomSentence';
 
 Enzyme.configure({ adapter: new Adapter() });
 

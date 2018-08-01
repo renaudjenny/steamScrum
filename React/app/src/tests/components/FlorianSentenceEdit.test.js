@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { MemoryRouter } from 'react-router-dom'
-import FlorianSentenceEdit from './FlorianSentenceEdit';
+import FlorianSentenceEdit from '../../components/FlorianSentenceEdit';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
