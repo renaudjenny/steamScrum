@@ -11,82 +11,73 @@ import moment from 'moment';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-it('renders without crashing', () => {
-  const wrapper = mount(
-    <MemoryRouter>
-      <GroomingSessionForm />
-    </MemoryRouter>
-  );
-  wrapper.unmount();
-});
+describe('Grooming Session Form', () => {
 
-it('retrieve Grooming Sessions context', (done) => {
-  const wrapper = mount(
-    <MemoryRouter>
-      <GroomingSessionForm />
-    </MemoryRouter>
-  );
-  const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
+  let wrapper;
 
-  const mock = new MockAdapter(axios);
-  const data = { groomingSessionsCount: 5, maximumGroomingSessionsCount: 98 };
-  mock.onGet('/groomingSessionsContext').reply(200, data);
-
-  groomingSessionForm.refreshContext(() => {
-    expect(groomingSessionForm.state.groomingSessionsCount).toEqual(data.groomingSessionsCount);
-    expect(groomingSessionForm.state.maximumGroomingSessionsCount).toEqual(data.maximumGroomingSessionsCount);
-    wrapper.unmount();
-    done();
+  beforeEach(() => {
+    wrapper = mount(
+      <MemoryRouter>
+        <GroomingSessionForm />
+      </MemoryRouter>
+    );
   });
-});
 
-it('handle name change', () => {
-  const wrapper = mount(
-    <MemoryRouter>
-      <GroomingSessionForm />
-    </MemoryRouter>
-  );
-  const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
-  expect(groomingSessionForm.state.currentGroomingSession.name).toEqual('');
-
-  const name = 'Test';
-  wrapper.find('input#groomingSessionName').simulate('change', { target: { value: name } });
-  expect(groomingSessionForm.state.currentGroomingSession.name).toEqual(name);
-});
-
-it('handle date change', () => {
-  const wrapper = mount(
-    <MemoryRouter>
-      <GroomingSessionForm />
-    </MemoryRouter>
-  );
-  const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
-  const currentGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
-  expect(currentGroomingSessionFormattedDate).toEqual(moment().format('YYYY-MM-DD'));
-
-  const date = moment('23-04-2018', 'YYYY-MM-DD');
-  wrapper.find('input#groomingSessionDate').simulate('change', { target: { value: date.format('YYYY-MM-DD') } });
-  const newGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
-  expect(newGroomingSessionFormattedDate).toEqual(date.format('YYYY-MM-DD'));
-});
-
-it('post the form', (done) => {
-  const wrapper = mount(
-    <MemoryRouter>
-      <GroomingSessionForm />
-    </MemoryRouter>
-  );
-  const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
-
-  const mock = new MockAdapter(axios);
-  const data = { id: '123', name: 'Posted Grooming Session', date: `${new Date()}` };
-  mock.onPost('/groomingSessions').reply(201, data);
-
-  groomingSessionForm.submit(() => {
-    expect(groomingSessionForm.state.newGroomingSession).toEqual(data);
-    wrapper.update();
-    expect(wrapper.find('p#newGroomingSessionInfo>strong').text()).toEqual(data.name);
+  afterEach(() => {
     wrapper.unmount();
-    done();
+  });
+
+  test('retrieve Grooming Sessions context', (done) => {
+    const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
+
+    const mock = new MockAdapter(axios);
+    const data = { groomingSessionsCount: 5, maximumGroomingSessionsCount: 98 };
+    mock.onGet('/groomingSessionsContext').reply(200, data);
+
+    groomingSessionForm.refreshContext(() => {
+      expect(groomingSessionForm.state.groomingSessionsCount).toEqual(data.groomingSessionsCount);
+      expect(groomingSessionForm.state.maximumGroomingSessionsCount).toEqual(data.maximumGroomingSessionsCount);
+      done();
+    });
+  });
+
+  test('handle name change', () => {
+    const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
+    expect(groomingSessionForm.state.currentGroomingSession.name).toEqual('');
+
+    const name = 'Test';
+    wrapper.find('input#groomingSessionName').simulate('change', { target: { value: name } });
+    expect(groomingSessionForm.state.currentGroomingSession.name).toEqual(name);
+  });
+
+  test('handle date change', () => {
+    const wrapper = mount(
+      <MemoryRouter>
+        <GroomingSessionForm />
+      </MemoryRouter>
+    );
+    const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
+    const currentGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
+    expect(currentGroomingSessionFormattedDate).toEqual(moment().format('YYYY-MM-DD'));
+
+    const date = moment('23-04-2018', 'YYYY-MM-DD');
+    wrapper.find('input#groomingSessionDate').simulate('change', { target: { value: date.format('YYYY-MM-DD') } });
+    const newGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
+    expect(newGroomingSessionFormattedDate).toEqual(date.format('YYYY-MM-DD'));
+  });
+
+  test('post the form', (done) => {
+    const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
+
+    const mock = new MockAdapter(axios);
+    const data = { id: '123', name: 'Posted Grooming Session', date: `${new Date()}` };
+    mock.onPost('/groomingSessions').reply(201, data);
+
+    groomingSessionForm.submit(() => {
+      expect(groomingSessionForm.state.newGroomingSession).toEqual(data);
+      wrapper.update();
+      expect(wrapper.find('p#newGroomingSessionInfo>strong').text()).toEqual(data.name);
+      done();
+    });
   });
 });

@@ -10,30 +10,38 @@ import FlorianRandomSentence from '../../components/FlorianRandomSentence';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-it('renders without crashing', () => {
-  const wrapper = mount(
-    <MemoryRouter>
-      <FlorianRandomSentence />
-    </MemoryRouter>
-  );
-  wrapper.unmount();
-});
+describe('Florian Random sentence', () => {
 
-it('search for a new random sentence', (done) => {
-  const wrapper = mount( 
-    <MemoryRouter>
-      <FlorianRandomSentence />
-    </MemoryRouter>
-  );
-  const florianRandomSentence = wrapper.find(FlorianRandomSentence).instance();
+  let wrapper;
 
-  const mock = new MockAdapter(axios);
-  const data = { sentence: "a random sentence from test" };
-  mock.onGet('/randomFlorianSentence').reply(200, data);
+  beforeEach(() => {
+    wrapper = mount(
+      <MemoryRouter>
+        <FlorianRandomSentence />
+      </MemoryRouter>
+    );
+  });
 
-  florianRandomSentence.refreshSentence(() => {
-    expect(florianRandomSentence.state.sentence).toEqual(data.sentence);
+  afterEach(() => {
     wrapper.unmount();
-    done();
+  });
+
+  test('search for a new random sentence', (done) => {
+    const wrapper = mount(
+      <MemoryRouter>
+        <FlorianRandomSentence />
+      </MemoryRouter>
+    );
+    const florianRandomSentence = wrapper.find(FlorianRandomSentence).instance();
+
+    const mock = new MockAdapter(axios);
+    const data = { sentence: "a random sentence from test" };
+    mock.onGet('/randomFlorianSentence').reply(200, data);
+
+    florianRandomSentence.refreshSentence(() => {
+      expect(florianRandomSentence.state.sentence).toEqual(data.sentence);
+      wrapper.unmount();
+      done();
+    });
   });
 });

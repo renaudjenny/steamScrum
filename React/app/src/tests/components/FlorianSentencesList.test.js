@@ -2,13 +2,29 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { MemoryRouter } from 'react-router-dom'
 import FlorianSentencesList from '../../components/FlorianSentencesList';
+import Enzyme from 'enzyme';
+import { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <MemoryRouter>
-      <FlorianSentencesList />
-    </MemoryRouter>
-  , div);
-  ReactDOM.unmountComponentAtNode(div);
+Enzyme.configure({ adapter: new Adapter() });
+
+describe('Florian Sentences List', () => {
+
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = mount(
+      <MemoryRouter>
+        <FlorianSentencesList />
+      </MemoryRouter>
+    );
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+  });
+
+  test('renders without crashing', () => {
+    wrapper.update();
+  });
 });

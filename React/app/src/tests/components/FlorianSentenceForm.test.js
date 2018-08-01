@@ -2,13 +2,29 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { MemoryRouter } from 'react-router-dom'
 import FlorianSentenceForm from '../../components/FlorianSentenceForm';
+import Enzyme from 'enzyme';
+import { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <MemoryRouter>
-      <FlorianSentenceForm />
-    </MemoryRouter>
-  , div);
-  ReactDOM.unmountComponentAtNode(div);
+Enzyme.configure({ adapter: new Adapter() });
+
+describe('Florian Sentence Form', () => {
+
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = mount(
+      <MemoryRouter>
+        <FlorianSentenceForm />
+      </MemoryRouter>
+    );
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+  });
+
+  test('renders without crashing', () => {
+    wrapper.update();
+  });
 });

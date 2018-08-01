@@ -68,7 +68,7 @@ class GroomingSessionForm extends React.Component {
     axios.post('/groomingSessions', {
       name: this.state.currentGroomingSession.name,
       date: moment(this.state.currentGroomingSession.date).format(),
-    })
+    }, { cancelToken: this.source.token })
     .then((response) => {
       this.setState({ newGroomingSession: response.data });
       this.refreshContext(() => {
@@ -76,6 +76,10 @@ class GroomingSessionForm extends React.Component {
       });
     })
     .catch((error) => {
+      if (axios.isCancel(error)) {
+        completion();
+        return;
+      }
       completion();
     })
   }
