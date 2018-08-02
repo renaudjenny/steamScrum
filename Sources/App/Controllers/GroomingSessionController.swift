@@ -35,6 +35,21 @@ final class GroomingSessionController {
         })
     }
 
+    func get(_ req: Request) throws -> Future<GroomingSessionFullContent> {
+        return try req.parameters.next(GroomingSession.self).flatMap({ (groomingSession) -> EventLoopFuture<([UserStory], GroomingSession)> in
+            return try groomingSession.userStories.query(on: req).all()
+                .and(result: groomingSession)
+        }).map({ (tuple) -> GroomingSessionFullContent in
+            let (userStories, groomingSession) = tuple
+            return GroomingSessionFullContent(
+                id: groomingSession.id,
+                name: groomingSession.name,
+                date: groomingSession.date,
+                userStories: userStories
+            )
+        })
+    }
+
     func context(_ req: Request) throws -> Future<Context> {
         return GroomingSession.query(on: req).count().map { (count) -> Context in
             let context = Context(
@@ -51,5 +66,12 @@ extension GroomingSessionController {
     struct Context: Content {
         var groomingSessionsCount: Int
         var maximumGroomingSessionsCount: Int
+    }
+
+    struct GroomingSessionFullContent: Content {
+        var id: Int?
+        var name: String?
+        var date: Date?
+        var userStories: [UserStory]
     }
 }

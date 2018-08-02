@@ -11,6 +11,16 @@ import Vapor
 struct UserStory: PostgreSQLModel {
     var id: Int?
     var name: String
+    var groomingSessionId: GroomingSession.ID?
+    var groomingSession: Parent<UserStory, GroomingSession>? {
+        return self.parent(\.groomingSessionId)
+    }
+
+    init(id: Int? = nil, name: String, groomingSessionId: Int? = nil) {
+        self.id = id
+        self.name = name
+        self.groomingSessionId = groomingSessionId
+    }
 }
 
 // MARK: - Inner Types

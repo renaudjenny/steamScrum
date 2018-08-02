@@ -12,14 +12,8 @@ struct GroomingSession: PostgreSQLModel {
     var id: Int?
     var name: String
     var date: Date
-}
-
-// MARK: - Inner Types
-extension GroomingSession {
-    struct DeveloperEstimation: PostgreSQLModel {
-        var id: Int?
-        var developer: Developer
-        var userStory: UserStory
+    var userStories: Children<GroomingSession, UserStory> {
+        return self.children(\.groomingSessionId)
     }
 }
 
@@ -28,9 +22,3 @@ extension GroomingSession: Migration { }
 extension GroomingSession: Content { }
 
 extension GroomingSession: Parameter { }
-
-extension GroomingSession.DeveloperEstimation: Migration { }
-
-extension GroomingSession.DeveloperEstimation: Content { }
-
-extension GroomingSession.DeveloperEstimation: Parameter { }

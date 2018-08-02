@@ -20,7 +20,7 @@ public func configure(
     else if let url = Environment.get("DATABASE_URL") {
         databaseConfig = try PostgreSQLDatabaseConfig(url: url)
     } else {
-        databaseConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "postgres")
+        databaseConfig = PostgreSQLDatabaseConfig(hostname: "localhost", port: 5432, username: "postgres", database: "steamscrum")
     }
 
     let database = PostgreSQLDatabase(config: databaseConfig!)

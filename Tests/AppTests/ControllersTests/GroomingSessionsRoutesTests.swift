@@ -123,11 +123,32 @@ class GroomingSessionsRoutesTests: XCTestCase {
         XCTAssertEqual(receivedGroomingSessions.count, 0)
     }
 
+    func testGetGroomingSession() {
+        let route = "/groomingSessions"
+        let groomingSessionName = "Grooming test GET"
+        let groomingSessionDate = Date(timeIntervalSince1970: 1.0)
+
+        let groomingSession = GroomingSession(id: nil, name: groomingSessionName, date: groomingSessionDate)
+        let createdGroomingSession = try! groomingSession.save(on: self.connection).wait()
+
+        var receivedGroomingSession = try! self.app.getResponse(to: "\(route)/\(createdGroomingSession.id!)", decodeTo: GroomingSessionController.GroomingSessionFullContent.self)
+
+        XCTAssertEqual(receivedGroomingSession.name, groomingSessionName)
+        XCTAssertEqual(receivedGroomingSession.date, groomingSessionDate)
+        XCTAssertEqual(receivedGroomingSession.userStories.count, 0)
+
+        let userStory = try! UserStory(id: nil, name: "User story", groomingSessionId: receivedGroomingSession.id!).save(on: self.connection).wait()
+        receivedGroomingSession = try! self.app.getResponse(to: "\(route)/\(createdGroomingSession.id!)", decodeTo: GroomingSessionController.GroomingSessionFullContent.self)
+        XCTAssertEqual(receivedGroomingSession.userStories.count, 1)
+        XCTAssertEqual(receivedGroomingSession.userStories.first?.name, userStory.name)
+    }
+
     static let allTests = [
         ("testGetGroomingSessionsRoute", testGetGroomingSessionsRoute),
         ("testPostGroomingSessionRoute", testPostGroomingSessionRoute),
         ("testGetGroomingSessionsContext", testGetGroomingSessionsContext),
         ("testPostMaximumFlorianSentencesRoute", testPostMaximumFlorianSentencesRoute),
         ("testDeleteGroomingSession", testDeleteGroomingSession),
+        ("testGetGroomingSession", testGetGroomingSession),
     ]
 }
