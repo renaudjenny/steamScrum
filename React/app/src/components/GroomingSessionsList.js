@@ -3,13 +3,13 @@ import axios from 'axios';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { withRouter } from "react-router-dom";
 
 class GroomingSessionsList extends React.Component {
 
@@ -60,7 +60,7 @@ class GroomingSessionsList extends React.Component {
   deleteGroomingSession(sessionId, completion = () => null) {
     axios.delete(`/groomingSessions/${sessionId}`, { cancelToken: this.source.token })
     .then(() => {
-      const sessions = this.state.sessions.filter(session => session.id != sessionId);
+      const sessions = this.state.sessions.filter(session => session.id !== sessionId);
       this.setState({
         sessions,
         openDeleteModal: false,
@@ -103,6 +103,7 @@ class GroomingSessionsList extends React.Component {
           <SessionItem key={`session_${session.id}`}
             session={session}
             deleteCallback={(session) => this.handleDeleteModalOpen(session)}
+            history={this.props.history}
           />
         )}
         <Modal
@@ -125,17 +126,36 @@ class GroomingSessionsList extends React.Component {
   }
 }
 
-const SessionItem = ({ session, deleteCallback }) => {
-  return (
-    <ListItem button>
-      <ListItemText primary={session.name} />
-      <ListItemSecondaryAction>
-        <IconButton>
-          <DeleteIcon onClick={() => deleteCallback(session)} />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
-  );
-};
+class SessionItem extends React.Component {
 
-export default GroomingSessionsList;
+  constructor(props) {
+    super(props);
+    this.state = {
+      session: props.session,
+      deleteCallback: props.deleteCallback,
+    }
+  }
+
+  handleSessionClick(sessionId) {
+    console.log(this.props);
+    this.props.history.push({
+      pathname: '/GroomingSessionDetail',
+      state: { sessionId: sessionId }
+    });
+  }
+
+  render() {
+    return (
+      <ListItem button onClick={() => this.handleSessionClick(this.state.session.id)}>
+        <ListItemText primary={this.state.session.name} />
+        <ListItemSecondaryAction>
+          <IconButton>
+            <DeleteIcon onClick={() => this.state.deleteCallback(this.state.session)} />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    );
+  }
+}
+
+export default withRouter(GroomingSessionsList);

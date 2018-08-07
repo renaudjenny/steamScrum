@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -12,49 +11,31 @@ import FlorianSentencesList from './components/FlorianSentencesList';
 import FlorianSentenceEdit from './components/FlorianSentenceEdit';
 import GroomingSessionsList from './components/GroomingSessionsList';
 import GroomingSessionForm from './components/GroomingSessionForm';
+import GroomingSessionDetail from './components/GroomingSessionDetail';
 
-class Sessions extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sessions: []
-    }
-  }
-
-  componentDidMount() {
-    axios.get('/groomingSessions')
-    .then((response) => {
-      this.setState({ sessions: response.data });
-    })
-    .catch(() => {
-      console.log('error')
-    });
-  }
-
-  render() {
-    return (
-      <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
-        <Grid item>
-          <Typography variant='title' component="h2">Choisissez une session de grooming</Typography>
-        </Grid>
-        <GroomingSessionsList />
-        <Grid item>
-          <Link to='/groomingSessionForm'>
-            <Button variant="raised" color='primary'>
-              Créer une session de grooming
-            </Button>
-          </Link>
-        </Grid>
-        <Grid>
-          <Link to='/florian'>
-            <Button variant="raised" color="secondary">
-              Poser une question à Florian ?
-            </Button>
-          </Link>
-        </Grid>
+const Sessions = (props) => {
+  return (
+    <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
+      <Grid item>
+        <Typography variant='title' component="h2">Choisissez une session de grooming</Typography>
       </Grid>
-    )
-  }
+      <GroomingSessionsList />
+      <Grid item>
+        <Link to='/groomingSessionForm'>
+          <Button variant="raised" color='primary'>
+            Créer une session de grooming
+          </Button>
+        </Link>
+      </Grid>
+      <Grid>
+        <Link to='/florian'>
+          <Button variant="raised" color="secondary">
+            Poser une question à Florian ?
+          </Button>
+        </Link>
+      </Grid>
+    </Grid>
+  )
 }
 
 // ========================================
@@ -69,6 +50,7 @@ const ReactRouter = () => {
         <Route path='/florianSentencesList' component={FlorianSentencesList} />
         <Route path='/florianSentenceEdit' component={FlorianSentenceEdit} />
         <Route path='/groomingSessionForm' component={GroomingSessionForm} />
+        <Route path='/groomingSessionDetail' component={GroomingSessionDetail} />
       </div>
     </Router>
   );

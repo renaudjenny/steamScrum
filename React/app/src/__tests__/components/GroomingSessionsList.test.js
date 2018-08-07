@@ -13,13 +13,15 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('Grooming Sessions List', () => {
 
   let wrapper;
+  let groomingSessionsList;
 
   beforeEach(() => {
     wrapper = mount(
       <MemoryRouter>
-        <GroomingSessionsList />
+        <GroomingSessionsList.WrappedComponent />
       </MemoryRouter>
     );
+    groomingSessionsList = wrapper.find(GroomingSessionsList.WrappedComponent).instance();
   });
 
   afterEach(() => {
@@ -27,7 +29,6 @@ describe('Grooming Sessions List', () => {
   });
 
   test('retrieve grooming sessions', (done) => {
-    const groomingSessionsList = wrapper.find(GroomingSessionsList).instance();
     expect(groomingSessionsList.state.sessions.length).toEqual(0);
 
     const mock = new MockAdapter(axios);
@@ -41,7 +42,6 @@ describe('Grooming Sessions List', () => {
   });
 
   test('delete a session', (done) => {
-    const groomingSessionsList = wrapper.find(GroomingSessionsList).instance();
     const sessions = [{ id: '123', name: 'test delete', date: '2018-07-01T06:00:00' }];
     groomingSessionsList.setState({ sessions });
     expect(groomingSessionsList.state.sessions.length).toEqual(1);

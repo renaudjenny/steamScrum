@@ -27,11 +27,6 @@ describe('Florian Random sentence', () => {
   });
 
   test('search for a new random sentence', (done) => {
-    const wrapper = mount(
-      <MemoryRouter>
-        <FlorianRandomSentence />
-      </MemoryRouter>
-    );
     const florianRandomSentence = wrapper.find(FlorianRandomSentence).instance();
 
     const mock = new MockAdapter(axios);
@@ -40,7 +35,6 @@ describe('Florian Random sentence', () => {
 
     florianRandomSentence.refreshSentence(() => {
       expect(florianRandomSentence.state.sentence).toEqual(data.sentence);
-      wrapper.unmount();
       done();
     });
   });
