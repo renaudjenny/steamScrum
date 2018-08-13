@@ -15,10 +15,12 @@ class GroomingSessionsList extends React.Component {
 
   constructor(props) {
     super(props);
+    const countCallback = props.countCallback || (() => null);
     this.state = {
       sessions: [],
       openDeleteModal: false,
       sessionToDelete: null,
+      countCallback,
     }
 
     this.modalStyle = {
@@ -45,12 +47,13 @@ class GroomingSessionsList extends React.Component {
     axios.get('/groomingSessions', { cancelToken: this.source.token })
     .then((response) => {
       this.setState({ sessions: response.data });
+      this.state.countCallback(response.data.length);
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
         return;
       }
-      console.error(error);
+      throw error;
     })
     .finally(() => {
       completion();
@@ -70,7 +73,6 @@ class GroomingSessionsList extends React.Component {
       if (axios.isCancel(error)) {
         return;
       }
-      console.error(error);
     })
     .finally(() => {
       completion()
@@ -137,7 +139,6 @@ class SessionItem extends React.Component {
   }
 
   handleSessionClick(sessionId) {
-    console.log(this.props);
     this.props.history.push({
       pathname: '/GroomingSessionDetail',
       state: { sessionId: sessionId }

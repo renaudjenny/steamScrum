@@ -13,29 +13,43 @@ import GroomingSessionsList from './components/GroomingSessionsList';
 import GroomingSessionForm from './components/GroomingSessionForm';
 import GroomingSessionDetail from './components/GroomingSessionDetail';
 
-const Sessions = (props) => {
-  return (
-    <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
-      <Grid item>
-        <Typography variant='title' component="h2">Choisissez une session de grooming</Typography>
+class Index extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sessionsCount: 0,
+    };
+  }
+
+  render() {
+    let title = 'There is no Grooming Sessions available yet. Go create some!';
+    if (this.state.sessionsCount > 0) {
+      title = 'Choose a Grooming Session';
+    }
+
+    return (
+      <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
+        <Grid item>
+          <Typography variant='title' component="h2">{title}</Typography>
+        </Grid>
+        <GroomingSessionsList countCallback={(count) => this.setState({sessionsCount: count})} />
+        <Grid item>
+          <Link to='/groomingSessionForm'>
+            <Button variant="raised" color='primary'>
+              Create Grooming Session
+            </Button>
+          </Link>
+        </Grid>
+        <Grid>
+          <Link to='/florian'>
+            <Button variant="raised" color="secondary">
+              Ask Florian!
+            </Button>
+          </Link>
+        </Grid>
       </Grid>
-      <GroomingSessionsList />
-      <Grid item>
-        <Link to='/groomingSessionForm'>
-          <Button variant="raised" color='primary'>
-            Créer une session de grooming
-          </Button>
-        </Link>
-      </Grid>
-      <Grid>
-        <Link to='/florian'>
-          <Button variant="raised" color="secondary">
-            Poser une question à Florian ?
-          </Button>
-        </Link>
-      </Grid>
-    </Grid>
-  )
+    )
+  }
 }
 
 // ========================================
@@ -44,7 +58,7 @@ const ReactRouter = () => {
   return (
     <Router>
       <div>
-        <Route exact path="/" component={Sessions} />
+        <Route exact path="/" component={Index} />
         <Route path='/florian' component={FlorianRandomSentence} />
         <Route path='/florianSentenceForm' component={FlorianSentenceForm} />
         <Route path='/florianSentencesList' component={FlorianSentencesList} />
@@ -56,7 +70,9 @@ const ReactRouter = () => {
   );
 }
 
-ReactDOM.render(
-  <ReactRouter />,
-  document.getElementById('root')
-);
+export default ReactRouter;
+
+const root = document.getElementById('root');
+if (root) {
+  ReactDOM.render(<ReactRouter />, root);
+}

@@ -47,7 +47,6 @@ class FlorianSentenceForm extends React.Component {
         return;
       }
       this.setState({ isFlorianSentenceDataLoading: false });
-      console.error(error);
     });
   }
 
