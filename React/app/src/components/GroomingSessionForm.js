@@ -98,7 +98,7 @@ class GroomingSessionForm extends React.Component {
     return (
       <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
         <Grid item>
-          <Typography variant="headline" component="h3">Ajouter une nouvelle session de Grooming</Typography>
+          <Typography variant="headline" component="h3">Add a Grooming Session</Typography>
         </Grid>
         <Grid item>
           {groomingSessionDataContent()}
