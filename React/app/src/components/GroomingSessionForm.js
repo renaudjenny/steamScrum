@@ -9,7 +9,6 @@ import axios from 'axios';
 import moment from 'moment';
 
 class GroomingSessionForm extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +22,7 @@ class GroomingSessionForm extends React.Component {
 
   componentDidMount() {
     this.source = axios.CancelToken.source();
-    this.refreshContext();
+    this.mountPromise = this.refreshContext();
   }
 
   componentWillUnmount() {
@@ -32,10 +31,10 @@ class GroomingSessionForm extends React.Component {
 
   refreshContext(completion = () => null) {
     this.setState({ isGroomingSessionDataLoading: true });
-    axios.get('/groomingSessionsContext', { cancelToken: this.source.token })
+    return axios.get('/groomingSessionsContext', { cancelToken: this.source.token })
     .then((response) => {
       const { groomingSessionsCount, maximumGroomingSessionsCount } = response.data;
-      this.setState({
+      return this.setState({
         groomingSessionsCount: groomingSessionsCount,
         maximumGroomingSessionsCount: maximumGroomingSessionsCount,
         isGroomingSessionDataLoading: false,
@@ -45,7 +44,7 @@ class GroomingSessionForm extends React.Component {
       if (axios.isCancel(error)) {
         return;
       }
-      this.setState({ isGroomingSessionDataLoading: false });
+      return this.setState({ isGroomingSessionDataLoading: false });
     })
     .finally(() => {
       completion();
@@ -90,7 +89,7 @@ class GroomingSessionForm extends React.Component {
         return <LinearProgress style={{ width: 300 }} />
       } else {
         return <Typography component="p">
-            Nombres de sessions déjà enregistrées <strong>{this.state.groomingSessionsCount}/{this.state.maximumGroomingSessionsCount}</strong>
+            Already saved Grooming Sessions: <strong>{this.state.groomingSessionsCount}/{this.state.maximumGroomingSessionsCount}</strong>
           </Typography>
       }
     };
