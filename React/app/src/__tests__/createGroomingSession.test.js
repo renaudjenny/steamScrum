@@ -5,16 +5,23 @@ import Adapter from 'enzyme-adapter-react-16';
 import { MemoryRouter } from 'react-router-dom'
 import GroomingSessionForm from "../components/GroomingSessionForm";
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 describe("Given I'm on the form to create a new Grooming Session", () => {
   Enzyme.configure({ adapter: new Adapter() });
   let wrapper;
+  let groomingSessionForm;
 
   const typoPosition = {
     title: 0,
     context: 1,
+  };
+
+  const textFieldPosition = {
+    name: 0,
+    date: 1
   };
 
   beforeEach(() => {
@@ -23,6 +30,7 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
         <GroomingSessionForm />
       </MemoryRouter>
     );
+    groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
   });
 
   afterEach(() => {
@@ -41,14 +49,17 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
       const data = {groomingSessionsCount: 0, maximumGroomingSessionCount: 250};
       mock.onGet('/groomingSessionsContext').reply(200, data);
 
-      const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
       expect.assertions(1);
       return groomingSessionForm.mountPromise.then(() => {
         wrapper.update();
-        const text = "Already saved Grooming Sessions: 0/0";
         const textTypography = wrapper.find(Typography).at(typoPosition.context)
-        expect(textTypography.text()).toBe(text);
+        expect(textTypography.text()).toBe("Already saved Grooming Sessions: 0/0");
       });
+    });
+
+    test("Then I see a text field Session name to set the name of the Grooming Session", () => {
+      const field = wrapper.find(TextField).at(textFieldPosition.name);
+      expect(field.text()).toBe("Session name");
     });
   });
 });

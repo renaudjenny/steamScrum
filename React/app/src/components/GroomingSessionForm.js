@@ -103,7 +103,7 @@ class GroomingSessionForm extends React.Component {
           {groomingSessionDataContent()}
         </Grid>
         <Grid item>
-          <TextField id='groomingSessionName' label='Nom de la session' value={this.state.currentGroomingSession.name} onChange={(event) => this.handleGroomingSessionNameChange(event)} />
+          <TextField id='groomingSessionName' label="Session name" value={this.state.currentGroomingSession.name} onChange={(event) => this.handleGroomingSessionNameChange(event)} />
         </Grid>
         <Grid item>
           <TextField
