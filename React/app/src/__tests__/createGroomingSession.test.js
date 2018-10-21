@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import GroomingSessionForm from "../components/GroomingSessionForm";
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
@@ -17,11 +18,16 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
   const typoPosition = {
     title: 0,
     context: 1,
+    otherSessions: 2
   };
 
   const textFieldPosition = {
     name: 0,
     date: 1
+  };
+
+  const buttonPosition = {
+    add: 0
   };
 
   beforeEach(() => {
@@ -65,6 +71,20 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
     test("Then I see a text field Session date to set the date of the Grooming Session", () => {
       const field = wrapper.find(TextField).at(textFieldPosition.date);
       expect(field.text()).toBe("Session date");
+    });
+
+    test("Then I see a button Add to add to validate the form", () => {
+      const button = wrapper.find(Button).at(buttonPosition.add);
+      expect(button.text()).toBe("Add");
+    });
+
+    test("Then I see a link Other Sessions to open the page to the Sessions list", () => {
+      expect.assertions(1);
+      return groomingSessionForm.mountPromise.then(() => {
+        wrapper.update();
+        const typo = wrapper.find(Typography).at(typoPosition.otherSessions);
+        expect(typo.text()).toBe("Other Sessions");
+      });
     });
 
   });

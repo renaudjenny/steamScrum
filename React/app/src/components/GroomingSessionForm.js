@@ -115,7 +115,7 @@ class GroomingSessionForm extends React.Component {
           />
         </Grid>
         <Grid>
-          <Button variant="raised" color="primary" onClick={() => this.submit()}>Ajouter</Button>
+          <Button variant="raised" color="primary" onClick={() => this.submit()}>Add</Button>
         </Grid>
         {this.state.newGroomingSession !== null &&
           <Grid item>
@@ -124,7 +124,7 @@ class GroomingSessionForm extends React.Component {
         }
         <Grid item>
           <Link to='/'>
-            <Typography>Les autres sessions</Typography>
+            <Typography>Other Sessions</Typography>
           </Link>
         </Grid>
       </Grid>
