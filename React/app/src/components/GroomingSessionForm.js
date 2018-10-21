@@ -108,7 +108,7 @@ class GroomingSessionForm extends React.Component {
         <Grid item>
           <TextField
             id='groomingSessionDate'
-            label='Date de la session'
+            label="Session date"
             value={moment(this.state.currentGroomingSession.date).format('YYYY-MM-DD')}
             onChange={(event) => this.handleGroomingSessionDateChange(event)}
             type='date'

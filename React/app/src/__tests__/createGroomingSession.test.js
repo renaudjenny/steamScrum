@@ -61,5 +61,11 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
       const field = wrapper.find(TextField).at(textFieldPosition.name);
       expect(field.text()).toBe("Session name");
     });
+
+    test("Then I see a text field Session date to set the date of the Grooming Session", () => {
+      const field = wrapper.find(TextField).at(textFieldPosition.date);
+      expect(field.text()).toBe("Session date");
+    });
+
   });
 });
