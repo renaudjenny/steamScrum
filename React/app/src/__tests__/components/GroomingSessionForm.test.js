@@ -27,15 +27,6 @@ describe('Grooming Session Form', () => {
     wrapper.unmount();
   });
 
-  test('handle name change', () => {
-    const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
-    expect(groomingSessionForm.state.currentGroomingSession.name).toEqual('');
-
-    const name = 'Test';
-    wrapper.find('input#groomingSessionName').simulate('change', { target: { value: name } });
-    expect(groomingSessionForm.state.currentGroomingSession.name).toEqual(name);
-  });
-
   test('handle date change', () => {
     const wrapper = mount(
       <MemoryRouter>

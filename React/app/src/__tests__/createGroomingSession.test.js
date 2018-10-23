@@ -106,4 +106,14 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
       });
     });
   });
+
+  describe("When I manipulate the form to change the name", () => {
+    test('Then the name is changed in the current Grooming Session', () => {
+      expect(groomingSessionForm.state.currentGroomingSession.name).toEqual("");
+      const nameTextField = wrapper.find(TextField).at(textFieldPosition.name);
+      const name = 'Test';
+      nameTextField.props().onChange({ target: { value: name } });
+      expect(groomingSessionForm.state.currentGroomingSession.name).toEqual(name);
+    });
+  });
 });
