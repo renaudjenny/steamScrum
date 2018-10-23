@@ -27,20 +27,6 @@ describe('Grooming Session Form', () => {
     wrapper.unmount();
   });
 
-  test('retrieve Grooming Sessions context', (done) => {
-    const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
-
-    const mock = new MockAdapter(axios);
-    const data = { groomingSessionsCount: 5, maximumGroomingSessionsCount: 98 };
-    mock.onGet('/groomingSessionsContext').reply(200, data);
-
-    groomingSessionForm.refreshContext(() => {
-      expect(groomingSessionForm.state.groomingSessionsCount).toEqual(data.groomingSessionsCount);
-      expect(groomingSessionForm.state.maximumGroomingSessionsCount).toEqual(data.maximumGroomingSessionsCount);
-      done();
-    });
-  });
-
   test('handle name change', () => {
     const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
     expect(groomingSessionForm.state.currentGroomingSession.name).toEqual('');

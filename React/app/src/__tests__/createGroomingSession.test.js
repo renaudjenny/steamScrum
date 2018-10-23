@@ -44,6 +44,12 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
   });
 
   describe("When I'm on the form without doing anything yet", () => {
+    beforeAll(() => {
+      const mock = new MockAdapter(axios);
+      const data = {groomingSessionsCount: 0, maximumGroomingSessionsCount: 250};
+      mock.onGet('/groomingSessionsContext').reply(200, data);
+    });
+
     test("Then I see the title Add a Grooming Session", () => {
       const title = "Add a Grooming Session";
       const titleTypography = wrapper.find(Typography).at(typoPosition.title);
@@ -51,15 +57,11 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
     });
 
     test("Then I see 0 Already saved Grooming Session count, with a maximum of 250 available", () => {
-      const mock = new MockAdapter(axios);
-      const data = {groomingSessionsCount: 0, maximumGroomingSessionCount: 250};
-      mock.onGet('/groomingSessionsContext').reply(200, data);
-
       expect.assertions(1);
       return groomingSessionForm.mountPromise.then(() => {
         wrapper.update();
         const textTypography = wrapper.find(Typography).at(typoPosition.context)
-        expect(textTypography.text()).toBe("Already saved Grooming Sessions: 0/0");
+        expect(textTypography.text()).toBe("Already saved Grooming Sessions: 0/250");
       });
     });
 
@@ -86,6 +88,22 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
         expect(typo.text()).toBe("Other Sessions");
       });
     });
+  });
 
+  describe("When there is already Grooming Sessions available. Like 5 available Grooming Sessions", () => {
+    beforeAll(() => {
+      const mock = new MockAdapter(axios);
+      const data = {groomingSessionsCount: 5, maximumGroomingSessionsCount: 250};
+      mock.onGet('/groomingSessionsContext').reply(200, data);
+    });
+
+    test("Then I see 5 Already saved Grooming Session count, with a maximum of 250 available", () => {
+      expect.assertions(1);
+      return groomingSessionForm.mountPromise.then(() => {
+        wrapper.update();
+        const typo = wrapper.find(Typography).at(typoPosition.context);
+        expect(typo.text()).toBe("Already saved Grooming Sessions: 5/250");
+      });
+    });
   });
 });
