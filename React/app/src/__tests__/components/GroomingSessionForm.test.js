@@ -27,22 +27,6 @@ describe('Grooming Session Form', () => {
     wrapper.unmount();
   });
 
-  test('handle date change', () => {
-    const wrapper = mount(
-      <MemoryRouter>
-        <GroomingSessionForm />
-      </MemoryRouter>
-    );
-    const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
-    const currentGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
-    expect(currentGroomingSessionFormattedDate).toEqual(moment().format('YYYY-MM-DD'));
-
-    const date = moment('23-04-2018', 'YYYY-MM-DD');
-    wrapper.find('input#groomingSessionDate').simulate('change', { target: { value: date.format('YYYY-MM-DD') } });
-    const newGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format('YYYY-MM-DD');
-    expect(newGroomingSessionFormattedDate).toEqual(date.format('YYYY-MM-DD'));
-  });
-
   test('post the form', (done) => {
     const groomingSessionForm = wrapper.find(GroomingSessionForm).instance();
 

@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import moment from 'moment';
 
 describe("Given I'm on the form to create a new Grooming Session", () => {
   Enzyme.configure({ adapter: new Adapter() });
@@ -114,6 +115,21 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
       const name = 'Test';
       nameTextField.props().onChange({ target: { value: name } });
       expect(groomingSessionForm.state.currentGroomingSession.name).toEqual(name);
+    });
+  });
+
+  describe("When I manipulate the form to change the name", () => {
+    const expectedDateFormat = 'YYYY-MM-DD';
+    test('Then the date is changed in the current Grooming Session', () => {
+      const now = moment();
+      const currentGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format(expectedDateFormat);
+      expect(currentGroomingSessionFormattedDate).toEqual(now.format(expectedDateFormat));
+
+      const date = moment('23-04-2018', expectedDateFormat);
+      const dateTextField = wrapper.find(TextField).at(textFieldPosition.date);
+      dateTextField.props().onChange({ target: { value: date.format(expectedDateFormat) } });
+      const newGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format(expectedDateFormat);
+      expect(newGroomingSessionFormattedDate).toEqual(date.format(expectedDateFormat));
     });
   });
 });
