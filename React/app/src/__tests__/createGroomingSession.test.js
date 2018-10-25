@@ -118,8 +118,9 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
     });
   });
 
-  describe("When I manipulate the form to change the name", () => {
+  describe("When I manipulate the form to change the date", () => {
     const expectedDateFormat = 'YYYY-MM-DD';
+
     test('Then the date is changed in the current Grooming Session', () => {
       const now = moment();
       const currentGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format(expectedDateFormat);
