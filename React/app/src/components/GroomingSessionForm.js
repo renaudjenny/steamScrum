@@ -18,6 +18,9 @@ class GroomingSessionForm extends React.Component {
       maximumGroomingSessionsCount: 0,
       isGroomingSessionDataLoading: false,
     }
+    this.source = null;
+    this.mountPromise = Promise.resolve();
+    this.addSubmitPromise = Promise.resolve();
   }
 
   componentDidMount() {
@@ -64,13 +67,18 @@ class GroomingSessionForm extends React.Component {
   }
 
   submit(completion = () => null) {
-    axios.post('/groomingSessions', {
+    const data = {
       name: this.state.currentGroomingSession.name,
       date: moment(this.state.currentGroomingSession.date).format(),
-    }, { cancelToken: this.source.token })
-    .then((response) => {
+    };
+
+    this.addSubmitPromise = axios.post(
+      '/groomingSessions',
+      data,
+      { cancelToken: this.source.token }
+    ).then((response) => {
       this.setState({ newGroomingSession: response.data });
-      this.refreshContext(() => {
+      return this.refreshContext(() => {
         completion();
       });
     })
@@ -80,6 +88,7 @@ class GroomingSessionForm extends React.Component {
         return;
       }
       completion();
+      return;
     })
   }
 
@@ -124,7 +133,7 @@ class GroomingSessionForm extends React.Component {
         </Grid>
         {this.state.newGroomingSession !== null &&
           <Grid item>
-            <Typography componenent="p" id='newGroomingSessionInfo'>Votre nouvelle session: <strong>{this.state.newGroomingSession.name}</strong> a bien été enregistrée</Typography>
+            <Typography componenent="p" id='newGroomingSessionInfo'>Your new Session: <strong>{this.state.newGroomingSession.name}</strong> is saved</Typography>
           </Grid>
         }
         <Grid item>

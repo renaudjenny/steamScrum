@@ -31,6 +31,13 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
     add: 0
   };
 
+  const typoPositionAfterAddSubmit = {
+    title: 0,
+    context: 1,
+    newAddedSession: 2,
+    otherSessions: 3
+  };
+
   beforeEach(() => {
     wrapper = mount(
       <MemoryRouter>
@@ -131,6 +138,23 @@ describe("Given I'm on the form to create a new Grooming Session", () => {
       dateTextField.props().onChange({ target: { value: date.format(expectedDateFormat) } });
       const newGroomingSessionFormattedDate = moment(groomingSessionForm.state.currentGroomingSession.date).format(expectedDateFormat);
       expect(newGroomingSessionFormattedDate).toEqual(date.format(expectedDateFormat));
+    });
+  });
+
+  describe("When I click the button to submit the form", () => {
+    beforeAll(() => {
+      const mock = new MockAdapter(axios);
+      const data = { id: '123', name: 'Posted Grooming Session', date: `${new Date()}` };
+      mock.onPost('/groomingSessions').reply(201, data);
+    });
+
+    test("Then the form is well fulfilled", () => {
+      const addButton = wrapper.find(Button).at(buttonPosition.add);
+      addButton.props().onClick();
+      return groomingSessionForm.addSubmitPromise.then(() => {
+        wrapper.update();
+        expect(wrapper.find(Typography).at(typoPositionAfterAddSubmit.newAddedSession).text()).toEqual("Your new Session: Posted Grooming Session is saved");
+      });
     });
   });
 });
