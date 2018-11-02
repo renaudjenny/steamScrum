@@ -17,22 +17,24 @@ class GroomingSessionDetail extends React.Component {
       session: { id: sessionId },
       isGroomingSessionDataLoading: false
     }
+    this.source = null;
+    this.mountPromise = Promise.resolve();
   }
 
   componentDidMount() {
     this.source = axios.CancelToken.source();
-    this.refreshGroomingSession();
+    this.mountPromise = this.refreshGroomingSession();
   }
 
   componentWillUnmount() {
     this.source.cancel();
   }
 
-  refreshGroomingSession(completion = () => null) {
+  refreshGroomingSession() {
     this.setState({ isGroomingSessionDataLoading: true });
-    axios.get(`/groomingSessions/${this.state.session.id}`, { cancelToken: this.source.token })
+    return axios.get(`/groomingSessions/${this.state.session.id}`, { cancelToken: this.source.token })
     .then((response) => {
-      this.setState({
+      return this.setState({
         session: response.data,
         isGroomingSessionDataLoading: false,
       });
@@ -41,11 +43,8 @@ class GroomingSessionDetail extends React.Component {
       if (axios.isCancel(error)) {
         return;
       }
-      this.setState({ isGroomingSessionDataLoading: false });
+      return this.setState({ isGroomingSessionDataLoading: false });
     })
-    .finally(() => {
-      completion();
-    });
   }
 
   render() {
@@ -77,7 +76,7 @@ class GroomingSessionDetail extends React.Component {
         {groomingSessionDataContent()}
         <Grid item>
           <Link to='/'>
-            <Typography>Les autres sessions</Typography>
+            <Typography>Other Sessions</Typography>
           </Link>
         </Grid>
       </Grid>
