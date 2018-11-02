@@ -84,5 +84,14 @@ describe("Given I'm on the Grooming Session Page", () => {
         expect(typo.text()).toEqual("Session test 123");
       });
     });
+
+    test("Then the date text is the Session date", () => {
+      expect.assertions(1);
+      return groomingSessionDetail.mountPromise.then(() => {
+        wrapper.update();
+        const typo = wrapper.find(Typography).at(typoPositionAfterLoading.sessionDate);
+        expect(typo.text()).toEqual("August 3, 2018");
+      });
+    });
   });
 });
