@@ -25,20 +25,6 @@ describe('Grooming Sessions List', () => {
     wrapper.unmount();
   });
 
-  test('retrieve grooming sessions', (done) => {
-    const groomingSessionsList = wrapper.find(GroomingSessionsList.WrappedComponent).instance();
-    expect(groomingSessionsList.state.sessions.length).toEqual(0);
-
-    const mock = new MockAdapter(axios);
-    const data = [{ id: 1, name: 'test1', date: '2018-07-01T06:00:00' }, { id: 2, name: 'test2', date: '2018-07-01T06:00:00' }];
-    mock.onGet('/groomingSessions').reply(200, data);
-
-    groomingSessionsList.refreshGroomingSessions(() => {
-      expect(groomingSessionsList.state.sessions.length).toEqual(2);
-      done();
-    });
-  });
-
   test('delete a session', (done) => {
     const groomingSessionsList = wrapper.find(GroomingSessionsList.WrappedComponent).instance();
     const sessions = [{ id: '123', name: 'test delete', date: '2018-07-01T06:00:00' }];

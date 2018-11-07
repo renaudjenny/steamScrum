@@ -1,15 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { withRouter } from "react-router-dom";
+import SessionItem from "./SessionItem";
+import { withRouter } from 'react-router-dom'
 
 class GroomingSessionsList extends React.Component {
 
@@ -22,6 +18,7 @@ class GroomingSessionsList extends React.Component {
       sessionToDelete: null,
       countCallback,
     }
+    this.mountPromise = Promise.resolve();
 
     this.modalStyle = {
       position: 'absolute',
@@ -36,27 +33,25 @@ class GroomingSessionsList extends React.Component {
 
   componentDidMount() {
     this.source = axios.CancelToken.source();
-    this.refreshGroomingSessions();
+    this.mountPromise = this.refreshGroomingSessions();
   }
 
   componentWillUnmount() {
     this.source.cancel();
   }
 
-  refreshGroomingSessions(completion = () => null) {
-    axios.get('/groomingSessions', { cancelToken: this.source.token })
+  refreshGroomingSessions() {
+    return axios.get('/groomingSessions', { cancelToken: this.source.token })
     .then((response) => {
       this.setState({ sessions: response.data });
-      this.state.countCallback(response.data.length);
+      this.state.countCallback(Promise.resolve(response.data.length));
+      return;
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
         return;
       }
-      throw error;
-    })
-    .finally(() => {
-      completion();
+      return error;
     });
   }
 
@@ -124,37 +119,6 @@ class GroomingSessionsList extends React.Component {
           </div>
         </Modal>
       </List>
-    );
-  }
-}
-
-class SessionItem extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      session: props.session,
-      deleteCallback: props.deleteCallback,
-    }
-  }
-
-  handleSessionClick(sessionId) {
-    this.props.history.push({
-      pathname: '/GroomingSessionDetail',
-      state: { sessionId: sessionId }
-    });
-  }
-
-  render() {
-    return (
-      <ListItem button onClick={() => this.handleSessionClick(this.state.session.id)}>
-        <ListItemText primary={this.state.session.name} />
-        <ListItemSecondaryAction>
-          <IconButton>
-            <DeleteIcon onClick={() => this.state.deleteCallback(this.state.session)} />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
     );
   }
 }
