@@ -15,22 +15,23 @@ class FlorianRandomSentence extends React.Component {
       sentence: "",
       isLoadingSentence: false,
     }
+    this.mountPromise = Promise.resolve();
   }
 
   componentDidMount() {
     this.source = axios.CancelToken.source();
-    this.refreshSentence();
+    this.mountPromise = this.refreshSentence();
   }
 
   componentWillUnmount() {
     this.source.cancel();
   }
 
-  refreshSentence(completion = () => null) {
+  refreshSentence() {
     this.setState({ isLoadingSentence: true });
-    axios.get('/randomFlorianSentence', { cancelToken: this.source.token })
+    return axios.get('/randomFlorianSentence', { cancelToken: this.source.token })
     .then((response) => {
-      this.setState({
+      return this.setState({
         isLoadingSentence: false,
         sentence: response.data.sentence
       });
@@ -39,13 +40,10 @@ class FlorianRandomSentence extends React.Component {
       if (axios.isCancel(error)) {
         return;
       }
-      this.setState({
+      return this.setState({
         isLoadingSentence: false,
         sentence: "Error"
       });
-    })
-    .finally(() => {
-      completion();
     });
   }
 
