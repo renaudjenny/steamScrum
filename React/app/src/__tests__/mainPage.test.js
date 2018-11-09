@@ -10,6 +10,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import GroomingSessionsList from "../components/GroomingSessionsList";
 import SessionItem from "../components/SessionItem";
+import Modal from '@material-ui/core/Modal';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ListItemText from '@material-ui/core/ListItemText';
 
 describe('Given I\'m on Steam Scrum main page', () => {
   Enzyme.configure({ adapter: new Adapter() });
@@ -24,6 +27,11 @@ describe('Given I\'m on Steam Scrum main page', () => {
   const buttonPosition = {
     addGroomingSession: 0,
     askFlorian: 1,
+  };
+
+  const confirmDeleteItemModalButtonPosition = {
+    confirm: 0,
+    cancel: 1
   };
 
   beforeEach(() => {
@@ -88,6 +96,64 @@ describe('Given I\'m on Steam Scrum main page', () => {
         wrapper.update();
         const groomingSessionItems = wrapper.find(SessionItem);
         expect(groomingSessionItems).toHaveLength(2);
+      });
+    });
+  });
+
+  describe("When I want to delete a Grooming Session", () => {
+    beforeAll(() => {
+      const mock = new MockAdapter(axios);
+      const data = [
+        { id: 1, name: 'test1', date: '2018-07-01T06:00:00' },
+        { id: 2, name: 'test2', date: '2018-07-01T06:00:00' }
+      ];
+      mock.onGet('/groomingSessions').reply(200, data);
+      mock.onDelete('/groomingSessions/1').reply(200);
+    });
+
+    test("Then I'm asked to confirm the deletion", () => {
+      expect.assertions(2);
+      return groomingSessionsList.mountPromise.then(() => {
+        wrapper.update();
+        const findModalOpenState = () => wrapper.find(Modal).props().open;
+
+        expect(findModalOpenState()).toBe(false);
+
+        const firstSessionItem = wrapper.find(SessionItem).at(0);
+        const deleteButton = firstSessionItem.find(DeleteIcon);
+
+        deleteButton.props().onClick();
+        wrapper.update();
+        expect(findModalOpenState()).toBe(true);
+      });
+    });
+
+    test("Then I confirm the deletion and Item is removed", () => {
+      const findGroomingSessionItems = () => wrapper.find(SessionItem);
+
+      expect.assertions(3);
+      return groomingSessionsList.mountPromise
+      .then(() => {
+        wrapper.update();
+        expect(findGroomingSessionItems()).toHaveLength(2);
+
+        const firstSessionItem = wrapper.find(SessionItem).at(0);
+        const deleteButton = firstSessionItem.find(DeleteIcon);
+
+        deleteButton.props().onClick();
+        wrapper.update();
+
+        const modal = wrapper.find(Modal);
+        const confirmButton = modal.find(Button).at(confirmDeleteItemModalButtonPosition.confirm);
+        confirmButton.props().onClick();
+        return groomingSessionsList.deletePromise
+      })
+      .then(() => {
+        wrapper.update();
+        expect(findGroomingSessionItems()).toHaveLength(1);
+        const sessionItem = findGroomingSessionItems().at(0);
+        const itemText = sessionItem.find(ListItemText);
+        expect(itemText.props().primary).toBe('test2');
       });
     });
   });

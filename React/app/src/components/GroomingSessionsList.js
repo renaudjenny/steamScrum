@@ -19,6 +19,7 @@ class GroomingSessionsList extends React.Component {
       countCallback,
     }
     this.mountPromise = Promise.resolve();
+    this.deletePromise = Promise.resolve();
 
     this.modalStyle = {
       position: 'absolute',
@@ -55,11 +56,11 @@ class GroomingSessionsList extends React.Component {
     });
   }
 
-  deleteGroomingSession(sessionId, completion = () => null) {
-    axios.delete(`/groomingSessions/${sessionId}`, { cancelToken: this.source.token })
+  deleteGroomingSession(sessionId) {
+    return axios.delete(`/groomingSessions/${sessionId}`, { cancelToken: this.source.token })
     .then(() => {
       const sessions = this.state.sessions.filter(session => session.id !== sessionId);
-      this.setState({
+      return this.setState({
         sessions,
         openDeleteModal: false,
       });
@@ -68,9 +69,7 @@ class GroomingSessionsList extends React.Component {
       if (axios.isCancel(error)) {
         return;
       }
-    })
-    .finally(() => {
-      completion()
+      return;
     });
   }
 
@@ -87,10 +86,11 @@ class GroomingSessionsList extends React.Component {
         openDeleteModal: false,
         sessionsToDelete: null,
       });
+      this.deletePromise = Promise.resolve();
       return;
     }
 
-    this.deleteGroomingSession(this.state.sessionToDelete.id);
+    this.deletePromise = this.deleteGroomingSession(this.state.sessionToDelete.id);
   }
 
   render() {
