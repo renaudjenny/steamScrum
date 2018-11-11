@@ -10,7 +10,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios';
 
 class FlorianSentenceForm extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -20,11 +19,12 @@ class FlorianSentenceForm extends React.Component {
       maximumSentencesCount: 0,
       isFlorianSentenceDataLoading: false,
     }
+    this.mountPromise = Promise.resolve();
   }
 
   componentDidMount() {
     this.source = axios.CancelToken.source();
-    this.refreshContext();
+    this.mountPromise = this.refreshContext();
   }
 
   componentWillUnmount() {
@@ -33,20 +33,20 @@ class FlorianSentenceForm extends React.Component {
 
   refreshContext() {
     this.setState({ isFlorianSentenceDataLoading: true});
-    axios.get('/florianSentencesContext', { cancelToken: this.source.token })
+    return axios.get('/florianSentencesContext', { cancelToken: this.source.token })
     .then((response) => {
       const { sentencesCount, maximumSentencesCount } = response.data
-      this.setState({
+      return this.setState({
         sentencesCount: sentencesCount,
         maximumSentencesCount: maximumSentencesCount,
         isFlorianSentenceDataLoading: false,
-      })
+      });
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
         return;
       }
-      this.setState({ isFlorianSentenceDataLoading: false });
+      return this.setState({ isFlorianSentenceDataLoading: false });
     });
   }
 
@@ -71,7 +71,7 @@ class FlorianSentenceForm extends React.Component {
         return <LinearProgress style={{ width: 300 }} />
       } else {
         return <Typography component="p">
-            Nombres de phrases déjà enregistrées <strong>{this.state.sentencesCount}/{this.state.maximumSentencesCount}</strong>
+            Already saved sentences: <strong>{this.state.sentencesCount}/{this.state.maximumSentencesCount}</strong>
           </Typography>
       }
     };
