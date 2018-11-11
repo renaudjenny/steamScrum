@@ -24,12 +24,15 @@ class FlorianSentencesList extends React.Component {
       sentencesCount: 0,
       maximumSentencesCount: 0,
     }
+    this.mountPromise = Promise.resolve();
   }
 
   componentDidMount() {
     this.source = axios.CancelToken.source();
-    this.refreshSentences();
-    this.refreshContext();
+    this.mountPromise =  this.refreshSentences()
+    .then(() => {
+      return this.refreshContext();
+    });
   }
 
   componentWillUnmount() {
@@ -37,28 +40,29 @@ class FlorianSentencesList extends React.Component {
   }
 
   refreshSentences() {
-    axios.get('/florianSentences', { cancelToken: this.source.token })
+    return axios.get('/florianSentences', { cancelToken: this.source.token })
     .then((response) => {
-      this.setState({ sentences: response.data })
+      return this.setState({ sentences: response.data })
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
         return;
       }
-      this.setState({ sentences: [{ id: -1, sentence: "error1" }, { id: -2, sentence: "error2 with long text very very very very very long" }] })
+      return this.setState({ sentences: [{ id: -1, sentence: "error1" }, { id: -2, sentence: "error2 with long text very very very very very long" }] })
     });
   }
 
   refreshContext() {
-    axios.get('/florianSentencesContext')
+    return axios.get('/florianSentencesContext')
     .then((response) => {
       const { sentencesCount, maximumSentencesCount } = response.data
-      this.setState({ sentencesCount: sentencesCount, maximumSentencesCount: maximumSentencesCount })
+      return this.setState({ sentencesCount: sentencesCount, maximumSentencesCount: maximumSentencesCount })
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
         return;
       }
+      return;
     });
   }
 
@@ -76,7 +80,7 @@ class FlorianSentencesList extends React.Component {
         </Grid>
         <Grid item>
           <Typography component="p">
-            Nombres de phrases déjà enregistrées <strong>{this.state.sentencesCount}/{this.state.maximumSentencesCount}</strong>
+            Already saved sentences: <strong>{this.state.sentencesCount}/{this.state.maximumSentencesCount}</strong>
           </Typography>
         </Grid>
         <List style={{ width: '100%', maxWidth: 360 }}>
