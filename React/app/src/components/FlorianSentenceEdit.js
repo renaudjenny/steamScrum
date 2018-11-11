@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 
 class FlorianSentenceEdit extends React.Component {
-
   constructor(props) {
     super(props);
     if (props.location == null) {

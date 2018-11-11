@@ -9,7 +9,7 @@ import FlorianSentenceForm from "../components/FlorianSentenceForm";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 
-describe("Given I'm on the page to add a new Florian Senence", () => {
+describe("Given I'm on the page to add a new Florian Sentence", () => {
   Enzyme.configure({ adapter: new Adapter() });
   let wrapper;
   let florianSentenceForm;
