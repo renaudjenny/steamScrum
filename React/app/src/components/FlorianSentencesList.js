@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import FlorianSentence from "./FlorianSentence";
+import Modal from '@material-ui/core/Modal';
 
 class FlorianSentencesList extends React.Component {
   constructor(props) {
@@ -15,8 +16,21 @@ class FlorianSentencesList extends React.Component {
       currentSentence: "",
       sentencesCount: 0,
       maximumSentencesCount: 0,
+      sentenceToDelete: null,
+      openDeleteModal: false,
     }
     this.mountPromise = Promise.resolve();
+    this.deletePromise = Promise.resolve();
+
+    this.modalStyle = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 300,
+      backgroundColor: 'white',
+      padding: 12,
+    }
   }
 
   componentDidMount() {
@@ -40,7 +54,7 @@ class FlorianSentencesList extends React.Component {
       if (axios.isCancel(error)) {
         return;
       }
-      return this.setState({ sentences: [{ id: -1, sentence: "error1" }, { id: -2, sentence: "error2 with long text very very very very very long" }] })
+      return;
     });
   }
 
@@ -58,10 +72,41 @@ class FlorianSentencesList extends React.Component {
     });
   }
 
-  handleDeletedSentence(id) {
-    const sentences = this.state.sentences.filter((sentence) => sentence.id !== id);
-    this.setState({ sentences: sentences });
-    this.refreshContext();
+  deleteFlorianSentence(id) {
+    return axios.delete(`florianSentences/${id}`)
+    .then(() => {
+      const sentences = this.state.sentences.filter(sentence => sentence.id !== id);
+      this.setState({
+        openDeleteModal: false,
+        sentences: sentences,
+      });
+      return this.refreshContext();
+    })
+    .catch((error) => {
+      if (axios.isCancel(error)) {
+        return;
+      }
+      return;
+    });
+  }
+
+  handleDeleteModalOpen(sentence) {
+    this.setState({
+      openDeleteModal: true,
+      sentenceToDelete: sentence,
+    });
+  }
+
+  handleDeleteModalClose(isDeleteConfirmed) {
+    if (isDeleteConfirmed !== true) {
+      this.setState({
+        openDeleteModal: false,
+        sentenceToDelete: null,
+      });
+      this.deletePromise = Promise.resolve();
+      return;
+    }
+    this.deletePromise = this.deleteFlorianSentence(this.state.sentenceToDelete.id);
   }
 
   render() {
@@ -76,7 +121,29 @@ class FlorianSentencesList extends React.Component {
           </Typography>
         </Grid>
         <List style={{ width: '100%', maxWidth: 360 }}>
-          {this.state.sentences.map((sentence) => <FlorianSentence key={`sentence${sentence.id}`} value={sentence} history={this.props.history} onDelete={(id) => this.handleDeletedSentence(id)} />)}
+          {this.state.sentences.map(sentence => 
+            <FlorianSentence
+              key={`sentence${sentence.id}`}
+              value={sentence}
+              deleteCallback={sentence => this.handleDeleteModalOpen(sentence)}
+              history={this.props.history}
+            />
+          )}
+          <Modal
+            open={this.state.openDeleteModal}
+            onClose={() => this.handleDeleteModalClose()}
+          >
+            <div style={this.modalStyle}>
+              <Typography variant="title">Confirm deletion?</Typography>
+              <Typography variant="subheading">
+                {this.state.sentenceToDelete &&
+                  `Remove sentence: ${this.state.sentenceToDelete.sentence}?`
+                }
+              </Typography>
+              <Button onClick={() => this.handleDeleteModalClose(true)}>Remove</Button>
+              <Button onClick={() => this.handleDeleteModalClose()}>Cancel</Button>
+            </div>
+          </Modal>
         </List>
         <Grid item>
           <Link to='/florian'>
