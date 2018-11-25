@@ -12,6 +12,7 @@ import FlorianSentencesList from '../components/FlorianSentencesList';
 import FlorianSentenceEdit from '../components/FlorianSentenceEdit';
 import GroomingSessionForm from '../components/GroomingSessionForm';
 import GroomingSessionDetail from '../components/GroomingSessionDetail';
+import StoryForm from "../components/StoryForm";
 
 describe("When I'm connected to Steam Scrum app", () => {
   Enzyme.configure({ adapter: new Adapter() });
@@ -43,5 +44,6 @@ describe("When I'm connected to Steam Scrum app", () => {
     expect(pathMap["/florianSentenceEdit"]).toBe(FlorianSentenceEdit);
     expect(pathMap["/groomingSessionForm"]).toBe(GroomingSessionForm);
     expect(pathMap["/groomingSessionDetail"]).toBe(GroomingSessionDetail);
+    expect(pathMap["/createNewStory"]).toBe(StoryForm);
   });
 });

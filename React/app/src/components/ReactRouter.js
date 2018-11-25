@@ -7,6 +7,7 @@ import FlorianSentencesList from './FlorianSentencesList';
 import FlorianSentenceEdit from './FlorianSentenceEdit';
 import GroomingSessionForm from './GroomingSessionForm';
 import GroomingSessionDetail from './GroomingSessionDetail';
+import StoryForm from "./StoryForm";
 
 const ReactRouter = () => {
   return (
@@ -19,6 +20,7 @@ const ReactRouter = () => {
         <Route path='/florianSentenceEdit' component={FlorianSentenceEdit} />
         <Route path='/groomingSessionForm' component={GroomingSessionForm} />
         <Route path='/groomingSessionDetail' component={GroomingSessionDetail} />
+        <Route path='/createNewStory' component={StoryForm} />
       </div>
     </Router>
   );
