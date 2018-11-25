@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import GroomingSessionDetail from "../components/GroomingSessionDetail";
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
@@ -24,6 +25,10 @@ describe("Given I'm on the Grooming Session Page", () => {
     sessionName: 1,
     sessionDate: 2,
     otherSessions: 3
+  };
+
+  const buttonPosition = {
+    createStory: 0,
   };
 
   beforeEach(() => {
@@ -53,6 +58,17 @@ describe("Given I'm on the Grooming Session Page", () => {
     test("Then a Link to other sessions is available", () => {
       const typo = wrapper.find(Typography).at(typoPosition.otherSessions);
       expect(typo.text()).toBe("Other Sessions");
+    });
+
+    test("Then the button to create a story is shown", () => {
+     const button = wrapper.find(Button).at(buttonPosition.createStory);
+     expect(button.text()).toBe("Create a new Story");
+    });
+
+    test("Then the button to create a story links to Story form", () => {
+      const button = wrapper.find(Button).at(buttonPosition.createStory);
+      const buttonLink = button.parent();
+      expect(buttonLink.props().href).toBe('/createNewStory');
     });
   });
 

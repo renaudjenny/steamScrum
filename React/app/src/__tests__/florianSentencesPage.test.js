@@ -86,7 +86,7 @@ describe("Given I'm on the list of Florian Sentences", () => {
         expect(history).toHaveLength(2);
         expect(history.action).toBe('PUSH');
         expect(history.location.pathname).toBe('/florianSentenceEdit');
-      })
+      });
     });
   });
 

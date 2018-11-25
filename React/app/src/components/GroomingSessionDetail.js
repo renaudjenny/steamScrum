@@ -75,6 +75,13 @@ class GroomingSessionDetail extends React.Component {
         </Grid>
         {groomingSessionDataContent()}
         <Grid item>
+          <Link to='/createNewStory'>
+            <Button variant="raised" color="primary">
+              Create a new Story
+            </Button>
+          </Link>
+        </Grid>
+        <Grid item>
           <Link to='/'>
             <Typography>Other Sessions</Typography>
           </Link>
