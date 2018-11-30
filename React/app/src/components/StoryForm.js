@@ -3,13 +3,15 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Chip from "@material-ui/core/Chip";
 
 class StoryForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       currentStory: { name: '' },
-      newDeveloper: { name: '' },
+      developerNames: [],
+      newDeveloperName: '',
     }
   }
 
@@ -20,9 +22,27 @@ class StoryForm extends React.Component {
   }
 
   handleDeveloperNameChange(event) {
-    const newDeveloper = this.state.newDeveloper;
-    newDeveloper.name = event.target.value;
-    this.setState({ newDeveloper });
+    const newDeveloperName = event.target.value;
+    this.setState({ newDeveloperName });
+  }
+
+  handleAddNewDeveloperButtonClick() {
+    let developerNames = this.state.developerNames;
+    const newDeveloperName = this.state.newDeveloperName;
+
+    const isDeveloperNameEmpty = newDeveloperName === "";
+    const isDeveloperNameAlreadyInList = developerNames.includes(newDeveloperName);
+    if (isDeveloperNameEmpty || isDeveloperNameAlreadyInList) {
+      return;
+    }
+
+    developerNames.push(newDeveloperName);
+    this.setState({ developerNames });
+  }
+
+  handleDeleteDeveloperFromList(developerName) {
+    const developerNames = this.state.developerNames.filter(name => name !== developerName);
+    this.setState({ developerNames });
   }
 
   render() {
@@ -46,10 +66,19 @@ class StoryForm extends React.Component {
           <TextField
             id="developerName"
             label="Developer name"
-            value={this.state.newDeveloper.name}
+            value={this.state.newDeveloperName}
             onChange={event => this.handleDeveloperNameChange(event)}
           />
-          <Button variant="raised" color="primary">Add</Button>
+          <Button variant="raised" color="primary" onClick={() => this.handleAddNewDeveloperButtonClick()}>Add</Button>
+        </Grid>
+        <Grid item>
+          {this.state.developerNames.map(developerName => {
+            return <Chip
+              key={developerName}
+              label={developerName}
+              onDelete={() => this.handleDeleteDeveloperFromList(developerName)}
+            />
+          })}
         </Grid>
       </Grid>
     );
