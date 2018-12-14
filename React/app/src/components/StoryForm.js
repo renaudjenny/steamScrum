@@ -4,15 +4,48 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import axios from 'axios';
 
 class StoryForm extends React.Component {
   constructor(props) {
     super(props);
+    const sessionId = props.sessionId || props.location.state.sessionId;
     this.state = {
+      session: { id: sessionId },
       currentStory: { name: '' },
       developerNames: [],
       newDeveloperName: '',
+      isGroomingSessionDataLoading: false,
     }
+    this.source = null;
+    this.mountPromise = Promise.resolve();
+  }
+
+  componentDidMount() {
+    this.source = axios.CancelToken.source();
+    this.mountPromise = this.refreshGroomingSession();
+  }
+
+  componentWillUnmount() {
+    this.source.cancel();
+  }
+
+  refreshGroomingSession() {
+    this.setState({ isGroomingSessionDataLoading: true });
+    return axios.get(`/groomingSessions/${this.state.session.id}`, { cancelToken: this.source.token })
+    .then((response) => {
+      return this.setState({
+        session: response.data,
+        isGroomingSessionDataLoading: false,
+      });
+    })
+    .catch((error) => {
+      if (axios.isCancel(error)) {
+        return;
+      }
+      return this.setState({ isGroomingSessionDataLoading: false });
+    })
   }
 
   handleStoryNameChange(event) {
@@ -46,10 +79,21 @@ class StoryForm extends React.Component {
   }
 
   render() {
+    const groomingSessionLink = () => {
+      if (this.state.isGroomingSessionDataLoading) {
+        return <LinearProgress />
+      } else {
+        return <Typography>{this.state.session.name}</Typography>
+      }
+    }
+
     return (
       <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
         <Grid item>
           <Typography variant="headline" component="h3">Add a new Story</Typography>
+        </Grid>
+        <Grid item>
+          {groomingSessionLink()}
         </Grid>
         <Grid item>
           <TextField

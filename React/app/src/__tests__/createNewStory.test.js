@@ -8,13 +8,16 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 
 describe("Given I'm on the form to add a new Story", () => {
   Enzyme.configure({ adapter: new Adapter() });
   let wrapper;
   let storyForm;
 
-  const typoPosition = {
+  const typoPositionBeforeLoading = {
     title: 0,
     developersTitle: 1,
   };
@@ -31,7 +34,7 @@ describe("Given I'm on the form to add a new Story", () => {
   beforeEach(() => {
     wrapper = mount(
       <MemoryRouter>
-        <StoryForm />
+        <StoryForm sessionId={123} />
       </MemoryRouter>
     );
     storyForm = wrapper.find(StoryForm).instance();
@@ -43,7 +46,7 @@ describe("Given I'm on the form to add a new Story", () => {
 
   describe("When the page is loading", () => {
     test("Then I see the title Add a new Story", () => {
-      const title = wrapper.find(Typography).at(typoPosition.title);
+      const title = wrapper.find(Typography).at(typoPositionBeforeLoading.title);
       expect(title.text()).toBe("Add a new Story");
     });
 
@@ -52,8 +55,13 @@ describe("Given I'm on the form to add a new Story", () => {
       expect(field.text()).toBe("Story name");
     });
 
+    test("Then I see a Progress Bar until the data is loaded", () => {
+      const progress = wrapper.find(LinearProgress);
+      expect(progress).toHaveLength(1);
+    });
+
     test("Then I see a title to the section to developers", () => {
-      const title = wrapper.find(Typography).at(typoPosition.developersTitle);
+      const title = wrapper.find(Typography).at(typoPositionBeforeLoading.developersTitle);
       expect(title.text()).toBe("Developers");
     });
 
@@ -133,6 +141,46 @@ describe("Given I'm on the form to add a new Story", () => {
       wrapper.update();
       expect(findDeveloperChips()).toHaveLength(1);
       expect(findDeveloperChips().text()).toBe("Luigi");
+    });
+  });
+
+  describe("When the page is loaded", () => {
+    const typoPositionAfterLoading = {
+      title: 0,
+      groomingSessionName: 1,
+      developersTitle: 2,
+    };
+
+    beforeAll(() => {
+      const mock = new MockAdapter(axios);
+      const data = {
+        id: 123,
+        name: "Session test 123",
+        date: "2018-08-03T05:37:13Z",
+        userStories: []
+      };
+      mock.onGet('/groomingSessions/123').reply(200, data);
+    });
+
+    test("Then the Progress Bar is gone", () => {
+      expect.assertions(2);
+
+      const findLinearProgress = () => wrapper.find(LinearProgress);
+      expect(findLinearProgress()).toHaveLength(1);
+
+      return storyForm.mountPromise.then(() => {
+        wrapper.update();
+        expect(findLinearProgress()).toHaveLength(0);
+      });
+    });
+
+    test("Then I see the Grooming Session name with a name on it to go back to the Grooming Session", () => {
+      expect.assertions(1);
+      return storyForm.mountPromise.then(() => {
+        wrapper.update();
+        const groomingSessionName = wrapper.find(Typography).at(typoPositionAfterLoading.groomingSessionName);
+        expect(groomingSessionName.text()).toBe("Session test 123");
+      });
     });
   });
 });

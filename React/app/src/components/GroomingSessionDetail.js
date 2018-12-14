@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
@@ -46,6 +47,13 @@ class GroomingSessionDetail extends React.Component {
     })
   }
 
+  handleCreateNewStoryButtonClick () {
+    this.props.history.push({
+      pathname: '/createNewStory',
+      state: { sessionId: this.state.session.id }
+    });
+  }
+
   render() {
     const groomingSessionDataContent = () => {
       if (this.state.isGroomingSessionDataLoading) {
@@ -74,11 +82,13 @@ class GroomingSessionDetail extends React.Component {
         </Grid>
         {groomingSessionDataContent()}
         <Grid item>
-          <Link to='/createNewStory'>
-            <Button variant="raised" color="primary">
-              Create a new Story
-            </Button>
-          </Link>
+          <Button
+            variant="raised"
+            color="primary"
+            onClick={() => this.handleCreateNewStoryButtonClick()}
+          >
+            Create a new Story
+          </Button>
         </Grid>
         <Grid item>
           <Link to='/'>
@@ -98,4 +108,4 @@ const UserStory = ({ userStory }) => {
   );
 }
 
-export default GroomingSessionDetail;
+export default withRouter(GroomingSessionDetail);

@@ -37,7 +37,7 @@ describe("Given I'm on the Grooming Session Page", () => {
         <GroomingSessionDetail sessionId={123} />
       </MemoryRouter>
     );
-    groomingSessionDetail = wrapper.find(GroomingSessionDetail).instance();
+    groomingSessionDetail = wrapper.find(GroomingSessionDetail.WrappedComponent).instance();
   });
 
   afterEach(() => {
@@ -65,10 +65,14 @@ describe("Given I'm on the Grooming Session Page", () => {
      expect(button.text()).toBe("Create a new Story");
     });
 
-    test("Then the button to create a story links to Story form", () => {
+    test("Then the button to create a story open the Story form", () => {
       const button = wrapper.find(Button).at(buttonPosition.createStory);
-      const buttonLink = button.parent();
-      expect(buttonLink.props().href).toBe('/createNewStory');
+      const history = groomingSessionDetail.props.history;
+      expect(history).toHaveLength(1);
+      button.props().onClick();
+      expect(history).toHaveLength(2);
+      expect(history.action).toBe('PUSH');
+      expect(history.location.pathname).toBe('/createNewStory');
     });
   });
 
