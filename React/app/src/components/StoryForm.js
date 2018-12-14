@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from 'react-router-dom'
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -78,12 +79,21 @@ class StoryForm extends React.Component {
     this.setState({ developerNames });
   }
 
+  handleSessionNameClick() {
+    const state = { sessionId: this.state.session.id }
+    this.props.history.push('/GroomingSessionDetail', state)
+  }
+
   render() {
     const groomingSessionLink = () => {
       if (this.state.isGroomingSessionDataLoading) {
         return <LinearProgress />
       } else {
-        return <Typography>{this.state.session.name}</Typography>
+        return (
+          <Typography onClick={() => this.handleSessionNameClick()}>
+            {this.state.session.name}
+          </Typography>
+        )
       }
     }
 
@@ -129,4 +139,4 @@ class StoryForm extends React.Component {
   }
 }
 
-export default StoryForm;
+export default withRouter(StoryForm);

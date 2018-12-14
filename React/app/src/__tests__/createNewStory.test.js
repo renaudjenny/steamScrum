@@ -37,7 +37,7 @@ describe("Given I'm on the form to add a new Story", () => {
         <StoryForm sessionId={123} />
       </MemoryRouter>
     );
-    storyForm = wrapper.find(StoryForm).instance();
+    storyForm = wrapper.find(StoryForm.WrappedComponent).instance();
   });
 
   afterEach(() => {
@@ -175,11 +175,19 @@ describe("Given I'm on the form to add a new Story", () => {
     });
 
     test("Then I see the Grooming Session name with a name on it to go back to the Grooming Session", () => {
-      expect.assertions(1);
+      expect.assertions(5);
       return storyForm.mountPromise.then(() => {
         wrapper.update();
         const groomingSessionName = wrapper.find(Typography).at(typoPositionAfterLoading.groomingSessionName);
         expect(groomingSessionName.text()).toBe("Session test 123");
+
+        const history = storyForm.props.history
+        expect(history).toHaveLength(1)
+
+        groomingSessionName.props().onClick()
+        expect(history).toHaveLength(2)
+        expect(history.action).toBe('PUSH')
+        expect(history.location.pathname).toBe('/GroomingSessionDetail')
       });
     });
   });
