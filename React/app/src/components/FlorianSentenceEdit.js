@@ -1,21 +1,21 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import axios from 'axios';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import FormControl from '@material-ui/core/FormControl'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
 
 class FlorianSentenceEdit extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     if (props.location == null) {
       this.state = {
         florianSentence: { id: 0, sentence: 'Error' },
         originalSentence: 'Error'
       }
-      return;
+      return
     }
     this.state = {
       florianSentence: props.location.state.florianSentence,
@@ -23,37 +23,36 @@ class FlorianSentenceEdit extends React.Component {
     }
   }
 
-  handleSentenceChange(event) {
-    const newFlorianSentence = this.state.florianSentence;
-    newFlorianSentence.sentence = event.target.value;
+  handleSentenceChange (event) {
+    const newFlorianSentence = this.state.florianSentence
+    newFlorianSentence.sentence = event.target.value
     this.setState({ florianSentence: newFlorianSentence })
   }
 
-  save() {
+  save () {
     axios.patch(`florianSentences/${this.state.florianSentence.id}`, {
-      sentence: this.state.florianSentence.sentence,
+      sentence: this.state.florianSentence.sentence
     }).then((result) => {
       this.props.history.push('/florianSentencesList')
     })
   }
 
-  render() {
+  render () {
     return (
       <Grid container spacing={24} direction='column' alignItems='center' justify='center'>
         <Grid item>
-	  <Typography component="h3">Éditer la phrase : <strong>{this.state.originalSentence}</strong></Typography>
+          <Typography component='h3'>Éditer la phrase : <strong>{this.state.originalSentence}</strong></Typography>
         </Grid>
         <Grid item>
           <FormControl>
-            <InputLabel htmlFor="sentence">La phrase a édité</InputLabel>
-            <Input id="sentence" value={this.state.florianSentence.sentence} onChange={(event) => this.handleSentenceChange(event)} multiline={true} />
-            <Button variant="raised" color="primary" onClick={() => this.save()}>Enregistrer</Button>
+            <InputLabel htmlFor='sentence'>La phrase a édité</InputLabel>
+            <Input id='sentence' value={this.state.florianSentence.sentence} onChange={(event) => this.handleSentenceChange(event)} multiline />
+            <Button variant='raised' color='primary' onClick={() => this.save()}>Enregistrer</Button>
           </FormControl>
         </Grid>
       </Grid>
     )
   }
-
 }
 
-export default FlorianSentenceEdit;
+export default FlorianSentenceEdit

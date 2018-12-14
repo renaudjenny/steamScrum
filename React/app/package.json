@@ -16,14 +16,15 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom --verbose",
+    "test": "standard && react-scripts test --env=jsdom --verbose",
     "eject": "react-scripts eject",
     "watchman": "watchman-make --root='../..' -p 'React/app/src/**' --run './react-build.sh'"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.15.0",
     "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1"
+    "enzyme-adapter-react-16": "^1.1.1",
+    "standard": "*"
   },
   "jest": {
       "collectCoverageFrom": [
@@ -31,5 +32,8 @@
       "!src/index.js",
       "!src/registerServiceWorker.js"
     ]
+  },
+    "standard": {
+    "env": [ "jest" ]
   }
 }
