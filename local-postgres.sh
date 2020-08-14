@@ -1,0 +1,1 @@
+docker run --name local-postgres -e POSTGRES_PASSWORD=vapor_password -e POSTGRES_USER=vapor_username -e POSTGRES_DB=vapor_database -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres
