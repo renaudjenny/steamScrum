@@ -1,0 +1,29 @@
+import Fluent
+import Vapor
+
+struct GroomingSessionController: RouteCollection {
+    func boot(routes: RoutesBuilder) throws {
+        let groomingSessions = routes.grouped("grooming_sessions")
+        groomingSessions.get(use: index)
+        groomingSessions.post(use: create)
+        groomingSessions.group(":groomingSessionID") { groomingSession in
+            groomingSession.delete(use: delete)
+        }
+    }
+
+    func index(req: Request) throws -> EventLoopFuture<[GroomingSession]> {
+        return GroomingSession.query(on: req.db).all()
+    }
+
+    func create(req: Request) throws -> EventLoopFuture<GroomingSession> {
+        let groomingSession = try req.content.decode(GroomingSession.self)
+        return groomingSession.save(on: req.db).map { groomingSession }
+    }
+
+    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { $0.delete(on: req.db) }
+            .transform(to: .ok)
+    }
+}
