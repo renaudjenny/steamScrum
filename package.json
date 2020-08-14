@@ -1,8 +1,0 @@
-{
-  "engines": {
-    "node": "8.11.2"
-  },
-  "scripts": {
-    "postinstall": "./react-build.sh"
-  }
-}
