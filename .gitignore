@@ -1,29 +1,9 @@
-
-# Created by https://www.gitignore.io/api/vapor
-
-### Vapor ###
-Config/secrets
-
-### Vapor Patch ###
 Packages
 .build
 xcuserdata
 *.xcodeproj
 DerivedData/
 .DS_Store
+db.sqlite
+.swiftpm
 
-# End of https://www.gitignore.io/api/vapor
-
-# React
-Public/*
-React/app/node_modules
-React/app/coverage
-React/app/build
-React/app/.env.local
-React/app/.env.development.local
-React/app/.env.test.local
-React/app/.env.production.local
-
-React/app/npm-debug.log*
-React/app/yarn-debug.log*
-React/app/yarn-error.log*
