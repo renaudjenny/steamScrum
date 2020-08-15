@@ -35,4 +35,43 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(receivedGroomingSession.date, groomingSessionDate)
         })
     }
+
+    func testGetGroomingSessionsContext() throws {
+        let app = Application(.testing)
+        defer { app.shutdown() }
+        try configure(app)
+        try app.autoMigrate().wait()
+
+        let maximumGroomingSessionsCount = GroomingSessionContext.maximumAllowed
+
+        try app.test(.GET, "groomingSessionsContext") { res in
+            let context = try res.content.decode(GroomingSessionContext.self)
+            XCTAssertEqual(context.groomingSessionsCount, 0)
+            XCTAssertEqual(context.maximumGroomingSessionsCount, maximumGroomingSessionsCount)
+        }
+
+        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+            try req.content.encode([
+                "name": "Session 1",
+                "date": ISO8601DateFormatter().string(from: Date())
+            ])
+        })
+        try app.test(.GET, "groomingSessionsContext") { res in
+            let context = try res.content.decode(GroomingSessionContext.self)
+            XCTAssertEqual(context.groomingSessionsCount, 1)
+        }
+
+        for i in 0..<10 {
+            try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+                try req.content.encode([
+                    "name": "Session \(i + 2)",
+                    "date": ISO8601DateFormatter().string(from: Date())
+                ])
+            })
+        }
+        try app.test(.GET, "groomingSessionsContext") { res in
+            let context = try res.content.decode(GroomingSessionContext.self)
+            XCTAssertEqual(context.groomingSessionsCount, 11)
+        }
+    }
 }

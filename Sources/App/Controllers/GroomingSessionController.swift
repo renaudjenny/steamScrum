@@ -26,4 +26,14 @@ struct GroomingSessionController: RouteCollection {
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
     }
+
+    func context(req: Request) throws -> EventLoopFuture<GroomingSessionContext> {
+        return GroomingSession.query(on: req.db).count().map {
+            let context = GroomingSessionContext(
+                groomingSessionsCount: $0,
+                maximumGroomingSessionsCount: GroomingSessionContext.maximumAllowed
+            )
+            return context
+        }
+    }
 }
