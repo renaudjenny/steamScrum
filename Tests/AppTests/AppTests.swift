@@ -74,4 +74,34 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(context.groomingSessionsCount, 11)
         }
     }
+
+    func testPostMaximumGroomingSessions() throws {
+        let app = Application(.testing)
+        defer { app.shutdown() }
+        try configure(app)
+        try app.autoMigrate().wait()
+
+        for i in 0..<GroomingSessionContext.maximumAllowed {
+            try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+                try req.content.encode([
+                    "name": "Session \(i + 1)",
+                    "date": ISO8601DateFormatter().string(from: Date())
+                ])
+            })
+        }
+
+        try app.test(.GET, "grooming_sessions") { res in
+            let groomingSessions = try res.content.decode([GroomingSession].self)
+            XCTAssertEqual(groomingSessions.count, GroomingSessionContext.maximumAllowed)
+        }
+
+        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+            try req.content.encode([
+                "name": "Session ... too much",
+                "date": ISO8601DateFormatter().string(from: Date())
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .badRequest)
+        })
+    }
 }

@@ -17,7 +17,12 @@ struct GroomingSessionController: RouteCollection {
 
     func create(req: Request) throws -> EventLoopFuture<GroomingSession> {
         let groomingSession = try req.content.decode(GroomingSession.self)
-        return groomingSession.save(on: req.db).map { groomingSession }
+        return GroomingSession.query(on: req.db).count().flatMap({
+            guard $0 < GroomingSessionContext.maximumAllowed else {
+                return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Too many data already provided."))
+            }
+            return groomingSession.save(on: req.db).map { groomingSession }
+        })
     }
 
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
