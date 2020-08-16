@@ -31,14 +31,10 @@ struct UserStoryController: RouteCollection {
         let postUserStory = try req.content.decode(PostUserStory.self)
         return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
             .unwrap(or: Abort(.notFound))
-            .flatMap {
-                do {
-                    let userStory = try postUserStory.userStory(with: $0)
-                    return $0.$userStories.create(userStory, on: req.db)
-                        .transform(to: userStory)
-                } catch {
-                    return req.eventLoop.makeFailedFuture(error)
-                }
+            .flatMapThrowing { ($0, try postUserStory.userStory(with: $0)) }
+            .flatMap { groomingSession, userStory in
+                groomingSession.$userStories.create(userStory, on: req.db)
+                    .transform(to: userStory)
             }
     }
 
