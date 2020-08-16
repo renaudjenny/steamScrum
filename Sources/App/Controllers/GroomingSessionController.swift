@@ -17,6 +17,10 @@ struct GroomingSessionController: RouteCollection {
 
     func create(req: Request) throws -> EventLoopFuture<GroomingSession> {
         let groomingSession = try req.content.decode(GroomingSession.self)
+        guard !groomingSession.name.isEmpty else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Grooming Session name cannot be empty"))
+        }
+
         return GroomingSession.query(on: req.db).count().flatMap({
             guard $0 < GroomingSessionContext.maximumAllowed else {
                 return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Too many data already provided."))
