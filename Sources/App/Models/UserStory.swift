@@ -21,3 +21,12 @@ final class UserStory: Model, Content {
         self.$groomingSession.id = try groomingSession.requireID()
     }
 }
+
+// Structure of POST /grooming_sessions/:grooming_session_id/user_stories request.
+struct PostUserStory: Decodable {
+    var name: String
+
+    func userStory(with groomingSession: GroomingSession) throws -> UserStory {
+        try UserStory(name: name, groomingSession: groomingSession)
+    }
+}

@@ -5,7 +5,7 @@ struct UserStoryController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let userStories = routes.grouped("grooming_sessions", ":groomingSessionID", "user_stories")
         userStories.get(use: index)
-//        userStories.post(use: create)
+        userStories.post(use: create)
 //        userStories.group(":userStoryID") { groomingSession in
 //            groomingSession.delete(use: delete)
 //        }
@@ -27,13 +27,20 @@ struct UserStoryController: RouteCollection {
             .map { $0.userStories }
     }
 
-// TODO: not tested yet
-//    func create(req: Request) throws -> EventLoopFuture<UserStory> {
-//        let userStory = try req.content.decode(UserStory.self)
-//        return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
-//            .unwrap(or: Abort(.notFound))
-//            .flatMap { $0.$userStories.create(userStory, on: req.db) }
-//    }
+    func create(req: Request) throws -> EventLoopFuture<UserStory> {
+        let postUserStory = try req.content.decode(PostUserStory.self)
+        return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap {
+                do {
+                    let userStory = try postUserStory.userStory(with: $0)
+                    return $0.$userStories.create(userStory, on: req.db)
+                        .transform(to: userStory)
+                } catch {
+                    return req.eventLoop.makeFailedFuture(error)
+                }
+            }
+    }
 
 // TODO: Not tested yet
 //    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
