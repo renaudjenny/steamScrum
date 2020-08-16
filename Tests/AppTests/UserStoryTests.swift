@@ -34,4 +34,25 @@ final class UserStoryTests: XCTestCase {
             XCTAssertEqual(res.body.string, "[]")
         }
     }
+
+    func testUserStoryPost() throws {
+        let userStoryName = "User Story"
+
+        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+            try req.content.encode([
+                "name": userStoryName
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+            let receivedGroomingSession = try res.content.decode(UserStory.self)
+            XCTAssertEqual(receivedGroomingSession.name, userStoryName)
+        })
+
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+            XCTAssertEqual(res.status, .ok)
+            let userStories = try res.content.decode([UserStory].self)
+            XCTAssertEqual(userStories.count, 1)
+            XCTAssertEqual(userStories.first?.name, userStoryName)
+        }
+    }
 }

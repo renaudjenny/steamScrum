@@ -23,7 +23,7 @@ final class GroomingSessionTests: XCTestCase {
     }
 
     func testGroomingSessionsPost() throws {
-        let groomingSessionName = "Grooming test GET"
+        let groomingSessionName = "Session for POST"
         let groomingSessionDate = Date(timeIntervalSince1970: 1.0)
 
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
