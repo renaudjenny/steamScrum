@@ -44,8 +44,8 @@ final class UserStoryTests: XCTestCase {
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            let receivedGroomingSession = try res.content.decode(UserStory.self)
-            XCTAssertEqual(receivedGroomingSession.name, userStoryName)
+            let receivedUserStory = try res.content.decode(UserStory.self)
+            XCTAssertEqual(receivedUserStory.name, userStoryName)
         })
 
         try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
@@ -55,4 +55,74 @@ final class UserStoryTests: XCTestCase {
             XCTAssertEqual(userStories.first?.name, userStoryName)
         }
     }
+
+    func testUserStoryDelete() throws {
+        var id: UUID?
+        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+            try req.content.encode([
+                "name": "User Story to delete"
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+            let receivedUserStory = try res.content.decode(UserStory.self)
+            id = receivedUserStory.id
+        })
+
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+            XCTAssertEqual(res.status, .ok)
+            let userStories = try res.content.decode([UserStory].self)
+            XCTAssertEqual(userStories.count, 1)
+        }
+
+        let userStoryId = try XCTUnwrap(id)
+        try app.test(.DELETE, "grooming_sessions/\(try groomingSessionId())/user_stories/\(userStoryId)") { res in
+            XCTAssertEqual(res.status, .ok)
+        }
+
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+            let userStories = try res.content.decode([UserStory].self)
+            XCTAssertEqual(userStories.count, 0)
+        }
+    }
+
+    func testUserStoryCannotDeleteFromAnotherUserStory() throws {
+        var id: UUID?
+        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+            try req.content.encode([
+                "name": "User Story to delete"
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+            let receivedUserStory = try res.content.decode(UserStory.self)
+            id = receivedUserStory.id
+        })
+
+        var anotherGroomingSessionId: UUID?
+        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+            try req.content.encode([
+                "name": "Another Session",
+                "date": ISO8601DateFormatter().string(from: Date())
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .ok)
+            anotherGroomingSessionId = try res.content.decode(GroomingSession.self).id
+        })
+
+        try app.test(.GET, "grooming_sessions/\(XCTUnwrap(anotherGroomingSessionId))/user_stories") { res in
+            XCTAssertEqual(res.status, .ok)
+            let userStories = try res.content.decode([UserStory].self)
+            XCTAssertEqual(userStories.count, 0)
+        }
+
+        let userStoryId = try XCTUnwrap(id)
+        try app.test(.DELETE, "grooming_sessions/\(XCTUnwrap(anotherGroomingSessionId))/user_stories/\(userStoryId)") { res in
+            XCTAssertEqual(res.status, .notFound)
+        }
+
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+            let userStories = try res.content.decode([UserStory].self)
+            XCTAssertEqual(userStories.count, 1)
+        }
+    }
+
 }
