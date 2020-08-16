@@ -6,9 +6,9 @@ struct UserStoryController: RouteCollection {
         let userStories = routes.grouped("grooming_sessions", ":groomingSessionID", "user_stories")
         userStories.get(use: index)
         userStories.post(use: create)
-//        userStories.group(":userStoryID") { groomingSession in
-//            groomingSession.delete(use: delete)
-//        }
+        userStories.group(":userStoryID") { userStory in
+            userStory.delete(use: delete)
+        }
     }
 
     func index(req: Request) throws -> EventLoopFuture<[UserStory]> {
@@ -38,11 +38,22 @@ struct UserStoryController: RouteCollection {
             }
     }
 
-// TODO: Not tested yet
-//    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-//        return UserStory.find(req.parameters.get("userStoryID"), on: req.db)
-//            .unwrap(or: Abort(.notFound))
-//            .flatMap { $0.delete(on: req.db) }
-//            .transform(to: .ok)
-//    }
+    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        guard
+        let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+        let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+        let userStoryIdString = req.parameters.get("userStoryID"),
+        let userStoryId = UUID(uuidString: userStoryIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .filter(\.$groomingSession.$id == groomingSessionId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap { $0.delete(on: req.db) }
+            .transform(to: .ok)
+    }
 }
