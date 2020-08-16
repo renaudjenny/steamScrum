@@ -2,12 +2,20 @@
 import XCTVapor
 
 final class GroomingSessionTests: XCTestCase {
-    func testGroomingSessionsGet() throws {
-        let app = Application(.testing)
-        defer { app.shutdown() }
+    private let app = Application(.testing)
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
         try configure(app)
         try app.autoMigrate().wait()
+    }
 
+    override func tearDown() {
+        app.shutdown()
+        super.tearDown()
+    }
+
+    func testGroomingSessionsGet() throws {
         try app.test(.GET, "grooming_sessions") { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "[]")
@@ -15,11 +23,6 @@ final class GroomingSessionTests: XCTestCase {
     }
 
     func testGroomingSessionsPost() throws {
-        let app = Application(.testing)
-        defer { app.shutdown() }
-        try configure(app)
-        try app.autoMigrate().wait()
-
         let groomingSessionName = "Grooming test GET"
         let groomingSessionDate = Date(timeIntervalSince1970: 1.0)
 
@@ -37,11 +40,6 @@ final class GroomingSessionTests: XCTestCase {
     }
 
     func testGroomingSessionsContextGet() throws {
-        let app = Application(.testing)
-        defer { app.shutdown() }
-        try configure(app)
-        try app.autoMigrate().wait()
-
         let maximumGroomingSessionsCount = GroomingSessionContext.maximumAllowed
 
         try app.test(.GET, "groomingSessionsContext") { res in
@@ -76,11 +74,6 @@ final class GroomingSessionTests: XCTestCase {
     }
 
     func testMaximumGroomingSessionsPost() throws {
-        let app = Application(.testing)
-        defer { app.shutdown() }
-        try configure(app)
-        try app.autoMigrate().wait()
-
         for i in 0..<GroomingSessionContext.maximumAllowed {
             try app.test(.POST, "grooming_sessions", beforeRequest: { req in
                 try req.content.encode([
@@ -106,11 +99,6 @@ final class GroomingSessionTests: XCTestCase {
     }
 
     func testGroomingSessionsWithoutNamePost() throws {
-        let app = Application(.testing)
-        defer { app.shutdown() }
-        try configure(app)
-        try app.autoMigrate().wait()
-
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "date": ISO8601DateFormatter().string(from: Date())
@@ -130,11 +118,6 @@ final class GroomingSessionTests: XCTestCase {
     }
 
     func testGroomingSessionDelete() throws {
-        let app = Application(.testing)
-        defer { app.shutdown() }
-        try configure(app)
-        try app.autoMigrate().wait()
-
         var id: UUID?
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
