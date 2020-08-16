@@ -128,4 +128,38 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(res.status, .badRequest)
         })
     }
+
+    func testGroomingSessionDelete() throws {
+        let app = Application(.testing)
+        defer { app.shutdown() }
+        try configure(app)
+        try app.autoMigrate().wait()
+
+        var id: UUID?
+        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+            try req.content.encode([
+                "name": "Session to delete",
+                "date": ISO8601DateFormatter().string(from: Date())
+            ])
+        }, afterResponse: { res in
+            let groomingSession = try res.content.decode(GroomingSession.self)
+            XCTAssertNotNil(groomingSession.id)
+            id = groomingSession.id
+        })
+
+        try app.test(.GET, "grooming_sessions") { res in
+            let groomingSessions = try res.content.decode([GroomingSession].self)
+            XCTAssertEqual(groomingSessions.count, 1)
+        }
+
+        let groomingSessionId = try XCTUnwrap(id)
+        try app.test(.DELETE, "grooming_sessions/\(groomingSessionId)") { res in
+            XCTAssertEqual(res.status, .ok)
+        }
+
+        try app.test(.GET, "grooming_sessions") { res in
+            let groomingSessions = try res.content.decode([GroomingSession].self)
+            XCTAssertEqual(groomingSessions.count, 0)
+        }
+    }
 }
