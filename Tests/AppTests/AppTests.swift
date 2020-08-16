@@ -104,4 +104,28 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(res.status, .badRequest)
         })
     }
+
+    func testGroomingSessionsWithoutNamePost() throws {
+        let app = Application(.testing)
+        defer { app.shutdown() }
+        try configure(app)
+        try app.autoMigrate().wait()
+
+        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+            try req.content.encode([
+                "date": ISO8601DateFormatter().string(from: Date())
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .badRequest)
+        })
+
+        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+            try req.content.encode([
+                "name": "",
+                "date": ISO8601DateFormatter().string(from: Date())
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .badRequest)
+        })
+    }
 }
