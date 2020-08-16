@@ -36,7 +36,7 @@ final class AppTests: XCTestCase {
         })
     }
 
-    func testGetGroomingSessionsContext() throws {
+    func testGroomingSessionsContextGet() throws {
         let app = Application(.testing)
         defer { app.shutdown() }
         try configure(app)
@@ -75,7 +75,7 @@ final class AppTests: XCTestCase {
         }
     }
 
-    func testPostMaximumGroomingSessions() throws {
+    func testMaximumGroomingSessionsPost() throws {
         let app = Application(.testing)
         defer { app.shutdown() }
         try configure(app)
