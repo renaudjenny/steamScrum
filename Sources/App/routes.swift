@@ -8,6 +8,7 @@ func routes(_ app: Application) throws {
 
     try app.register(collection: GroomingSessionController())
     app.get("groomingSessionsContext", use: GroomingSessionController().context(req:))
+    try app.register(collection: UserStoryController())
 }
 
 private func renderHomePage(with groomingSessions: [GroomingSession]) -> HTML {

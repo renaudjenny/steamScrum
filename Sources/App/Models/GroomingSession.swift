@@ -13,6 +13,9 @@ final class GroomingSession: Model, Content {
     @Field(key: "date")
     var date: Date
 
+    @Children(for: \.$groomingSession)
+    var userStories: [UserStory]
+
     init() { }
 
     init(id: UUID? = nil, name: String, date: Date) {

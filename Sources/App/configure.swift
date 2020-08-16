@@ -22,6 +22,7 @@ public func configure(_ app: Application) throws {
     }
 
     app.migrations.add(CreateGroomingSession())
+    app.migrations.add(CreateUserStory())
 
     // register routes
     try routes(app)
