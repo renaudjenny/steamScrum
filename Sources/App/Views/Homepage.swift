@@ -25,6 +25,8 @@ struct Homepage {
     }
 
     var groomingForm: String { """
+        <h2>Add a Grooming Session</h2>
+        <p>You can add grooming session to test the API</p>
         <form>
         <div>
         <label for="name">Grooming Session name: </label>
@@ -46,6 +48,7 @@ struct Homepage {
 
     var groomingSessionsList: String { """
         <h2>Grooming Sessions</h2>
+        <p><strong>\(groomingSessionContext.groomingSessionsCount)/\(groomingSessionContext.maximumGroomingSessionsCount)</strong></p>
         \(groomingSessions.map({ groomingSession in
         """
         <div>

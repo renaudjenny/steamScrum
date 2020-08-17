@@ -6,8 +6,8 @@ func routes(_ app: Application) throws {
         GroomingSession.query(on: req.db).all().map {
             Homepage(
                 groomingSessionContext: GroomingSessionContext(
-                    groomingSessionsCount: 42,
-                    maximumGroomingSessionsCount: 69
+                    groomingSessionsCount: $0.count,
+                    maximumGroomingSessionsCount: GroomingSessionContext.maximumAllowed
                 ),
                 groomingSessions: $0
             ).render
