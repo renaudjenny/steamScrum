@@ -7,6 +7,7 @@ struct GroomingSessionController: RouteCollection {
         groomingSessions.get(use: index)
         groomingSessions.post(use: create)
         groomingSessions.group(":groomingSessionID") { groomingSession in
+            groomingSession.get(use: get)
             groomingSession.delete(use: delete)
         }
     }
@@ -34,6 +35,12 @@ struct GroomingSessionController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
+    }
+
+    func get(req: Request) throws -> EventLoopFuture<HTML> {
+        return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .map { GroomingSessionView(groomingSession: $0).render }
     }
 
     func context(req: Request) throws -> EventLoopFuture<GroomingSessionContext> {

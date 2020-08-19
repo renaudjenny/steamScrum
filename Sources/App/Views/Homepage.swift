@@ -52,7 +52,8 @@ struct Homepage {
         \(groomingSessions.map({ groomingSession in
         """
         <div>
-        <h3>\(groomingSession.name)<h3><button type="button" onClick='removeGroomingSession("\(groomingSession.id!)")'>❌</button>
+        <h3><a href="grooming_sessions/\(groomingSession.id!)">\(groomingSession.name)</a><h3>
+        <button type="button" onClick='removeGroomingSession("\(groomingSession.id!)")'>❌</button>
         <h4>\(groomingSession.date.description)<h4>
         </div>
         """
