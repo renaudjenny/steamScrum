@@ -38,7 +38,17 @@ struct GroomingSessionController: RouteCollection {
     }
 
     func get(req: Request) throws -> EventLoopFuture<HTML> {
-        return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
+        guard
+        let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+        let groomingSessionId = UUID(uuidString: groomingSessionIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return GroomingSession.query(on: req.db)
+            .filter(\.$id == groomingSessionId)
+            .with(\.$userStories)
+            .first()
             .unwrap(or: Abort(.notFound))
             .map { GroomingSessionView(groomingSession: $0).render }
     }
