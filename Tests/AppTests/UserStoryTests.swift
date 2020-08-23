@@ -56,6 +56,18 @@ final class UserStoryTests: XCTestCase {
         }
     }
 
+    func testUserStoryPostAnEmptyName() throws {
+        let userStoryName = ""
+
+        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+            try req.content.encode([
+                "name": userStoryName
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .badRequest)
+        })
+    }
+
     func testUserStoryDelete() throws {
         var id: UUID?
         try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
