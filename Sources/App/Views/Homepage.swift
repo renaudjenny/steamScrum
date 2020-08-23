@@ -65,9 +65,8 @@ struct Homepage {
     var script: String { """
         <script>
         const setGroomingSessionDateToNow = () => {
-            const date = new Date()
-            const iso8601Compatible = date.toISOString().replace(/\\.[0-9]{3}/, "")
-            document.getElementById("date").setAttribute("value", iso8601Compatible)
+            const formattedDate = new Date().toJSON().slice(0, 10)
+            document.getElementById("date").setAttribute("value", formattedDate)
         }
         const removeGroomingSession = (groomingSessionId) => fetch(`grooming_sessions/${groomingSessionId}`, { method: "DELETE" })
             .then(() => location.reload())
