@@ -17,7 +17,10 @@ struct GroomingSessionController: RouteCollection {
     }
 
     func create(req: Request) throws -> EventLoopFuture<GroomingSession> {
-        let groomingSession = try req.content.decode(GroomingSession.self)
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.yyyyMMdd)
+        let groomingSession = try req.content.decode(GroomingSession.self, using: jsonDecoder)
+        print(groomingSession.date)
         guard !groomingSession.name.isEmpty else {
             return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Grooming Session name cannot be empty"))
         }
@@ -62,4 +65,15 @@ struct GroomingSessionController: RouteCollection {
             return context
         }
     }
+}
+
+private extension DateFormatter {
+    static let yyyyMMdd: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
 }
