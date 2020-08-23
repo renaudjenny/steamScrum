@@ -24,12 +24,12 @@ final class GroomingSessionTests: XCTestCase {
 
     func testGroomingSessionsPost() throws {
         let groomingSessionName = "Session for POST"
-        let groomingSessionDate = Date(timeIntervalSince1970: 1.0)
+        let groomingSessionDate = Date(timeIntervalSince1970: 0)
 
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": groomingSessionName,
-                "date": ISO8601DateFormatter().string(from: groomingSessionDate)
+                "date": DateFormatter.yyyyMMdd.string(from: groomingSessionDate)
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -51,7 +51,7 @@ final class GroomingSessionTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session 1",
-                "date": ISO8601DateFormatter().string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date())
             ])
         })
         try app.test(.GET, "groomingSessionsContext") { res in
@@ -63,7 +63,7 @@ final class GroomingSessionTests: XCTestCase {
             try app.test(.POST, "grooming_sessions", beforeRequest: { req in
                 try req.content.encode([
                     "name": "Session \(i + 2)",
-                    "date": ISO8601DateFormatter().string(from: Date())
+                    "date": DateFormatter.yyyyMMdd.string(from: Date())
                 ])
             })
         }
@@ -78,7 +78,7 @@ final class GroomingSessionTests: XCTestCase {
             try app.test(.POST, "grooming_sessions", beforeRequest: { req in
                 try req.content.encode([
                     "name": "Session \(i + 1)",
-                    "date": ISO8601DateFormatter().string(from: Date())
+                    "date": DateFormatter.yyyyMMdd.string(from: Date())
                 ])
             })
         }
@@ -122,7 +122,7 @@ final class GroomingSessionTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session to delete",
-                "date": ISO8601DateFormatter().string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date())
             ])
         }, afterResponse: { res in
             let groomingSession = try res.content.decode(GroomingSession.self)

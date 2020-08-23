@@ -13,7 +13,7 @@ final class UserStoryTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session test",
-                "date": ISO8601DateFormatter().string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date())
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -101,7 +101,7 @@ final class UserStoryTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Another Session",
-                "date": ISO8601DateFormatter().string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date())
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
