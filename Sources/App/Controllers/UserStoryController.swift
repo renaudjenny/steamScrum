@@ -29,6 +29,8 @@ struct UserStoryController: RouteCollection {
 
     func create(req: Request) throws -> EventLoopFuture<UserStory> {
         let postUserStory = try req.content.decode(PostUserStory.self)
+        guard !postUserStory.name.isEmpty else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
+
         return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMapThrowing { ($0, try postUserStory.userStory(with: $0)) }
