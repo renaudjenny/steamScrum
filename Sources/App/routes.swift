@@ -9,7 +9,8 @@ func routes(_ app: Application) throws {
                     groomingSessionsCount: $0.count,
                     maximumGroomingSessionsCount: GroomingSessionContext.maximumAllowed
                 ),
-                groomingSessions: $0
+                groomingSessions: $0,
+                formatDate: dateFormatter.string
             ).render
         }
     }
@@ -18,3 +19,10 @@ func routes(_ app: Application) throws {
     app.get("groomingSessionsContext", use: GroomingSessionController().context(req:))
     try app.register(collection: UserStoryController())
 }
+
+private var dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .full
+    formatter.timeStyle = .none
+    return formatter
+}()
