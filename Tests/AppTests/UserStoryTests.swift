@@ -68,6 +68,29 @@ final class UserStoryTests: XCTestCase {
         })
     }
 
+    func testMaximumUserStoryPost() throws {
+        for i in 0..<UserStoryContext.maximumAllowed {
+            try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+                try req.content.encode([
+                    "name": "User Story \(i + 1)"
+                ])
+            })
+        }
+
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+            let userStories = try res.content.decode([UserStory].self)
+            XCTAssertEqual(userStories.count, UserStoryContext.maximumAllowed)
+        }
+
+        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+            try req.content.encode([
+                "name": "User Story ... too much"
+            ])
+        }, afterResponse: { res in
+            XCTAssertEqual(res.status, .badRequest)
+        })
+    }
+
     func testUserStoryDelete() throws {
         var id: UUID?
         try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in

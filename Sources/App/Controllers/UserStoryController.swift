@@ -30,9 +30,24 @@ struct UserStoryController: RouteCollection {
     func create(req: Request) throws -> EventLoopFuture<UserStory> {
         let postUserStory = try req.content.decode(PostUserStory.self)
         guard !postUserStory.name.isEmpty else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
+        guard
+        let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+        let groomingSessionId = UUID(uuidString: groomingSessionIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
 
-        return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
+        return GroomingSession.query(on: req.db)
+            .filter(\.$id == groomingSessionId)
+            .with(\.$userStories)
+            .first()
             .unwrap(or: Abort(.notFound))
+            .flatMapThrowing({
+                guard $0.userStories.count < UserStoryContext.maximumAllowed else {
+                    throw Abort(.badRequest, reason: "Too many data already provided.")
+                }
+                return $0
+            })
             .flatMapThrowing { ($0, try postUserStory.userStory(with: $0)) }
             .flatMap { groomingSession, userStory in
                 groomingSession.$userStories.create(userStory, on: req.db)
