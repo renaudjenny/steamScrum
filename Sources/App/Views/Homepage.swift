@@ -1,6 +1,9 @@
+import Foundation
+
 struct Homepage {
     let groomingSessionContext: GroomingSessionContext
     let groomingSessions: [GroomingSession]
+    let formatDate: (Date) -> String
 
     var render: HTML { HTML(value: """
         <html>
@@ -80,7 +83,7 @@ struct Homepage {
         </div>
         <div class="row">
             <div class="column">
-                <h4>\(groomingSession.date.description)<h4>
+                <h4>\(formatDate(groomingSession.date))<h4>
             </div>
         </div>
         """
