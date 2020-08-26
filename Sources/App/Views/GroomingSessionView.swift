@@ -1,5 +1,6 @@
 struct GroomingSessionView {
     let groomingSession: GroomingSession
+    let maximumAllowed = UserStoryContext.maximumAllowed
 
     var render: HTML { HTML(value: """
         <html>
@@ -22,16 +23,15 @@ struct GroomingSessionView {
 
     private var userStoryForm: String { """
         <h2>Add a User Story</h2>
+        <p><strong>\(groomingSession.userStories.count)/\(maximumAllowed)</strong></p>
         <form>
-        <div>
-        <label for="name">User Story name: </label>
-        <input type="text" name="name" id="name" required>
-        </div>
-        <div>
-        <button type="button" onclick="createUserStory()">
-        Submit
-        </button>
-        </div>
+            <fieldset>
+                <label for="name">User Story name: </label>
+                <input type="text" name="name" id="name" required>
+                <button type="button" onclick="createUserStory()">
+                    Submit
+                </button>
+            </fieldset>
         </form>
         """
     }
