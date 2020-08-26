@@ -1,6 +1,7 @@
 import Fluent
 import FluentPostgresDriver
-import FluentSQLiteDriver
+// Useful to test locally. However, it won't work on Heroku as SQLite driver is not available
+//import FluentSQLiteDriver
 import Vapor
 
 // configures your application
@@ -9,7 +10,9 @@ public func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     if app.environment == .testing {
-        app.databases.use(.sqlite(), as: .sqlite)
+        // Useful to test locally. However, it won't work on Heroku as SQLite driver is not available
+        // Uncomment the import and the line bellow or it will crash at runtime
+        // app.databases.use(.sqlite(.memory), as: .sqlite)
     } else if let url = Environment.get("DATABASE_URL") {
         app.databases.use(try .postgres(url: url), as: .psql)
     } else {
