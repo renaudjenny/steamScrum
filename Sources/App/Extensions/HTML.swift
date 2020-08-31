@@ -1,10 +1,10 @@
 import Vapor
 
-struct HTML {
+struct OldHTML {
     let value: String
 }
 
-extension HTML: ResponseEncodable {
+extension OldHTML: ResponseEncodable {
     public func encodeResponse(for request: Request) -> EventLoopFuture<Response> {
         var headers = HTTPHeaders()
         headers.add(name: .contentType, value: "text/html")

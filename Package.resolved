@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
           "branch": null,
-          "revision": "c9a9bf061d713c91ee9974fa8a6afe413acfd0e9",
-          "version": "1.2.0"
+          "revision": "4b4d6605aa2e4f0c2ae3c7563795ae3bec259fff",
+          "version": "1.2.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "8f723677a6deb77e0efa1f2af6ebb0d7c6e6f105",
-          "version": "1.7.2"
+          "revision": "ef2a9a76c48856f0388ee2026d67d2ebde8c571c",
+          "version": "1.7.3"
         }
       },
       {
@@ -65,12 +65,39 @@
         }
       },
       {
+        "package": "HTMLKit",
+        "repositoryURL": "https://github.com/vapor-community/HTMLKit.git",
+        "state": {
+          "branch": null,
+          "revision": "c4b9749cd8f6e8f926f59e88f6d5c83bb07a06b0",
+          "version": "2.0.0-beta.3.5"
+        }
+      },
+      {
+        "package": "HTMLKitVaporProvider",
+        "repositoryURL": "https://github.com/MatsMoll/htmlkit-vapor-provider.git",
+        "state": {
+          "branch": null,
+          "revision": "e2fbade459dbf899b54710d76db64237ce2bfb69",
+          "version": "1.0.0-beta.4"
+        }
+      },
+      {
+        "package": "Lingo",
+        "repositoryURL": "https://github.com/miroslavkovac/Lingo.git",
+        "state": {
+          "branch": null,
+          "revision": "f21f388b04239641b3e88d14f21762125faa9857",
+          "version": "3.0.5"
+        }
+      },
+      {
         "package": "postgres-kit",
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "fca27ff90326e3612ed0197598a7ce467bfedfbd",
-          "version": "2.1.0"
+          "revision": "806a5130f8857f9ee85aa83b77aab8768a35cc0e",
+          "version": "2.1.1"
         }
       },
       {
@@ -159,8 +186,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "acf5465b5e7fb9aeda54a34d16fb44c31a399715",
-          "version": "2.20.2"
+          "revision": "5fc24345f92ec4c274121776c215ab0aa1ed4d50",
+          "version": "2.22.0"
         }
       },
       {
@@ -168,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-extras.git",
         "state": {
           "branch": null,
-          "revision": "d525d3bbd1321fa928948065fd9a8dc109d5d45b",
-          "version": "1.6.0"
+          "revision": "e5b5d191a80667a14827bfeb0ae4a511f7677942",
+          "version": "1.7.0"
         }
       },
       {
@@ -177,8 +204,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-http2.git",
         "state": {
           "branch": null,
-          "revision": "e9627350bdb85bde7e0dc69a29799e40961ced72",
-          "version": "1.13.0"
+          "revision": "1e68e51752be0b43c5a0ef35818c1dd24d13e77c",
+          "version": "1.14.1"
         }
       },
       {
@@ -186,8 +213,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "8a137b72a9339f295bc8bb95cd2fafe207f1df0d",
-          "version": "2.9.0"
+          "revision": "ea1dfd64193bf5af4490635a4a44c4fb43b1e1ae",
+          "version": "2.9.1"
         }
       },
       {
@@ -195,8 +222,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-transport-services.git",
         "state": {
           "branch": null,
-          "revision": "d40a5e34e5b35f4f961cb34aeb2e0a02f42a945f",
-          "version": "1.8.0"
+          "revision": "bb56586c4cab9a79dce6ec4738baddb5802c5de7",
+          "version": "1.9.0"
         }
       },
       {
@@ -204,8 +231,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "a8a641c9c72a42dd7787b23cf668bcb7656c1a41",
-          "version": "4.27.3"
+          "revision": "66f412bcb276c09ad3a5df263f159cee9fecc310",
+          "version": "4.29.1"
         }
       },
       {

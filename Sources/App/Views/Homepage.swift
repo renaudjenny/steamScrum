@@ -5,7 +5,7 @@ struct Homepage {
     let groomingSessions: [GroomingSession]
     let formatDate: (Date) -> String
 
-    var render: HTML { HTML(value: """
+    var render: OldHTML { OldHTML(value: """
         <html>
         <head>
         <meta charset="utf-8">

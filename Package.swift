@@ -5,6 +5,8 @@ var dependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
     .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
     .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
+    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "2.0.0-beta.3"),
+    .package(name: "HTMLKitVaporProvider", url: "https://github.com/MatsMoll/htmlkit-vapor-provider.git", from: "1.0.0-beta.4"),
 ]
 
 #if os(macOS)
@@ -15,6 +17,8 @@ var appTargetDependencies: [PackageDescription.Target.Dependency] = [
     .product(name: "Fluent", package: "fluent"),
     .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
     .product(name: "Vapor", package: "vapor"),
+    .product(name: "HTMLKit", package: "HTMLKit"),
+    .product(name: "HTMLKitVaporProvider", package: "HTMLKitVaporProvider"),
 ]
 
 #if os(macOS)

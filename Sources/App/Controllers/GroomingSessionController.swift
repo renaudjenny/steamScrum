@@ -1,5 +1,6 @@
 import Fluent
 import Vapor
+import HTMLKit
 
 struct GroomingSessionController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
@@ -40,7 +41,7 @@ struct GroomingSessionController: RouteCollection {
             .transform(to: .ok)
     }
 
-    func get(req: Request) throws -> EventLoopFuture<HTML> {
+    func get(req: Request) throws -> EventLoopFuture<View> {
         guard
         let groomingSessionIdString = req.parameters.get("groomingSessionID"),
         let groomingSessionId = UUID(uuidString: groomingSessionIdString)
@@ -53,7 +54,9 @@ struct GroomingSessionController: RouteCollection {
             .with(\.$userStories)
             .first()
             .unwrap(or: Abort(.notFound))
-            .map { GroomingSessionView(groomingSession: $0).render }
+            .flatMap {
+                GroomingSessionTemplate().render(with: GroomingSessionData(groomingSession: $0), for: req)
+            }
     }
 
     func context(req: Request) throws -> EventLoopFuture<GroomingSessionContext> {
