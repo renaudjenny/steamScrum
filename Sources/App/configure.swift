@@ -4,11 +4,11 @@ import FluentPostgresDriver
 import FluentSQLiteDriver
 #endif
 import Vapor
+import HTMLKitVaporProvider
 
 // configures your application
 public func configure(_ app: Application) throws {
-    // uncomment to serve files from /Public folder
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    try app.htmlkit.add(view: GroomingSessionTemplate())
 
     if app.environment == .testing {
         #if canImport(FluentSQLiteDriver)
