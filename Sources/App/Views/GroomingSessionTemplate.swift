@@ -28,7 +28,18 @@ struct GroomingSessionTemplate: HTMLTemplate {
                 form
                 H2 { "User Stories" }
                 ForEach(in: context.groomingSession.userStories) { userStory in
-                    H3 { userStory.name }
+                    Div {
+                        Div {
+                            H3 { userStory.name }
+                        }.class("column")
+                        Div {
+                            Button {
+                                "❌"
+                            }
+                            .type(.button)
+                            .on(click: "removeUserStory(\"" + userStory.id + "\")")
+                        }.class("column")
+                    }.class("row")
                 }
             }
         }
@@ -38,23 +49,31 @@ struct GroomingSessionTemplate: HTMLTemplate {
         Form {
             Label { "User Story name" }.for("name")
             Input(type: .text, id: "name").required()
-            Button { "Submit" }.on(click: "createUserStory()")
+            Button { "Submit" }
+                .type(.button)
+                .on(click: "createUserStory()")
         }
     }
 
     private var script: Script {
         Script {
-            "const createUserStory = () => {" + "\n"
-            "   const name = document.getElementById('name').value" + "\n"
-            "   fetch('" + context.groomingSession.id + "/user_stories', {" + "\n"
-            "       method: 'POST'," + "\n"
-            "       headers: {" + "\n"
-            "           'Content-Type': 'application/json'," + "\n"
-            "       }," + "\n"
-            "       body: JSON.stringify({ name })," + "\n"
-            "   })" + "\n"
-            "   .then(() => window.location.reload())" + "\n"
-            "}"
+            "const groomingSessionId = '" + context.groomingSession.id + "'\n"
+            """
+            const createUserStory = () => {
+               const name = document.getElementById('name').value
+               fetch(`${groomingSessionId}/user_stories`, {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                   },
+                   body: JSON.stringify({ name }),
+                })
+                .then(() => window.location.reload())
+            }
+
+            const removeUserStory = (userStoryId) => fetch(`${groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
+               .then(() => window.location.reload())
+            """
         }
     }
 }
