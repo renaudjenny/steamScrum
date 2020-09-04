@@ -48,7 +48,7 @@ struct GroomingSessionTemplate: HTMLTemplate {
     private var form: Form {
         Form {
             Label { "User Story name" }.for("name")
-            Input(type: .text, id: "name").required()
+            Input(type: .text, id: "name").name("name").required()
             Button { "Submit" }
                 .type(.button)
                 .on(click: "createUserStory()")

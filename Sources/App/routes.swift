@@ -4,14 +4,7 @@ import Vapor
 func routes(_ app: Application) throws {
     app.get { req in
         GroomingSession.query(on: req.db).all().map {
-            Homepage(
-                groomingSessionContext: GroomingSessionContext(
-                    groomingSessionsCount: $0.count,
-                    maximumGroomingSessionsCount: GroomingSessionContext.maximumAllowed
-                ),
-                groomingSessions: $0,
-                formatDate: dateFormatter.string
-            ).render
+            HomepageTemplate().render(with: HomepageData(groomingSessions: $0), for: req)
         }
     }
 
@@ -19,10 +12,3 @@ func routes(_ app: Application) throws {
     app.get("groomingSessionsContext", use: GroomingSessionController().context(req:))
     try app.register(collection: UserStoryController())
 }
-
-private var dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .full
-    formatter.timeStyle = .none
-    return formatter
-}()
