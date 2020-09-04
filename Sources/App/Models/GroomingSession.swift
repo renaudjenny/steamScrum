@@ -24,3 +24,7 @@ final class GroomingSession: Model, Content {
         self.date = date
     }
 }
+
+extension GroomingSession {
+    static let maximumAllowed = 250
+}
