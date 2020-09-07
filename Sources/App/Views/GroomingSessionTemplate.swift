@@ -22,25 +22,27 @@ struct GroomingSessionTemplate: HTMLTemplate {
                 script
             }
             Body {
-                H1 { "Grooming Session: " + context.groomingSession.name }
-                H2 { "Add a User Story" }
-                P { Bold { context.groomingSession.userStories.count + "/" + context.maximumAllowed } }
-                form
-                H2 { "User Stories" }
-                ForEach(in: context.groomingSession.userStories) { userStory in
-                    Div {
+                Div {
+                    H1 { "Grooming Session: " + context.groomingSession.name }.singleColumn
+                    H2 { "Add a User Story" }.singleColumn
+                    P { Bold { context.groomingSession.userStories.count + "/" + context.maximumAllowed } }.singleColumn
+                    form
+                    H2 { "User Stories" }.singleColumn
+                    ForEach(in: context.groomingSession.userStories) { userStory in
                         Div {
-                            H3 { userStory.name }
-                        }.class("column")
-                        Div {
-                            Button {
-                                "❌"
-                            }
-                            .type(.button)
-                            .on(click: "removeUserStory(\"" + userStory.id + "\")")
-                        }.class("column")
-                    }.class("row")
-                }
+                            Div {
+                                H3 { userStory.name }
+                            }.class("column")
+                            Div {
+                                Button {
+                                    "❌"
+                                }
+                                .type(.button)
+                                .on(click: "removeUserStory(\"" + userStory.id + "\")")
+                            }.class("column")
+                        }.class("row")
+                    }
+                }.class("container")
             }
         }
     }
