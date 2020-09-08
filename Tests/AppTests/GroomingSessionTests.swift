@@ -29,7 +29,7 @@ final class GroomingSessionTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": groomingSessionName,
-                "date": DateFormatter.yyyyMMdd.string(from: groomingSessionDate)
+                "date": DateFormatter.yyyyMMdd.string(from: groomingSessionDate),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -51,7 +51,7 @@ final class GroomingSessionTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session 1",
-                "date": DateFormatter.yyyyMMdd.string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         })
         try app.test(.GET, "groomingSessionsContext") { res in
@@ -63,7 +63,7 @@ final class GroomingSessionTests: XCTestCase {
             try app.test(.POST, "grooming_sessions", beforeRequest: { req in
                 try req.content.encode([
                     "name": "Session \(i + 2)",
-                    "date": DateFormatter.yyyyMMdd.string(from: Date())
+                    "date": DateFormatter.yyyyMMdd.string(from: Date()),
                 ])
             })
         }
@@ -78,7 +78,7 @@ final class GroomingSessionTests: XCTestCase {
             try app.test(.POST, "grooming_sessions", beforeRequest: { req in
                 try req.content.encode([
                     "name": "Session \(i + 1)",
-                    "date": DateFormatter.yyyyMMdd.string(from: Date())
+                    "date": DateFormatter.yyyyMMdd.string(from: Date()),
                 ])
             })
         }
@@ -91,7 +91,7 @@ final class GroomingSessionTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session ... too much",
-                "date": ISO8601DateFormatter().string(from: Date())
+                "date": ISO8601DateFormatter().string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .badRequest)
@@ -101,7 +101,7 @@ final class GroomingSessionTests: XCTestCase {
     func testGroomingSessionsWithoutNamePost() throws {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
-                "date": ISO8601DateFormatter().string(from: Date())
+                "date": ISO8601DateFormatter().string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .badRequest)
@@ -110,7 +110,7 @@ final class GroomingSessionTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "",
-                "date": ISO8601DateFormatter().string(from: Date())
+                "date": ISO8601DateFormatter().string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .badRequest)
@@ -122,7 +122,7 @@ final class GroomingSessionTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session to delete",
-                "date": DateFormatter.yyyyMMdd.string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         }, afterResponse: { res in
             let groomingSession = try res.content.decode(GroomingSession.self)
