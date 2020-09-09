@@ -14,7 +14,7 @@ struct GroomingSessionController: RouteCollection {
     }
 
     func index(req: Request) throws -> EventLoopFuture<[GroomingSession]> {
-        return GroomingSession.query(on: req.db).all()
+        GroomingSession.query(on: req.db).all()
     }
 
     func create(req: Request) throws -> EventLoopFuture<GroomingSession> {
@@ -35,7 +35,7 @@ struct GroomingSessionController: RouteCollection {
     }
 
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        return GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
+        GroomingSession.find(req.parameters.get("groomingSessionID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
@@ -60,7 +60,7 @@ struct GroomingSessionController: RouteCollection {
     }
 
     func context(req: Request) throws -> EventLoopFuture<GroomingSessionContext> {
-        return GroomingSession.query(on: req.db).count().map {
+        GroomingSession.query(on: req.db).count().map {
             let context = GroomingSessionContext(
                 groomingSessionsCount: $0,
                 maximumGroomingSessionsCount: GroomingSessionContext.maximumAllowed

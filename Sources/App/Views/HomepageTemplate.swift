@@ -16,9 +16,16 @@ struct HomepageTemplate: HTMLTemplate {
                 Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
-                    HTMLAttribute(attribute: "href", value: "https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css"),
-                    HTMLAttribute(attribute: "integrity", value: "sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="),
-                    HTMLAttribute(attribute: "crossorigin", value: "anonymous")
+                    HTMLAttribute(
+                        attribute: "href",
+                        value: "https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css"
+                    ),
+                    HTMLAttribute(
+                        attribute: "integrity",
+                        value: "sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEy"
+                            + "lN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="
+                    ),
+                    HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
                 script
             }
@@ -45,7 +52,10 @@ struct HomepageTemplate: HTMLTemplate {
             Div {
                 Div {
                     P {
-                        "This project changed a lot. It has been migrated to the last version of Vapor and will sooner be fully rendered in Swift! (See: " + Anchor { "Tokamak project" }.href("https://github.com/swiftwasm/Tokamak") + ")"
+                        "This project changed a lot. It has been migrated to the last version of Vapor"
+                            + "and will sooner be fully rendered in Swift! (See: "
+                            + Anchor { "Tokamak project" }.href("https://github.com/swiftwasm/Tokamak")
+                            + ")"
                     }
                 }.class("column")
             }.class("row")
@@ -53,7 +63,9 @@ struct HomepageTemplate: HTMLTemplate {
             Div {
                 Div {
                     P {
-                        "This is using pure Javascript (without any external libraries), and " + Anchor { "Milligram" }.href("https://milligram.io") + " to give a little bit of style here and there."
+                        "This is using pure Javascript (without any external libraries), and "
+                            + Anchor { "Milligram" }.href("https://milligram.io")
+                            + " to give a little bit of style here and there."
                     }
                 }.class("column")
             }.class("row")
@@ -61,7 +73,9 @@ struct HomepageTemplate: HTMLTemplate {
             Div {
                 Div {
                     P {
-                        "The code is available here: " + Anchor { "SteamScrum on GitHub" }.href("https://github.com/renaudjenny/steamScrum")
+                        "The code is available here: "
+                            + Anchor { "SteamScrum on GitHub" }
+                                .href("https://github.com/renaudjenny/steamScrum")
                     }
                 }.class("column")
             }.class("row")
@@ -76,8 +90,9 @@ struct HomepageTemplate: HTMLTemplate {
                 document.getElementById("date").setAttribute("value", formattedDate)
             }
 
-            const removeGroomingSession = (groomingSessionId) =>  fetch(`grooming_sessions/${groomingSessionId}`, { method: "DELETE" })
-                .then(() => location.reload())
+            const removeGroomingSession = (groomingSessionId) =>
+                fetch(`grooming_sessions/${groomingSessionId}`, { method: "DELETE" })
+                    .then(() => location.reload())
 
             const createGroomingSession = () => {
                 const name = document.getElementById("name").value

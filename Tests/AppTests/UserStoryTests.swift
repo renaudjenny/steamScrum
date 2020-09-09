@@ -13,7 +13,7 @@ final class UserStoryTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session test",
-                "date": DateFormatter.yyyyMMdd.string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -40,7 +40,7 @@ final class UserStoryTests: XCTestCase {
 
         try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
-                "name": userStoryName
+                "name": userStoryName,
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -61,7 +61,7 @@ final class UserStoryTests: XCTestCase {
 
         try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
-                "name": userStoryName
+                "name": userStoryName,
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .badRequest)
@@ -72,7 +72,7 @@ final class UserStoryTests: XCTestCase {
         for i in 0..<UserStoryContext.maximumAllowed {
             try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
                 try req.content.encode([
-                    "name": "User Story \(i + 1)"
+                    "name": "User Story \(i + 1)",
                 ])
             })
         }
@@ -84,7 +84,7 @@ final class UserStoryTests: XCTestCase {
 
         try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
-                "name": "User Story ... too much"
+                "name": "User Story ... too much",
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .badRequest)
@@ -95,7 +95,7 @@ final class UserStoryTests: XCTestCase {
         var id: UUID?
         try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
-                "name": "User Story to delete"
+                "name": "User Story to delete",
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -124,7 +124,7 @@ final class UserStoryTests: XCTestCase {
         var id: UUID?
         try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
-                "name": "User Story to delete"
+                "name": "User Story to delete",
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -136,7 +136,7 @@ final class UserStoryTests: XCTestCase {
         try app.test(.POST, "grooming_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Another Session",
-                "date": DateFormatter.yyyyMMdd.string(from: Date())
+                "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
@@ -150,7 +150,8 @@ final class UserStoryTests: XCTestCase {
         }
 
         let userStoryId = try XCTUnwrap(id)
-        try app.test(.DELETE, "grooming_sessions/\(XCTUnwrap(anotherGroomingSessionId))/user_stories/\(userStoryId)") { res in
+        let url = "grooming_sessions/\(try XCTUnwrap(anotherGroomingSessionId))/user_stories/\(userStoryId)"
+        try app.test(.DELETE, url) { res in
             XCTAssertEqual(res.status, .notFound)
         }
 

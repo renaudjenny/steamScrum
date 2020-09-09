@@ -30,7 +30,7 @@ extension UserStoryTests {
 }
 
 public func __allTests() -> [XCTestCaseEntry] {
-    return [
+    [
         testCase(GroomingSessionTests.__allTests__GroomingSessionTests),
         testCase(UserStoryTests.__allTests__UserStoryTests),
     ]

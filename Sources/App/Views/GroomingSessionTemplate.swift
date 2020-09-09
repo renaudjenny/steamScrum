@@ -15,9 +15,15 @@ struct GroomingSessionTemplate: HTMLTemplate {
                 Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
-                    HTMLAttribute(attribute: "href", value: "https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css"),
-                    HTMLAttribute(attribute: "integrity", value: "sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="),
-                    HTMLAttribute(attribute: "crossorigin", value: "anonymous")
+                    HTMLAttribute(
+                        attribute: "href",
+                        value: "https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css"
+                    ),
+                    HTMLAttribute(
+                        attribute: "integrity",
+                        value: "sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEy"
+                            + "lN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="),
+                    HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
                 script
             }
@@ -62,19 +68,20 @@ struct GroomingSessionTemplate: HTMLTemplate {
             "const groomingSessionId = '" + context.groomingSession.id + "'\n"
             """
             const createUserStory = () => {
-               const name = document.getElementById('name').value
-               fetch(`${groomingSessionId}/user_stories`, {
-                   method: 'POST',
-                   headers: {
-                       'Content-Type': 'application/json',
-                   },
-                   body: JSON.stringify({ name }),
+                const name = document.getElementById('name').value
+                fetch(`${groomingSessionId}/user_stories`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name }),
                 })
                 .then(() => window.location.reload())
             }
 
-            const removeUserStory = (userStoryId) => fetch(`${groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
-               .then(() => window.location.reload())
+            const removeUserStory = (userStoryId) =>
+                fetch(`${groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
+                    .then(() => window.location.reload())
             """
         }
     }
