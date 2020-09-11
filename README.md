@@ -1,5 +1,7 @@
 # Steam Scrum
 
+![CI](https://github.com/renaudjenny/steamScrum/workflows/Swift/badge.svg)
+
 **Steam Scrum** is a project to provide a simple interface to do Scrum Groomings.
 
 The API is written in `Swift` 5.2 thanks to [Vapor](https://vapor.codes).
