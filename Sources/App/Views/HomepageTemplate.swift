@@ -53,7 +53,7 @@ struct HomepageTemplate: HTMLTemplate {
                 Div {
                     P {
                         "This project changed a lot. It has been migrated to the last version of Vapor"
-                            + "and will sooner be fully rendered in Swift! (See: "
+                            + " and will sooner be fully rendered in Swift! (See: "
                             + Anchor { "Tokamak project" }.href("https://github.com/swiftwasm/Tokamak")
                             + ")"
                     }
