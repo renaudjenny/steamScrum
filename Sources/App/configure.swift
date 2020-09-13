@@ -8,6 +8,11 @@ import HTMLKitVaporProvider
 
 // configures your application
 public func configure(_ app: Application) throws {
+    // Serves files from `Public/` directory
+    let fileMiddleware = FileMiddleware(
+        publicDirectory: app.directory.publicDirectory
+    )
+    app.middleware.use(fileMiddleware)
     try app.htmlkit.add(view: GroomingSessionTemplate())
 
     if app.environment == .testing {
