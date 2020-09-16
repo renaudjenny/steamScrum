@@ -27,7 +27,7 @@ struct HomepageTemplate: HTMLTemplate {
                     ),
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
-                Script().source("script.js")
+                Script().source("/script.js")
             }
             Body {
                 Div {

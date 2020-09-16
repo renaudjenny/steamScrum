@@ -25,7 +25,7 @@ struct GroomingSessionTemplate: HTMLTemplate {
                             + "lN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="),
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
-                script
+                Script().source("/script.js")
             }
             Body {
                 Div {
@@ -60,29 +60,6 @@ struct GroomingSessionTemplate: HTMLTemplate {
             Button { "Submit" }
                 .type(.button)
                 .on(click: "createUserStory()")
-        }
-    }
-
-    private var script: Script {
-        Script {
-            "const groomingSessionId = '" + context.groomingSession.id + "'\n"
-            """
-            const createUserStory = () => {
-                const name = document.getElementById('name').value
-                fetch(`${groomingSessionId}/user_stories`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name }),
-                })
-                .then(() => window.location.reload())
-            }
-
-            const removeUserStory = (userStoryId) =>
-                fetch(`${groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
-                    .then(() => window.location.reload())
-            """
         }
     }
 }
