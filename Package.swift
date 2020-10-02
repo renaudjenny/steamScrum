@@ -2,11 +2,11 @@
 import PackageDescription
 
 var dependencies: [PackageDescription.Package.Dependency] = [
-    .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+    .package(url: "https://github.com/vapor/vapor.git", from: "4.30.0"),
     .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
-    .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
-    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "2.0.0-beta.3"),
-    .package(name: "HTMLKitVaporProvider", url: "https://github.com/MatsMoll/htmlkit-vapor-provider.git", from: "1.0.0-beta.4"),
+    .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.1.0"),
+    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "2.0.0"),
+    .package(name: "HTMLKitVaporProvider", url: "https://github.com/MatsMoll/htmlkit-vapor-provider.git", from: "1.0.0"),
 ]
 
 #if os(macOS)
