@@ -73,6 +73,25 @@ final class GroomingSessionTests: XCTestCase {
         }
     }
 
+    func testGroomingSessionsGetOrderedByDateDesc() throws {
+        let groomingSessions: [[String: String]] = (0..<10).map {
+            ["name": "Session \($0)", "date": DateFormatter.yyyyMMdd.string(from: Date().advanced(by: Double($0 * 60 * 1000)))]
+        }
+        try groomingSessions.shuffled().forEach { groomingSession in
+            try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+                try req.content.encode(groomingSession)
+            })
+        }
+        try app.test(.GET, "grooming_sessions") { res in
+            XCTAssertEqual(res.status, .ok)
+            let result = try res.content.decode([GroomingSession].self)
+            result.reversed().enumerated().forEach {
+                let date = groomingSessions[$0]["date"]
+                XCTAssertEqual(date, DateFormatter.yyyyMMdd.string(from: $1.date))
+            }
+        }
+    }
+
     func testMaximumGroomingSessionsPost() throws {
         for i in 0..<GroomingSessionContext.maximumAllowed {
             try app.test(.POST, "grooming_sessions", beforeRequest: { req in

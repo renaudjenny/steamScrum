@@ -14,7 +14,7 @@ struct GroomingSessionController: RouteCollection {
     }
 
     func index(req: Request) throws -> EventLoopFuture<[GroomingSession]> {
-        GroomingSession.query(on: req.db).all()
+        GroomingSession.query(on: req.db).sort(\.$date, .descending).all()
     }
 
     func create(req: Request) throws -> EventLoopFuture<GroomingSession> {
