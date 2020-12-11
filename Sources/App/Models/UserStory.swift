@@ -13,6 +13,8 @@ final class UserStory: Model, Content {
     @Parent(key: "grooming_session_id")
     var groomingSession: GroomingSession
 
+    var vote = Vote()
+
     init() { }
 
     init(id: UUID? = nil, name: String, groomingSession: GroomingSession) throws {

@@ -7,7 +7,11 @@ struct UserStoryController: RouteCollection {
         userStories.get(use: index)
         userStories.post(use: create)
         userStories.group(":userStoryID") { userStory in
+            userStory.get(use: get)
             userStory.delete(use: delete)
+            userStory.group("vote") { vote in
+                vote.get(use: getUserStoryVote)
+            }
         }
     }
 
@@ -72,5 +76,45 @@ struct UserStoryController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
             .transform(to: .ok)
+    }
+
+    func get(req: Request) throws -> EventLoopFuture<View> {
+        guard
+            let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+            let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+            let userStoryIdString = req.parameters.get("userStoryID"),
+            let userStoryId = UUID(uuidString: userStoryIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$groomingSession)
+            .filter(\.$groomingSession.$id == groomingSessionId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap {
+                UserStoryTemplate().render(with: UserStoryData(userStory: $0), for: req)
+            }
+    }
+
+    func getUserStoryVote(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
+        guard
+            let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+            let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+            let userStoryIdString = req.parameters.get("userStoryID"),
+            let userStoryId = UUID(uuidString: userStoryIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$groomingSession)
+            .filter(\.$groomingSession.$id == groomingSessionId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .map { $0.vote }
     }
 }

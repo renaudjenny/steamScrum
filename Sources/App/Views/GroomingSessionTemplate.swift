@@ -37,7 +37,7 @@ struct GroomingSessionTemplate: HTMLTemplate {
                     ForEach(in: context.groomingSession.userStories) { userStory in
                         Div {
                             Div {
-                                H3 { userStory.name }
+                                H3 { Anchor { userStory.name }.href(context.groomingSession.id + "/user_stories/" + userStory.id) }
                             }.class("column")
                             Div {
                                 Button {
