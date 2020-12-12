@@ -3,7 +3,11 @@ import Vapor
 
 // TODO: this should be changed to be a real Redux like store
 final class AppStore {
-    var userStoriesVotes: [UserStory: UserStory.Vote] = [:]
+    var userStoriesVotes: [UserStory.IDValue: UserStory.Vote] = [:] {
+        didSet { updateCallbacks.values.forEach { $0() } }
+    }
+
+    var updateCallbacks: [UUID: () -> Void] = [:]
 }
 
 func routes(_ app: Application) throws {

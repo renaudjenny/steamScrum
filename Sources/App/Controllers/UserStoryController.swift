@@ -14,14 +14,14 @@ struct UserStoryController: RouteCollection {
             userStory.group("vote") { vote in
                 vote.get(use: getVote)
                 vote.post(use: addVotingParticipant)
+                vote.webSocket(onUpgrade: upgradeVoteWebSocket)
             }
         }
     }
 
     func index(req: Request) throws -> EventLoopFuture<[UserStory]> {
-        guard
-        let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-        let groomingSessionId = UUID(uuidString: groomingSessionIdString)
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString)
         else {
             return req.eventLoop.makeFailedFuture(Abort(.badRequest))
         }
@@ -37,9 +37,8 @@ struct UserStoryController: RouteCollection {
     func create(req: Request) throws -> EventLoopFuture<UserStory> {
         let postUserStory = try req.content.decode(PostUserStory.self)
         guard !postUserStory.name.isEmpty else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
-        guard
-        let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-        let groomingSessionId = UUID(uuidString: groomingSessionIdString)
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString)
         else {
             return req.eventLoop.makeFailedFuture(Abort(.badRequest))
         }
@@ -63,11 +62,10 @@ struct UserStoryController: RouteCollection {
     }
 
     func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        guard
-        let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-        let groomingSessionId = UUID(uuidString: groomingSessionIdString),
-        let userStoryIdString = req.parameters.get("userStoryID"),
-        let userStoryId = UUID(uuidString: userStoryIdString)
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString)
         else {
             return req.eventLoop.makeFailedFuture(Abort(.badRequest))
         }
@@ -82,11 +80,10 @@ struct UserStoryController: RouteCollection {
     }
 
     func get(req: Request) throws -> EventLoopFuture<View> {
-        guard
-            let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-            let groomingSessionId = UUID(uuidString: groomingSessionIdString),
-            let userStoryIdString = req.parameters.get("userStoryID"),
-            let userStoryId = UUID(uuidString: userStoryIdString)
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString)
         else {
             return req.eventLoop.makeFailedFuture(Abort(.badRequest))
         }
@@ -103,11 +100,10 @@ struct UserStoryController: RouteCollection {
     }
 
     func getVote(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
-        guard
-            let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-            let groomingSessionId = UUID(uuidString: groomingSessionIdString),
-            let userStoryIdString = req.parameters.get("userStoryID"),
-            let userStoryId = UUID(uuidString: userStoryIdString)
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString)
         else {
             return req.eventLoop.makeFailedFuture(Abort(.badRequest))
         }
@@ -118,19 +114,18 @@ struct UserStoryController: RouteCollection {
             .filter(\.$groomingSession.$id == groomingSessionId)
             .first()
             .unwrap(or: Abort(.notFound))
-            .map {
-                if !store.userStoriesVotes.keys.contains($0) {
-                    store.userStoriesVotes[$0] = UserStory.Vote()
+            .map { _ in
+                if !store.userStoriesVotes.keys.contains(userStoryId) {
+                    store.userStoriesVotes[userStoryId] = UserStory.Vote()
                 }
-                return store.userStoriesVotes[$0] ?? UserStory.Vote()
+                return store.userStoriesVotes[userStoryId] ?? UserStory.Vote()
             }
     }
 
     func addVotingParticipant(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         print("addVotingParticipant called")
-        guard
-            let participant = try req.content.decode([String: String].self)["participant"],
-            !participant.isEmpty
+        guard let participant = try req.content.decode([String: String].self)["participant"],
+              !participant.isEmpty
         else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
 
         guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
@@ -145,12 +140,65 @@ struct UserStoryController: RouteCollection {
             .filter(\.$groomingSession.$id == groomingSessionId)
             .first()
             .unwrap(or: Abort(.notFound))
-            .map {
-                if !store.userStoriesVotes.keys.contains($0) {
-                    store.userStoriesVotes[$0] = UserStory.Vote()
+            .map { _ in
+                if !store.userStoriesVotes.keys.contains(userStoryId) {
+                    store.userStoriesVotes[userStoryId] = UserStory.Vote()
                 }
-                store.userStoriesVotes[$0]?.add(participant: participant)
+                store.userStoriesVotes[userStoryId]?.add(participant: participant)
             }
             .transform(to: .ok)
+    }
+
+    func upgradeVoteWebSocket(req: Request, webSocket: WebSocket) {
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString)
+        else {
+            webSocket.send("Bad request")
+            _ = webSocket.close()
+            return
+        }
+
+        // If the User Story is not available, close the connection
+        _ = UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$groomingSession)
+            .filter(\.$groomingSession.$id == groomingSessionId)
+            .first()
+            .map {
+                if $0 == nil {
+                    webSocket.send("Cannot connect to the vote you asked for")
+                    _ = webSocket.close()
+                }
+            }
+
+        if !store.userStoriesVotes.keys.contains(userStoryId) {
+            store.userStoriesVotes[userStoryId] = UserStory.Vote()
+        }
+
+        let webSocketId = UUID()
+
+        webSocket.onText { ws, text in
+            print("Text received: \(text)")
+
+            if text == "connection-ready" {
+                store.updateCallbacks[webSocketId] = {
+                    ws.send("New fresh data from the store!")
+                    guard let data = try? JSONEncoder().encode(store.userStoriesVotes[userStoryId]),
+                          let dataAsString = String(data: data, encoding: .utf8)
+                    else {
+                        ws.send("Error")
+                        return
+                    }
+                    ws.send(dataAsString)
+                }
+                store.updateCallbacks[webSocketId]?()
+            }
+        }
+
+        webSocket.onClose.whenComplete { _ in
+            store.updateCallbacks.removeValue(forKey: webSocketId)
+        }
     }
 }

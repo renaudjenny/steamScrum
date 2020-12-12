@@ -25,12 +25,23 @@ struct UserStoryTemplate: HTMLTemplate {
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
                 Script().source("/script.js")
+                Script() { "connectToTheUserStoryVoteWebSocket()" }
             }
             Body {
                 Div {
                     H2 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
                     H1 { context.userStory.name }.singleColumn
                     form
+                    Div {
+                        H3 { "Vote session" }.singleColumn
+                        H4 { "Data" }.singleColumn
+                        P {
+                            "Error: No Data received yet from the WebSocket"
+                        }
+                        .id("vote-session-data")
+                        .singleColumn
+                    }
+                    .singleColumn
                 }.class("container")
             }
         }

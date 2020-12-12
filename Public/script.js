@@ -60,3 +60,26 @@ const addVotingParticipant = () => {
         body: JSON.stringify({ participant }),
     })
 }
+
+const connectToTheUserStoryVoteWebSocket = () => {
+    const { groomingSessionId, userStoryId } = ids()
+    const url = new URL(window.location.href)
+    const webSocketURL = `ws://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote`
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const socket = new WebSocket(webSocketURL);
+
+        socket.addEventListener("open", (event) => {
+            socket.send("connection-ready");
+        })
+
+        socket.addEventListener("message", (event) => {
+            if (event.data[0] === "{") {
+                const data = JSON.parse(event.data)
+                document.getElementById("vote-session-data").innerHTML = "<pre>"
+                  + JSON.stringify(data, null, 2)
+                  + "</pre>"
+            }
+        })
+    })
+}
