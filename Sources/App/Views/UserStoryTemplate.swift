@@ -34,6 +34,26 @@ struct UserStoryTemplate: HTMLTemplate {
                     form
                     Div {
                         H3 { "Vote session" }.singleColumn
+                        H4 { "Participants" }.singleColumn
+                        Form {
+                            Label { "Temp Renaud vote" }.for("renaud-vote")
+                            Input(type: .number, id: "renaud-vote").name("renaud-vote").required()
+                            Button { "Submit" }
+                                .type(.button)
+                                .on(click: "tempRenaudVote()")
+                        }
+                        Table {
+                            TableHead {
+                                TableRow {
+                                    TableHeader { "Participant" }
+                                    TableHeader { "Has voted" }
+                                    TableHeader { "Points" }
+                                }
+                            }
+                            TableBody {
+
+                            }.id("participants-table")
+                        }.singleColumn
                         H4 { "Data" }.singleColumn
                         P {
                             "Error: No Data received yet from the WebSocket"

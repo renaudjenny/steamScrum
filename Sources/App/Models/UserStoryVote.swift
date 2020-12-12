@@ -18,3 +18,10 @@ extension UserStory {
         var sum: Int { points.reduce(0, { $0 + $1.value }) }
     }
 }
+
+extension UserStory.Vote {
+    struct Point: Decodable {
+        var participant: String
+        var points: Int
+    }
+}

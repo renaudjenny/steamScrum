@@ -61,6 +61,18 @@ const addVotingParticipant = () => {
     })
 }
 
+const tempRenaudVote = () => {
+    const { userStoryId } = ids()
+    const points = parseInt(document.getElementById("renaud-vote").value)
+    fetch(`${userStoryId}/vote/Renaud`, {
+    method: "POST",
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ participant: "Renaud", points: points }),
+    })
+}
+
 const connectToTheUserStoryVoteWebSocket = () => {
     const { groomingSessionId, userStoryId } = ids()
     const url = new URL(window.location.href)
@@ -79,6 +91,17 @@ const connectToTheUserStoryVoteWebSocket = () => {
                 document.getElementById("vote-session-data").innerHTML = "<pre>"
                   + JSON.stringify(data, null, 2)
                   + "</pre>"
+
+                const isVoteFinished = Object.keys(data.points).length === data.participants.length
+                document.getElementById("participants-table").innerHTML = data.participants.reduce((result, participant) => {
+                    const points = data.points[participant]
+                    const hasVoted = points != null
+                    return result + `<tr>
+                        <td>${participant}</td>
+                        <td>${hasVoted ? "✅" : "❓"}</td>
+                        <td>${isVoteFinished ? points : "👀"}</td>
+                    </tr>`
+                }, '')
             }
         })
     })
