@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-final class UserStory: Model, Content {
+final class UserStory: Model, Content, Hashable {
     static let schema = "user_stories"
 
     @ID(key: .id)
@@ -13,14 +13,18 @@ final class UserStory: Model, Content {
     @Parent(key: "grooming_session_id")
     var groomingSession: GroomingSession
 
-    var vote = Vote()
-
     init() { }
 
     init(id: UUID? = nil, name: String, groomingSession: GroomingSession) throws {
         self.id = id
         self.name = name
         self.$groomingSession.id = try groomingSession.requireID()
+    }
+
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
+
+    static func == (lhs: UserStory, rhs: UserStory) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

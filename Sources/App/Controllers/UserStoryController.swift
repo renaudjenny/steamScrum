@@ -2,6 +2,8 @@ import Fluent
 import Vapor
 
 struct UserStoryController: RouteCollection {
+    let store: AppStore
+
     func boot(routes: RoutesBuilder) throws {
         let userStories = routes.grouped("grooming_sessions", ":groomingSessionID", "user_stories")
         userStories.get(use: index)
@@ -10,7 +12,8 @@ struct UserStoryController: RouteCollection {
             userStory.get(use: get)
             userStory.delete(use: delete)
             userStory.group("vote") { vote in
-                vote.get(use: getUserStoryVote)
+                vote.get(use: getVote)
+                vote.post(use: addVotingParticipant)
             }
         }
     }
@@ -99,7 +102,7 @@ struct UserStoryController: RouteCollection {
             }
     }
 
-    func getUserStoryVote(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
+    func getVote(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
         guard
             let groomingSessionIdString = req.parameters.get("groomingSessionID"),
             let groomingSessionId = UUID(uuidString: groomingSessionIdString),
@@ -115,6 +118,39 @@ struct UserStoryController: RouteCollection {
             .filter(\.$groomingSession.$id == groomingSessionId)
             .first()
             .unwrap(or: Abort(.notFound))
-            .map { $0.vote }
+            .map {
+                if !store.userStoriesVotes.keys.contains($0) {
+                    store.userStoriesVotes[$0] = UserStory.Vote()
+                }
+                return store.userStoriesVotes[$0] ?? UserStory.Vote()
+            }
+    }
+
+    func addVotingParticipant(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        print("addVotingParticipant called")
+        guard
+            let participant = try req.content.decode([String: String].self)["participant"],
+            !participant.isEmpty
+        else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
+
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString)
+        else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
+
+        return UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$groomingSession)
+            .filter(\.$groomingSession.$id == groomingSessionId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .map {
+                if !store.userStoriesVotes.keys.contains($0) {
+                    store.userStoriesVotes[$0] = UserStory.Vote()
+                }
+                store.userStoriesVotes[$0]?.add(participant: participant)
+            }
+            .transform(to: .ok)
     }
 }

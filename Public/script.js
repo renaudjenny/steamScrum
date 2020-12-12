@@ -20,14 +20,22 @@ const createGroomingSession = () => {
     .then(() => location.reload())
 }
 
-const getGroomingSessionId = () => {
+const ids = () => {
     const url = new URL(window.location.href)
-    return url.pathname.split('/').pop()
+    const paths = url.pathname.split("/")
+    const groomingSessionId = paths[paths.indexOf("grooming_sessions") + 1]
+    const userStoryId = paths[paths.indexOf("user_stories") + 1]
+
+    return {
+        groomingSessionId,
+        userStoryId,
+    }
 }
 
 const createUserStory = () => {
     const name = document.getElementById('name').value
-    fetch(`${getGroomingSessionId()}/user_stories`, {
+    const { groomingSessionId } = ids()
+    fetch(`${groomingSessionId}/user_stories`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -38,5 +46,17 @@ const createUserStory = () => {
 }
 
 const removeUserStory = (userStoryId) =>
-    fetch(`${getGroomingSessionId()}/user_stories/${userStoryId}`, { method: 'DELETE' })
+    fetch(`${ids().groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
         .then(() => window.location.reload())
+
+const addVotingParticipant = () => {
+    const { userStoryId } = ids()
+    const participant = document.getElementById("participant").value
+    fetch(`${userStoryId}/vote`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ participant }),
+    })
+}

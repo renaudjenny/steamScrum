@@ -30,8 +30,19 @@ struct UserStoryTemplate: HTMLTemplate {
                 Div {
                     H2 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
                     H1 { context.userStory.name }.singleColumn
+                    form
                 }.class("container")
             }
+        }
+    }
+
+    private var form: Form {
+        Form {
+            Label { "Add participant to the vote" }.for("participant")
+            Input(type: .text, id: "participant").name("participant").required()
+            Button { "Submit" }
+                .type(.button)
+                .on(click: "addVotingParticipant()")
         }
     }
 }
