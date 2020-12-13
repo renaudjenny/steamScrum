@@ -207,12 +207,13 @@ struct UserStoryController: RouteCollection {
         let webSocketId = UUID()
 
         webSocket.onText { ws, text in
+            // TODO: Should handle these in their own functions
             print("Text received: \(text)")
 
             if text == "connection-ready" {
                 store.updateCallbacks[webSocketId] = {
                     ws.send("New fresh data from the store!")
-                    guard let data = try? JSONEncoder().encode(store.userStoriesVotes[userStoryId]),
+                    guard let data = try? JSONEncoder().encode(store.userStoriesVotes[userStoryId]?.encoded),
                           let dataAsString = String(data: data, encoding: .utf8)
                     else {
                         ws.send("Error")
@@ -220,6 +221,24 @@ struct UserStoryController: RouteCollection {
                     }
                     ws.send(dataAsString)
                 }
+                store.updateCallbacks[webSocketId]?()
+            } else if (text.contains("vote")) {
+                struct SetVote: Decodable {
+                    struct Vote: Decodable {
+                        var participant: String
+                        var points: Int
+                    }
+                    var vote: Vote
+                }
+
+                guard let data = text.data(using: .utf8),
+                      let setVote = try? JSONDecoder().decode(SetVote.self, from: data)
+                else { return }
+
+                store.userStoriesVotes[userStoryId]?.set(
+                    points: setVote.vote.points,
+                    for: setVote.vote.participant
+                )
                 store.updateCallbacks[webSocketId]?()
             }
         }

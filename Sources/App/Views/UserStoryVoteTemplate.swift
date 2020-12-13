@@ -63,11 +63,12 @@ struct UserStoryVoteTemplate: HTMLTemplate {
 
     private var form: Form {
         Form {
-            ForEach(in: fibonacciSequence) { point in
-                Button { point }
+            // TODO: 3x3 Grid instead of all aligned
+            ForEach(in: fibonacciSequence) { points in
+                Button { points }
                     .type(.button)
                     .class("button button-outline")
-                    .on(click: "setVote(\"" + context.participant + "\", " + point + ")")
+                    .on(click: "setVote(\"" + context.participant + "\", " + points + ")")
             }
         }
     }

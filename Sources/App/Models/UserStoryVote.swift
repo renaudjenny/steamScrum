@@ -23,8 +23,16 @@ extension UserStory {
 }
 
 extension UserStory.Vote {
-    struct Point: Decodable {
-        var participant: String
-        var points: Int
+    struct Encoded: Encodable {
+        var participants: [String]
+        var points: [String: Int]
+        var sum: Int
+        var avg: Double
     }
+    var encoded: Encoded { Encoded(
+        participants: participants,
+        points: points,
+        sum: sum,
+        avg: avg
+    )}
 }

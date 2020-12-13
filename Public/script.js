@@ -61,17 +61,12 @@ const addVotingParticipant = () => {
     })
 }
 
-const vote = (participant) => {
-//    const { userStoryId } = ids()
-//    const points = parseInt(document.getElementById("renaud-vote").value)
-//    fetch(`${userStoryId}/vote/Renaud`, {
-//    method: "POST",
-//    headers: {
-//        'Content-Type': 'application/json',
-//    },
-//    body: JSON.stringify({ participant: "Renaud", points: points }),
-//    })
-    console.log(`should redirect to vote for ${participant}`)
+// TODO: Extract this part into its own file?
+let webSocket = null
+const isWebSocketReady = () => {
+    return webSocket != null &&
+        webSocket.readyState === WebSocket.CLOSED &&
+        webSocket.readyState === WebSocket.CLOSING
 }
 
 const connectToTheUserStoryVoteWebSocket = () => {
@@ -80,13 +75,14 @@ const connectToTheUserStoryVoteWebSocket = () => {
     const webSocketURL = `ws://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote`
 
     window.addEventListener("DOMContentLoaded", () => {
-        const socket = new WebSocket(webSocketURL);
+        webSocket = new WebSocket(webSocketURL);
 
-        socket.addEventListener("open", (event) => {
-            socket.send("connection-ready");
+        webSocket.addEventListener("open", (event) => {
+            webSocket.send("connection-ready");
         })
 
-        socket.addEventListener("message", (event) => {
+        webSocket.addEventListener("message", (event) => {
+            // TODO: Do a golden path here instead of this pyramid of doom
             if (event.data[0] === "{") {
                 const data = JSON.parse(event.data)
 
@@ -96,6 +92,7 @@ const connectToTheUserStoryVoteWebSocket = () => {
                   + "</pre>"
 
                 if (document.getElementById("participants-buttons") != null) {
+                    // TODO: Extract into its own function
                     document.getElementById("participants-buttons").innerHTML = data.participants.reduce((result, participant) => {
                         return result + `<button
                             class="button button-outline"
@@ -107,6 +104,7 @@ const connectToTheUserStoryVoteWebSocket = () => {
                     }, '')
                 }
 
+                // TODO: Extract to its own function
                 const isVoteFinished = Object.keys(data.points).length === data.participants.length
                 document.getElementById("participants-table").innerHTML = data.participants.reduce((result, participant) => {
                     const points = data.points[participant]
@@ -120,4 +118,11 @@ const connectToTheUserStoryVoteWebSocket = () => {
             }
         })
     })
+}
+
+const setVote = (participant, points) => {
+    if (!isWebSocketReady) { return }
+
+    const vote = { vote: { participant, points }}
+    webSocket.send(JSON.stringify(vote))
 }
