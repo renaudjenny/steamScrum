@@ -2,12 +2,14 @@ import Vapor
 
 extension UserStory {
     struct Vote: Content {
-        var participants = Set<String>()
+        var participants: [String] = []
         var points: [String: Int] = [:]
 
         mutating func add(participant: String) {
-            guard participants.count < 50 else { return }
-            participants.insert(participant)
+            guard participants.count < 50,
+                  !participants.contains(participant)
+            else { return }
+            participants.append(participant)
         }
 
         mutating func set(points: Int, for participant: String) {
@@ -16,6 +18,7 @@ extension UserStory {
         }
 
         var sum: Int { points.reduce(0, { $0 + $1.value }) }
+        var avg: Double { Double(sum)/Double(participants.count) }
     }
 }
 

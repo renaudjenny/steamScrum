@@ -12,9 +12,9 @@ struct UserStoryController: RouteCollection {
             userStory.get(use: get)
             userStory.delete(use: delete)
             userStory.group("vote") { vote in
-                vote.get(use: getVote)
+                vote.get(use: getVoteResult)
+                vote.get(":participant", use: getVote)
                 vote.post(use: addVotingParticipant)
-                vote.post(":participant", use: point)
                 vote.webSocket(onUpgrade: upgradeVoteWebSocket)
             }
         }
@@ -100,7 +100,7 @@ struct UserStoryController: RouteCollection {
             }
     }
 
-    func getVote(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
+    func getVoteResult(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
         guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
               let groomingSessionId = UUID(uuidString: groomingSessionIdString),
               let userStoryIdString = req.parameters.get("userStoryID"),
@@ -123,6 +123,33 @@ struct UserStoryController: RouteCollection {
             }
     }
 
+    func getVote(req: Request) throws -> EventLoopFuture<View> {
+        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
+              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString),
+              let participant = req.parameters.get("participant")
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$groomingSession)
+            .filter(\.$groomingSession.$id == groomingSessionId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap {
+                guard let userStoryId = $0.id,
+                      let vote = store.userStoriesVotes[userStoryId],
+                      vote.participants.contains(participant)
+                else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
+
+                return UserStoryVoteTemplate().render(with: UserStoryVoteData(userStory: $0, participant: participant), for: req)
+            }
+    }
+
+    // TODO: this could be done directly in the WebSocket instead of doing another post request
     func addVotingParticipant(req: Request) throws -> EventLoopFuture<HTTPStatus> {
         guard let participant = try req.content.decode([String: String].self)["participant"],
               !participant.isEmpty
@@ -145,34 +172,6 @@ struct UserStoryController: RouteCollection {
                     store.userStoriesVotes[userStoryId] = UserStory.Vote()
                 }
                 store.userStoriesVotes[userStoryId]?.add(participant: participant)
-            }
-            .transform(to: .ok)
-    }
-
-    func point(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        // FIXME: UserStory.Vote.Point is super confusing, find another way to do that
-        // We should be able to only parse { points: Int } or something
-        let point = try req.content.decode(UserStory.Vote.Point.self)
-
-        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
-              let userStoryIdString = req.parameters.get("userStoryID"),
-              let userStoryId = UUID(uuidString: userStoryIdString),
-              let participant = req.parameters.get("participant")
-        else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
-
-        guard let vote = store.userStoriesVotes[userStoryId],
-              vote.participants.contains(participant)
-        else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
-
-        return UserStory.query(on: req.db)
-            .filter(\.$id == userStoryId)
-            .with(\.$groomingSession)
-            .filter(\.$groomingSession.$id == groomingSessionId)
-            .first()
-            .unwrap(or: Abort(.notFound))
-            .map { _ in
-                store.userStoriesVotes[userStoryId]?.set(points: point.points, for: participant)
             }
             .transform(to: .ok)
     }

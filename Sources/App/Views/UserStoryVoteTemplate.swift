@@ -1,11 +1,12 @@
 import HTMLKit
 
-struct UserStoryData {
+struct UserStoryVoteData {
     let userStory: UserStory
+    let participant: String
 }
 
-struct UserStoryTemplate: HTMLTemplate {
-    @TemplateValue(UserStoryData.self) var context
+struct UserStoryVoteTemplate: HTMLTemplate {
+    @TemplateValue(UserStoryVoteData.self) var context
 
     var body: HTML {
         Document(type: .html5) {
@@ -30,17 +31,11 @@ struct UserStoryTemplate: HTMLTemplate {
             Body {
                 Div {
                     H2 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
-                    H1 { context.userStory.name }.singleColumn
+                    H1 { context.participant }
+                    H1 { "Vote for: " + context.userStory.name }.singleColumn
                     form
+                    H2 { "Vote results" }
                     Div {
-                        H3 { "Vote session" }.singleColumn
-                        H4 { "Participants" }.singleColumn
-                        H5 { "Who are you?" }.singleColumn
-                        Div {
-                            Button { "Simple spectator" }.type(.button)
-                            Div { }.id("participants-buttons")
-                        }
-
                         Table {
                             TableHead {
                                 TableRow {
@@ -68,11 +63,14 @@ struct UserStoryTemplate: HTMLTemplate {
 
     private var form: Form {
         Form {
-            Label { "Add participant to the vote" }.for("participant")
-            Input(type: .text, id: "participant").name("participant").required()
-            Button { "Submit" }
-                .type(.button)
-                .on(click: "addVotingParticipant()")
+            ForEach(in: fibonacciSequence) { point in
+                Button { point }
+                    .type(.button)
+                    .class("button button-outline")
+                    .on(click: "setVote(\"" + context.participant + "\", " + point + ")")
+            }
         }
     }
+
+    private var fibonacciSequence: [Int] = [1, 2, 3, 5, 8, 13, 21, 34, 55]
 }

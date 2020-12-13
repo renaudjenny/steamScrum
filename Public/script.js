@@ -61,16 +61,17 @@ const addVotingParticipant = () => {
     })
 }
 
-const tempRenaudVote = () => {
-    const { userStoryId } = ids()
-    const points = parseInt(document.getElementById("renaud-vote").value)
-    fetch(`${userStoryId}/vote/Renaud`, {
-    method: "POST",
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ participant: "Renaud", points: points }),
-    })
+const vote = (participant) => {
+//    const { userStoryId } = ids()
+//    const points = parseInt(document.getElementById("renaud-vote").value)
+//    fetch(`${userStoryId}/vote/Renaud`, {
+//    method: "POST",
+//    headers: {
+//        'Content-Type': 'application/json',
+//    },
+//    body: JSON.stringify({ participant: "Renaud", points: points }),
+//    })
+    console.log(`should redirect to vote for ${participant}`)
 }
 
 const connectToTheUserStoryVoteWebSocket = () => {
@@ -88,9 +89,23 @@ const connectToTheUserStoryVoteWebSocket = () => {
         socket.addEventListener("message", (event) => {
             if (event.data[0] === "{") {
                 const data = JSON.parse(event.data)
+
+                // TODO: Debug code, remove it at some point
                 document.getElementById("vote-session-data").innerHTML = "<pre>"
                   + JSON.stringify(data, null, 2)
                   + "</pre>"
+
+                if (document.getElementById("participants-buttons") != null) {
+                    document.getElementById("participants-buttons").innerHTML = data.participants.reduce((result, participant) => {
+                        return result + `<button
+                            class="button button-outline"
+                            onClick="window.location.href = '${url}/vote/${participant}'"
+                        >
+                            ${participant}
+                        </button>
+                        `
+                    }, '')
+                }
 
                 const isVoteFinished = Object.keys(data.points).length === data.participants.length
                 document.getElementById("participants-table").innerHTML = data.participants.reduce((result, participant) => {
