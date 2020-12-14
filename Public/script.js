@@ -49,18 +49,6 @@ const removeUserStory = (userStoryId) =>
     fetch(`${ids().groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
         .then(() => window.location.reload())
 
-const addVotingParticipant = () => {
-    const { userStoryId } = ids()
-    const participant = document.getElementById("participant").value
-    fetch(`${userStoryId}/vote`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ participant }),
-    })
-}
-
 // TODO: Extract this part into its own file?
 let webSocket = null
 const isWebSocketReady = () => {
@@ -82,48 +70,87 @@ const connectToTheUserStoryVoteWebSocket = () => {
         })
 
         webSocket.addEventListener("message", (event) => {
-            // TODO: Do a golden path here instead of this pyramid of doom
-            console.log({ event })
-            if (event.data[0] === "{") {
-                const data = JSON.parse(event.data)
-
-                // TODO: Debug code, remove it at some point
-                document.getElementById("vote-session-data").innerHTML = "<pre>"
-                  + JSON.stringify(data, null, 2)
-                  + "</pre>"
-
-                if (document.getElementById("participants-buttons") != null) {
-                    // TODO: Extract into its own function
-                    document.getElementById("participants-buttons").innerHTML = data.participants.reduce((result, participant) => {
-                        return result + `<button
-                            class="button button-outline"
-                            onClick="window.location.href = '${url}/vote/${participant}'"
-                        >
-                            ${participant}
-                        </button>
-                        `
-                    }, '')
-                }
-
-                // TODO: Extract to its own function
-                const isVoteFinished = Object.keys(data.points).length === data.participants.length
-                document.getElementById("participants-table").innerHTML = data.participants.reduce((result, participant) => {
-                    const points = data.points[participant]
-                    const hasVoted = points != null
-                    return result + `<tr>
-                        <td>${participant}</td>
-                        <td>${hasVoted ? "✅" : "❓"}</td>
-                        <td>${isVoteFinished ? points : "👀"}</td>
-                    </tr>`
-                }, '')
+            if (event.data[0] !== "{") {
+                console.error("Error: Cannot parse this message: " + event.data)
+                return
             }
+            const data = JSON.parse(event.data)
+
+            // TODO: Debug code, remove it at some point
+            document.getElementById("vote-session-data").innerHTML = "<pre>"
+              + JSON.stringify(data, null, 2)
+              + "</pre>"
+
+            updateParticipantsButtonsIfNeeded(data, url)
+            updateVoteStatusIfNeeded(data)
         })
     })
 }
 
+const updateParticipantsButtonsIfNeeded = (data, url) => {
+    const participantsButtons = document.getElementById("participants-buttons")
+    if (participantsButtons == null) { return }
+
+    participantsButtons.innerHTML = data.participants.reduce((result, participant) => {
+        return result + `<button
+            class="button button-outline"
+            onClick="window.location.href = '${url}/vote/${participant}'"
+        >
+            ${participant}
+        </button>
+        `
+    }, '')
+}
+
+const updateVoteStatusIfNeeded = (data) => {
+    const participantsTable = document.getElementById("participants-table")
+    if (participantsTable == null) { return }
+
+    const isVoteFinished = data.avg != null
+
+    participantsTable.innerHTML = data.participants.reduce((result, participant) => {
+        const points = data.points[participant]
+        const hasVoted = points != null
+        return result + `<tr>
+            <td>${participant}</td>
+            <td>${hasVoted ? "✅" : "❓"}</td>
+            <td>${isVoteFinished ? points : "👀"}</td>
+        </tr>`
+    }, '')
+
+    if (isVoteFinished) {
+        participantsTable.innerHTML += `<tr>
+            <td><b>Average points</b></td>
+            <td></td>
+            <td><b>${data.avg.toFixed(2).replace(/[.,]00$/, "")}</b></td>
+        </tr>`
+    }
+
+    const saveButton = document.getElementById("save-button")
+    if (saveButton == null) { return }
+    if (isVoteFinished) {
+        saveButton.removeAttribute("disabled")
+    } else {
+        saveButton.setAttribute("disabled", "true")
+    }
+}
+
 const setVote = (participant, points) => {
-    if (!isWebSocketReady) { return }
+    if (!isWebSocketReady) {
+        console.error("Cannot vote, WebSocket isn't ready")
+        return
+    }
 
     const vote = { vote: { participant, points }}
     webSocket.send(JSON.stringify(vote))
+}
+
+const addVotingParticipant = () => {
+    if (!isWebSocketReady) {
+        console.error("Cannot add voting participant, WebSocket isn't ready")
+        return
+    }
+    const participant = document.getElementById("participant").value
+    const addVotingParticipant = { addVotingParticipant: participant }
+    webSocket.send(JSON.stringify(addVotingParticipant))
 }

@@ -35,11 +35,12 @@ struct UserStoryTemplate: HTMLTemplate {
                     Div {
                         H3 { "Vote session" }.singleColumn
                         H4 { "Participants" }.singleColumn
-                        H5 { "Who are you?" }.singleColumn
                         Div {
-                            Button { "Simple spectator" }.type(.button)
+                            P { "Select your name on the list to vote." +
+                                "If you're not here yet, use the form above to add you as participant." +
+                                "If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)" }
                             Div { }.id("participants-buttons")
-                        }
+                        }.singleColumn
 
                         Table {
                             TableHead {
@@ -53,6 +54,15 @@ struct UserStoryTemplate: HTMLTemplate {
 
                             }.id("participants-table")
                         }.singleColumn
+
+                        Button {
+                            "Save this vote"
+                        }
+                        .add(attributes: [HTMLAttribute(attribute: "disabled", value: "true")])
+                        .id("save-button")
+                        .on(click: "saveVote()")
+
+                        // TODO: Debug code, remove it ASAP
                         H4 { "Data" }.singleColumn
                         P {
                             "Error: No Data received yet from the WebSocket"

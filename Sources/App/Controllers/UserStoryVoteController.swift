@@ -8,8 +8,6 @@ struct UserStoryVoteController: RouteCollection {
         let vote = routes.grouped("grooming_sessions", ":groomingSessionID", "user_stories", ":userStoryID", "vote")
         vote.get(use: index)
         vote.get(":participant", use: voteView)
-        // FIXME: addVotingParticipant should be removed at some point
-        vote.post(use: addVotingParticipant)
         vote.webSocket(onUpgrade: upgrade)
     }
 
@@ -62,33 +60,6 @@ struct UserStoryVoteController: RouteCollection {
             }
     }
 
-    // TODO: this could be done directly in the WebSocket instead of doing another post request
-    private func addVotingParticipant(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        guard let participant = try req.content.decode([String: String].self)["participant"],
-              !participant.isEmpty
-        else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
-
-        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
-              let userStoryIdString = req.parameters.get("userStoryID"),
-              let userStoryId = UUID(uuidString: userStoryIdString)
-        else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
-
-        return UserStory.query(on: req.db)
-            .filter(\.$id == userStoryId)
-            .with(\.$groomingSession)
-            .filter(\.$groomingSession.$id == groomingSessionId)
-            .first()
-            .unwrap(or: Abort(.notFound))
-            .map { _ in
-                if !store.userStoriesVotes.keys.contains(userStoryId) {
-                    store.userStoriesVotes[userStoryId] = UserStory.Vote()
-                }
-                store.userStoriesVotes[userStoryId]?.add(participant: participant)
-            }
-            .transform(to: .ok)
-    }
-
     private func upgrade(req: Request, webSocket: WebSocket) {
         guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
               let groomingSessionId = UUID(uuidString: groomingSessionIdString),
@@ -136,7 +107,9 @@ struct UserStoryVoteController: RouteCollection {
 
         if text == "connection-ready" {
             onConnectionReady(webSocketId: webSocketId, userStoryId: userStoryId, webSocket: webSocket)
-        } else if (text.contains("vote")) {
+        } else if text.contains("addVotingParticipant") {
+            onAddVotingParticipant(webSocketId: webSocketId, userStoryId: userStoryId, webSocket: webSocket, text: text)
+        } else if text.contains("vote") {
             onVote(webSocketId: webSocketId, userStoryId: userStoryId, webSocket: webSocket, text: text)
         }
     }
@@ -153,6 +126,26 @@ struct UserStoryVoteController: RouteCollection {
             webSocket.send(message)
         }
         store.updateCallbacks[webSocketId]?()
+    }
+
+    private func onAddVotingParticipant(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
+        struct AddVotingParticipant: Decodable {
+            var addVotingParticipant: String
+        }
+
+        do {
+            guard let data = text.data(using: .utf8) else {
+                webSocket.send("Error: Cannot convert '\(text)' to UTF-8 Data")
+                return
+            }
+            let votingParticipant = try JSONDecoder().decode(AddVotingParticipant.self, from: data)
+
+            store.userStoriesVotes[userStoryId]?.add(participant: votingParticipant.addVotingParticipant)
+            store.updateCallbacks[webSocketId]?()
+        } catch {
+            webSocket.send("Error: \(error)")
+            return
+        }
     }
 
     private func onVote(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
