@@ -83,6 +83,7 @@ const connectToTheUserStoryVoteWebSocket = () => {
 
         webSocket.addEventListener("message", (event) => {
             // TODO: Do a golden path here instead of this pyramid of doom
+            console.log({ event })
             if (event.data[0] === "{") {
                 const data = JSON.parse(event.data)
 

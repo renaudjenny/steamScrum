@@ -19,5 +19,6 @@ func routes(_ app: Application) throws {
 
     try app.register(collection: GroomingSessionController())
     app.get("groomingSessionsContext", use: GroomingSessionController().context(req:))
-    try app.register(collection: UserStoryController(store: AppStore()))
+    try app.register(collection: UserStoryController())
+    try app.register(collection: UserStoryVoteController(store: AppStore()))
 }
