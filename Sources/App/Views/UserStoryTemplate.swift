@@ -31,16 +31,18 @@ struct UserStoryTemplate: HTMLTemplate {
                 Div {
                     H2 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
                     H1 { context.userStory.name }.singleColumn
-                    form
                     Div {
                         H3 { "Vote session" }.singleColumn
                         H4 { "Participants" }.singleColumn
                         Div {
-                            P { "Select your name on the list to vote. " +
-                                "If you're not here yet, use the form above to add you as participant. " +
-                                "If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)" }
-                            Div { }.id("participants-buttons")
-                        }.singleColumn
+                            Div {
+                                P { "Select your name on the list to vote. " +
+                                    "If you're name isn't here yet, use the form above to add it. " +
+                                    "If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)" }
+                                Div { }.id("participants-buttons")
+                            }.class("column")
+                            form.class("column")
+                        }.class("row")
 
                         Table {
                             TableHead {
@@ -56,18 +58,19 @@ struct UserStoryTemplate: HTMLTemplate {
                         }.singleColumn
 
                         Div {
-                            Button {
-                                "Save this vote"
-                            }
-                            .add(attributes: [HTMLAttribute(attribute: "disabled", value: "true")])
-                            .id("save-button")
-                            .on(click: "saveVote()")
-                            .class("column")
+                            Div {
+                                Button {
+                                    "Save this vote"
+                                }
+                                .add(attributes: [HTMLAttribute(attribute: "disabled", value: "true")])
+                                .id("save-button")
+                                .on(click: "saveVote()")
+                            }.class("column")
 
                             P {
                                 "You'll be able to save the vote when everyone has voted. You also need at least one vote."
                             }
-                            .class("column column-75")
+                            .class("column column-80")
                             .id("save-button-help")
                         }.class("row")
 
@@ -89,7 +92,7 @@ struct UserStoryTemplate: HTMLTemplate {
         Form {
             Label { "Add participant to the vote" }.for("participant")
             Input(type: .text, id: "participant").name("participant").required()
-            Button { "Submit" }
+            Button { "Add" }
                 .type(.button)
                 .on(click: "addVotingParticipant()")
         }

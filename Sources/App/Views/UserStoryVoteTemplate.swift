@@ -30,32 +30,36 @@ struct UserStoryVoteTemplate: HTMLTemplate {
             }
             Body {
                 Div {
-                    H2 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
-                    H1 { context.participant }
-                    H1 { "Vote for: " + context.userStory.name }.singleColumn
-                    form
-                    H2 { "Vote results" }
+                    H3 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
                     Div {
-                        Table {
-                            TableHead {
-                                TableRow {
-                                    TableHeader { "Participant" }
-                                    TableHeader { "Has voted" }
-                                    TableHeader { "Points" }
-                                }
-                            }
-                            TableBody {
+                        Div {
+                            H2 { context.participant + "for: " + context.userStory.name }.singleColumn
+                            form.singleColumn
+                        }.class("column")
+                        Div {
+                            H2 { "Vote results" }.singleColumn
+                            Div {
+                                Table {
+                                    TableHead {
+                                        TableRow {
+                                            TableHeader { "Participant" }
+                                            TableHeader { "Has voted" }
+                                            TableHeader { "Points" }
+                                        }
+                                    }
+                                    TableBody {
 
-                            }.id("participants-table")
-                        }.singleColumn
-                        H4 { "Data" }.singleColumn
-                        P {
-                            "Error: No Data received yet from the WebSocket"
-                        }
-                        .id("vote-session-data")
-                        .singleColumn
-                    }
-                    .singleColumn
+                                    }.id("participants-table")
+                                }.singleColumn
+                                H4 { "Data" }.singleColumn
+                                P {
+                                    "Error: No Data received yet from the WebSocket"
+                                }
+                                .id("vote-session-data")
+                                .singleColumn
+                            }.singleColumn
+                        }.class("column")
+                    }.class("row")
                 }.class("container")
             }
         }
@@ -63,17 +67,22 @@ struct UserStoryVoteTemplate: HTMLTemplate {
 
     private var form: Form {
         Form {
-            // TODO: 3x3 Grid instead of all aligned
-            ForEach(in: fibonacciSequence) { points in
-                Button { points }
-                    .type(.button)
-                    .class("button button-outline")
-                    .name("points-button")
-                    .data("points", value: points)
-                    .on(click: "setVote(\"" + context.participant + "\", " + points + ")")
+            ForEach(in: fibonacciSequence) { line in
+                Div {
+                    ForEach(in: line) { points in
+                        Button { points }
+                            .type(.button)
+                            .class("button button-outline")
+                            .name("points-button")
+                            .data("points", value: points)
+                            .on(click: "setVote(\"" + context.participant + "\", " + points + ")")
+                            .style(css: "width: 80px; height: 80px; margin: 8px;")
+                    }
+                }
+                .style(css: "display: flex; flex-flow: row wrap; align-items: center; justify-content: center;")
             }
         }
     }
 
-    private var fibonacciSequence: [Int] = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+    private var fibonacciSequence: [[Int]] = [[1, 2, 3], [5, 8, 13], [21, 34, 55]]
 }

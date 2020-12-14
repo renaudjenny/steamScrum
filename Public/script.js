@@ -177,7 +177,9 @@ const addVotingParticipant = () => {
         console.error("Cannot add voting participant, WebSocket isn't ready")
         return
     }
-    const participant = document.getElementById("participant").value
-    const addVotingParticipant = { addVotingParticipant: participant }
+    const participantInput = document.getElementById("participant")
+    const addVotingParticipant = { addVotingParticipant: participantInput.value }
     webSocket.send(JSON.stringify(addVotingParticipant))
+    participantInput.value = ""
+    participantInput.focus()
 }
