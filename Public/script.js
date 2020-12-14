@@ -83,6 +83,8 @@ const connectToTheUserStoryVoteWebSocket = () => {
 
             updateParticipantsButtonsIfNeeded(data, url)
             updateVoteStatusIfNeeded(data)
+
+            updatePointsButtonIfNeeded(data)
         })
     })
 }
@@ -127,12 +129,37 @@ const updateVoteStatusIfNeeded = (data) => {
     }
 
     const saveButton = document.getElementById("save-button")
-    if (saveButton == null) { return }
+    const saveButtonHelp = document.getElementById("save-button-help")
+    if (saveButton == null || saveButtonHelp == null) { return }
     if (isVoteFinished) {
         saveButton.removeAttribute("disabled")
+        saveButtonHelp.removeAttribute("hidden")
     } else {
         saveButton.setAttribute("disabled", "true")
+        saveButtonHelp.setAttribute("hidden", "true")
     }
+}
+
+const updatePointsButtonIfNeeded = (data) => {
+    const pointsButtons = document.getElementsByName("points-button")
+    if (pointsButtons == null) { return }
+
+    const url = new URL(window.location.href)
+    const paths = url.pathname.split("/")
+    const participant = paths.pop()
+
+    const selectedPoints = data.points[participant]
+    if (selectedPoints == null) { return }
+
+    pointsButtons.forEach(button => {
+        const points = parseInt(button.getAttribute("data-points"))
+        if (points == null) { return }
+        if (points === selectedPoints) {
+            button.className = "button"
+        } else {
+            button.className = "button button-outline"
+        }
+    })
 }
 
 const setVote = (participant, points) => {

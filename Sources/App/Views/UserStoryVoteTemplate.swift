@@ -68,6 +68,8 @@ struct UserStoryVoteTemplate: HTMLTemplate {
                 Button { points }
                     .type(.button)
                     .class("button button-outline")
+                    .name("points-button")
+                    .data("points", value: points)
                     .on(click: "setVote(\"" + context.participant + "\", " + points + ")")
             }
         }

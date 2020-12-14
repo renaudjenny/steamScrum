@@ -36,8 +36,8 @@ struct UserStoryTemplate: HTMLTemplate {
                         H3 { "Vote session" }.singleColumn
                         H4 { "Participants" }.singleColumn
                         Div {
-                            P { "Select your name on the list to vote." +
-                                "If you're not here yet, use the form above to add you as participant." +
+                            P { "Select your name on the list to vote. " +
+                                "If you're not here yet, use the form above to add you as participant. " +
                                 "If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)" }
                             Div { }.id("participants-buttons")
                         }.singleColumn
@@ -55,12 +55,21 @@ struct UserStoryTemplate: HTMLTemplate {
                             }.id("participants-table")
                         }.singleColumn
 
-                        Button {
-                            "Save this vote"
-                        }
-                        .add(attributes: [HTMLAttribute(attribute: "disabled", value: "true")])
-                        .id("save-button")
-                        .on(click: "saveVote()")
+                        Div {
+                            Button {
+                                "Save this vote"
+                            }
+                            .add(attributes: [HTMLAttribute(attribute: "disabled", value: "true")])
+                            .id("save-button")
+                            .on(click: "saveVote()")
+                            .class("column")
+
+                            P {
+                                "You'll be able to save the vote when everyone has voted. You also need at least one vote."
+                            }
+                            .class("column column-75")
+                            .id("save-button-help")
+                        }.class("row")
 
                         // TODO: Debug code, remove it ASAP
                         H4 { "Data" }.singleColumn
