@@ -183,3 +183,7 @@ const addVotingParticipant = () => {
     participantInput.value = ""
     participantInput.focus()
 }
+
+const saveVote = () => {
+    alert("Sorry the save vote feature is still work in progress. It will be implemented soon!")
+}

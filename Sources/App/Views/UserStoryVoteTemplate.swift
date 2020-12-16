@@ -33,7 +33,7 @@ struct UserStoryVoteTemplate: HTMLTemplate {
                     H3 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
                     Div {
                         Div {
-                            H2 { context.participant + "for: " + context.userStory.name }.singleColumn
+                            H2 { context.participant + " for: " + context.userStory.name }.singleColumn
                             form.singleColumn
                         }.class("column")
                         Div {
