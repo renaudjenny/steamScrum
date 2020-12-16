@@ -26,6 +26,7 @@ struct UserStoryTemplate: HTMLTemplate {
                 ])
                 Script().source("/script.js")
                 Script() { "connectToTheUserStoryVoteWebSocket()" }
+                Script() { "preventFormSubmit('add-participant-form')" }
             }
             Body {
                 Div {
@@ -92,9 +93,7 @@ struct UserStoryTemplate: HTMLTemplate {
         Form {
             Label { "Add participant to the vote" }.for("participant")
             Input(type: .text, id: "participant").name("participant").required()
-            Button { "Add" }
-                .type(.button)
-                .on(click: "addVotingParticipant()")
-        }
+            Button { "Add" }.type(.submit)
+        }.id("add-participant-form")
     }
 }

@@ -60,7 +60,8 @@ const isWebSocketReady = () => {
 const connectToTheUserStoryVoteWebSocket = () => {
     const { groomingSessionId, userStoryId } = ids()
     const url = new URL(window.location.href)
-    const webSocketURL = `wss://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote`
+    const protocol = url.protocol === 'http:' ? 'ws' : 'wss'
+    const webSocketURL = `${protocol}://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote`
 
     window.addEventListener("DOMContentLoaded", () => {
         webSocket = new WebSocket(webSocketURL);
@@ -178,12 +179,31 @@ const addVotingParticipant = () => {
         return
     }
     const participantInput = document.getElementById("participant")
+    if (participantInput.value === '') { return }
+
     const addVotingParticipant = { addVotingParticipant: participantInput.value }
     webSocket.send(JSON.stringify(addVotingParticipant))
+
     participantInput.value = ""
     participantInput.focus()
 }
 
 const saveVote = () => {
     alert("Sorry the save vote feature is still work in progress. It will be implemented soon!")
+}
+
+const preventFormSubmit = (id) => {
+    window.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById(id)
+        if (form == null) { return }
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault()
+            switch (id) {
+                case "add-participant-form":
+                    addVotingParticipant()
+                    break
+            }
+        })
+    })
 }
