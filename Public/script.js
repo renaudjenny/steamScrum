@@ -77,11 +77,6 @@ const connectToTheUserStoryVoteWebSocket = () => {
             }
             const data = JSON.parse(event.data)
 
-            // TODO: Debug code, remove it at some point
-            document.getElementById("vote-session-data").innerHTML = "<pre>"
-              + JSON.stringify(data, null, 2)
-              + "</pre>"
-
             updateParticipantsButtonsIfNeeded(data, url)
             updateVoteStatusIfNeeded(data)
 

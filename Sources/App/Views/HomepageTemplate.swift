@@ -28,7 +28,7 @@ struct HomepageTemplate: HTMLTemplate {
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
                 Script().source("/script.js")
-                Script() { "preventFormSubmit('add-grooming-session-form')" }
+                Script { "preventFormSubmit('add-grooming-session-form')" }
             }
             Body {
                 Div {

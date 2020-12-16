@@ -21,7 +21,6 @@ struct GroomingSessionController: RouteCollection {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.yyyyMMdd)
         let groomingSession = try req.content.decode(GroomingSession.self, using: jsonDecoder)
-        print(groomingSession.date)
         guard !groomingSession.name.isEmpty else {
             return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Grooming Session name cannot be empty"))
         }

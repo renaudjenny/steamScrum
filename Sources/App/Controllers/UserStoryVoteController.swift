@@ -103,8 +103,6 @@ struct UserStoryVoteController: RouteCollection {
     }
 
     private func onMessageReceived(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
-        print("Text received: \(text)")
-
         if text == "connection-ready" {
             onConnectionReady(webSocketId: webSocketId, userStoryId: userStoryId, webSocket: webSocket)
         } else if text.contains("addVotingParticipant") {

@@ -25,8 +25,8 @@ struct UserStoryTemplate: HTMLTemplate {
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
                 Script().source("/script.js")
-                Script() { "connectToTheUserStoryVoteWebSocket()" }
-                Script() { "preventFormSubmit('add-participant-form')" }
+                Script { "connectToTheUserStoryVoteWebSocket()" }
+                Script { "preventFormSubmit('add-participant-form')" }
             }
             Body {
                 Div {
@@ -74,14 +74,6 @@ struct UserStoryTemplate: HTMLTemplate {
                             .class("column column-80")
                             .id("save-button-help")
                         }.class("row")
-
-                        // TODO: Debug code, remove it ASAP
-                        H4 { "Data" }.singleColumn
-                        P {
-                            "Error: No Data received yet from the WebSocket"
-                        }
-                        .id("vote-session-data")
-                        .singleColumn
                     }
                     .singleColumn
                 }.class("container")

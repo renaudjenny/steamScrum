@@ -75,7 +75,11 @@ final class GroomingSessionTests: XCTestCase {
 
     func testGroomingSessionsGetOrderedByDateDesc() throws {
         let groomingSessions: [[String: String]] = (0..<10).map {
-            ["name": "Session \($0)", "date": DateFormatter.yyyyMMdd.string(from: Date().advanced(by: Double($0 * 60 * 1000)))]
+            [
+                "name": "Session \($0)",
+                "date": DateFormatter.yyyyMMdd
+                    .string(from: Date().advanced(by: Double($0 * 60 * 1000))),
+            ]
         }
         try groomingSessions.shuffled().forEach { groomingSession in
             try app.test(.POST, "grooming_sessions", beforeRequest: { req in
