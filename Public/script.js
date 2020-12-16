@@ -200,6 +200,12 @@ const preventFormSubmit = (id) => {
         form.addEventListener("submit", (event) => {
             event.preventDefault()
             switch (id) {
+                case "add-grooming-session-form":
+                    createGroomingSession()
+                    break
+                case "add-user-story-form":
+                    createUserStory()
+                    break
                 case "add-participant-form":
                     addVotingParticipant()
                     break
