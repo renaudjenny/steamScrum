@@ -48,7 +48,7 @@ struct UserStoryVoteTemplate: HTMLTemplate {
                                         }
                                     }
                                     TableBody {
-
+                                        ""
                                     }.id("participants-table")
                                 }.singleColumn
                                 H4 { "Data" }.singleColumn

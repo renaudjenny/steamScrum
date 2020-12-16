@@ -90,7 +90,7 @@ struct UserStoryVoteController: RouteCollection {
 
         let webSocketId = UUID()
 
-        webSocket.onText { onMessageReceived(
+        webSocket.onText { self.onMessageReceived(
             webSocketId: webSocketId,
             userStoryId: userStoryId,
             webSocket: $0,
