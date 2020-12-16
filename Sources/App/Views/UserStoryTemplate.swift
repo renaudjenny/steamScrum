@@ -39,7 +39,7 @@ struct UserStoryTemplate: HTMLTemplate {
                                 P { "Select your name on the list to vote. " +
                                     "If you're name isn't here yet, use the form above to add it. " +
                                     "If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)" }
-                                Div { }.id("participants-buttons")
+                                Div { "" }.id("participants-buttons")
                             }.class("column")
                             form.class("column")
                         }.class("row")
@@ -53,7 +53,7 @@ struct UserStoryTemplate: HTMLTemplate {
                                 }
                             }
                             TableBody {
-
+                                ""
                             }.id("participants-table")
                         }.singleColumn
 

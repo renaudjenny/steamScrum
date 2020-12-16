@@ -67,21 +67,25 @@ struct UserStoryVoteTemplate: HTMLTemplate {
 
     private var form: Form {
         Form {
-            ForEach(in: fibonacciSequence) { line in
-                Div {
-                    ForEach(in: line) { points in
-                        Button { points }
-                            .type(.button)
-                            .class("button button-outline")
-                            .name("points-button")
-                            .data("points", value: points)
-                            .on(click: "setVote(\"" + context.participant + "\", " + points + ")")
-                            .style(css: "width: 80px; height: 80px; margin: 8px;")
-                    }
-                }
-                .style(css: "display: flex; flex-flow: row wrap; align-items: center; justify-content: center;")
-            }
+            ForEach(in: self.fibonacciSequence, content: line)
         }
+    }
+
+    private func line(pointsForLine: TemplateValue<[Int]>) -> HTML {
+        Div {
+            ForEach(in: pointsForLine, content: button)
+        }
+        .style(css: "display: flex; flex-flow: row wrap; align-items: center; justify-content: center;")
+    }
+
+    private func button(points: TemplateValue<Int>) -> HTML {
+        Button { points }
+            .type(.button)
+            .class("button button-outline")
+            .name("points-button")
+            .data("points", value: points)
+            .on(click: "setVote(\"" + context.participant + "\", " + points + ")")
+            .style(css: "width: 80px; height: 80px; margin: 8px;")
     }
 
     private var fibonacciSequence: [[Int]] = [[1, 2, 3], [5, 8, 13], [21, 34, 55]]
