@@ -61,7 +61,7 @@ const connectToTheUserStoryVoteWebSocket = () => {
     const { groomingSessionId, userStoryId } = ids()
     const url = new URL(window.location.href)
     const protocol = url.protocol === 'http:' ? 'ws' : 'wss'
-    const webSocketURL = `${protocol}://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote`
+    const webSocketURL = `${protocol}://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote/connect`
 
     window.addEventListener("DOMContentLoaded", () => {
         webSocket = new WebSocket(webSocketURL);

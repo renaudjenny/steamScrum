@@ -8,7 +8,7 @@ struct UserStoryVoteController: RouteCollection {
         let vote = routes.grouped("grooming_sessions", ":groomingSessionID", "user_stories", ":userStoryID", "vote")
         vote.get(use: index)
         vote.get(":participant", use: voteView)
-        vote.webSocket(onUpgrade: upgrade)
+        vote.webSocket("connect", onUpgrade: upgrade)
     }
 
     private func index(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
