@@ -48,11 +48,38 @@ final class UserStoryVoteTests: XCTestCase {
 
     func testVoteGet() throws {
         // Check first that the store is empty
-        XCTAssertEqual(try store().updateCallbacks.count, 0)
+        XCTAssertEqual(try store().userStoriesVotes.count, 0)
 
         try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote") { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(try store().userStoriesVotes.count, 1)
+        }
+    }
+
+    func testVoteView() throws {
+        // Mock that a participant has already been added to the store
+        try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+            participants: ["Mario"],
+            points: [:]
+        )
+
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
+            XCTAssertEqual(res.status, .ok)
+        }
+    }
+
+    func testVoteViewWithoutValidParticipant() throws {
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
+            XCTAssertEqual(res.status, .badRequest)
+        }
+
+        try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+            participants: ["Luigi"],
+            points: [:]
+        )
+
+        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
+            XCTAssertEqual(res.status, .badRequest)
         }
     }
 }
