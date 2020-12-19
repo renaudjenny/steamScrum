@@ -26,6 +26,7 @@ struct GroomingSessionTemplate: HTMLTemplate {
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
                 Script().source("/script.js")
+                Script { "preventFormSubmit('add-user-story-form')" }
             }
             Body {
                 Div {
@@ -37,7 +38,10 @@ struct GroomingSessionTemplate: HTMLTemplate {
                     ForEach(in: context.groomingSession.userStories) { userStory in
                         Div {
                             Div {
-                                H3 { userStory.name }
+                                H3 {
+                                    Anchor { userStory.name }
+                                        .href(context.groomingSession.id + "/user_stories/" + userStory.id)
+                                }
                             }.class("column")
                             Div {
                                 Button {
@@ -57,9 +61,7 @@ struct GroomingSessionTemplate: HTMLTemplate {
         Form {
             Label { "User Story name" }.for("name")
             Input(type: .text, id: "name").name("name").required()
-            Button { "Submit" }
-                .type(.button)
-                .on(click: "createUserStory()")
-        }
+            Button { "Submit" }.type(.submit)
+        }.id("add-user-story-form")
     }
 }

@@ -28,6 +28,7 @@ struct HomepageTemplate: HTMLTemplate {
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
                 Script().source("/script.js")
+                Script { "preventFormSubmit('add-grooming-session-form')" }
             }
             Body {
                 Div {
@@ -103,8 +104,8 @@ struct HomepageTemplate: HTMLTemplate {
                                 Button { "Now" }.type(.button).on(click: "setGroomingSessionDateToNow()")
                             }.class("column")
                         }.class("row")
-                        Button { "Submit" }.type(.button).on(click: "createGroomingSession()")
-                    }
+                        Button { "Submit" }.type(.submit)
+                    }.id("add-grooming-session-form")
                 }.class("column")
             }.class("row")
         }

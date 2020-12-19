@@ -2,7 +2,7 @@ import Fluent
 
 struct CreateGroomingSession: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
-        return database.schema("grooming_sessions")
+        database.schema("grooming_sessions")
             .id()
             .field("name", .string, .required)
             .field("date", .date, .required)
@@ -10,6 +10,6 @@ struct CreateGroomingSession: Migration {
     }
 
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        return database.schema("grooming_sessions").delete()
+        database.schema("grooming_sessions").delete()
     }
 }
