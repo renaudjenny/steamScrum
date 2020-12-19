@@ -2,6 +2,7 @@ import Fluent
 import Vapor
 
 // TODO: this should be changed to be a real Redux like store
+// (See https://github.com/renaudjenny/steamScrum/issues/29)
 final class AppStore {
     var userStoriesVotes: [UserStory.IDValue: UserStory.Vote] = [:] {
         didSet { updateCallbacks.values.forEach { $0() } }

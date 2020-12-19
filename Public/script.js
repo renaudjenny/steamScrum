@@ -49,12 +49,12 @@ const removeUserStory = (userStoryId) =>
     fetch(`${ids().groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
         .then(() => window.location.reload())
 
-// TODO: Extract this part into its own file?
+// TODO: Extract this part into its own file (See https://github.com/renaudjenny/steamScrum/issues/26)
 let webSocket = null
 const isWebSocketReady = () => {
-    return webSocket != null &&
-        webSocket.readyState === WebSocket.CLOSED &&
-        webSocket.readyState === WebSocket.CLOSING
+    return webSocket != null
+        && webSocket.readyState === WebSocket.CLOSED
+        && webSocket.readyState === WebSocket.CLOSING
 }
 
 const connectToTheUserStoryVoteWebSocket = () => {
@@ -64,10 +64,10 @@ const connectToTheUserStoryVoteWebSocket = () => {
     const webSocketURL = `${protocol}://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote/connect`
 
     window.addEventListener("DOMContentLoaded", () => {
-        webSocket = new WebSocket(webSocketURL);
+        webSocket = new WebSocket(webSocketURL)
 
         webSocket.addEventListener("open", (event) => {
-            webSocket.send("connection-ready");
+            webSocket.send("connection-ready")
         })
 
         webSocket.addEventListener("message", (event) => {
@@ -184,7 +184,8 @@ const addVotingParticipant = () => {
 }
 
 const saveVote = () => {
-    alert("Sorry the save vote feature is still work in progress. It will be implemented soon!")
+    alert("Sorry the save vote feature is still work in progress. It will be implemented soon!\n"
+          + "See https://github.com/renaudjenny/steamScrum/issues/27")
 }
 
 const preventFormSubmit = (id) => {

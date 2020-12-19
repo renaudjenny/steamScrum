@@ -37,9 +37,7 @@ struct UserStoryTemplate: HTMLTemplate {
                         H4 { "Participants" }.singleColumn
                         Div {
                             Div {
-                                P { "Select your name on the list to vote. " +
-                                    "If you're name isn't here yet, use the form above to add it. " +
-                                    "If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)" }
+                                participantHelp
                                 Div { "" }.id("participants-buttons")
                             }.class("column")
                             form.class("column")
@@ -87,5 +85,14 @@ struct UserStoryTemplate: HTMLTemplate {
             Input(type: .text, id: "participant").name("participant").required()
             Button { "Add" }.type(.submit)
         }.id("add-participant-form")
+    }
+
+    private var participantHelp: P {
+        P {
+            "Select your name on the list to vote. "
+                + "If you're name isn't here yet, use the form above to add it. "
+                + "If you just want to be spectator, you can just stay on this page "
+                + "(you don't need to refresh the page to see voting status changing)"
+        }
     }
 }
