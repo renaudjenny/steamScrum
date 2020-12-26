@@ -89,7 +89,7 @@ struct UserStoryController: RouteCollection {
             .first()
             .unwrap(or: Abort(.notFound))
             .flatMap {
-                let address = "https://\(req.application.http.server.configuration.hostname)\(req.url.string)"
+                let address = "\(req.application.environment.host)\(req.url.string)"
                 let QRCodeSVG = (try? QRCode.encode(text: address, ecl: .medium))?.toSVGString(border: 4, width: 200)
                 return UserStoryTemplate().render(with: UserStoryData(userStory: $0, QRCodeSVG: QRCodeSVG), for: req)
             }

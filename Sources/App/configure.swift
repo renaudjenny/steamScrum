@@ -36,3 +36,14 @@ public func configure(_ app: Application) throws {
     // register routes
     try routes(app)
 }
+
+extension Environment {
+    var host: String {
+        switch self {
+        case .development, .testing:
+            return "http://localhost:8080"
+        default:
+            return "https://steam-scrum.herokuapp.com"
+        }
+    }
+}
