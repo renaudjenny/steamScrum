@@ -2,6 +2,7 @@ import HTMLKit
 
 struct UserStoryData {
     let userStory: UserStory
+    let QRCodeSVG: String?
 }
 
 struct UserStoryTemplate: HTMLTemplate {
@@ -30,8 +31,16 @@ struct UserStoryTemplate: HTMLTemplate {
             }
             Body {
                 Div {
-                    H2 { "Grooming Session: " + context.userStory.groomingSession.name }.singleColumn
-                    H1 { context.userStory.name }.singleColumn
+                    Div {
+                        H2 { "Grooming Session: " + context.userStory.groomingSession.name }
+                        H1 { context.userStory.name }
+                    }
+                    .class("float-left")
+                    Div {
+                        context.QRCodeSVG.escaping(.unsafeNone)
+                    }
+                    .class("float-right")
+
                     Div {
                         H3 { "Vote session" }.singleColumn
                         H4 { "Participants" }.singleColumn
