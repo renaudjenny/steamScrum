@@ -228,7 +228,7 @@
       },
       {
         "package": "swift-qrcode-generator",
-        "repositoryURL": "https://github.com/renaudjenny/swift-qrcode-generator.git",
+        "repositoryURL": "https://github.com/fwcd/swift-qrcode-generator.git",
         "state": {
           "branch": "master",
           "revision": "bbe6eb883680be13c7d7c13d564f7961bf4d8947",
