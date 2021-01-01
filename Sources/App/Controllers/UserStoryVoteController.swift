@@ -27,10 +27,10 @@ struct UserStoryVoteController: RouteCollection {
             .first()
             .unwrap(or: Abort(.notFound))
             .map { _ in
-                if !self.store.userStoriesVotes.keys.contains(userStoryId) {
-                    self.store.userStoriesVotes[userStoryId] = UserStory.Vote()
+                if !store.userStoriesVotes.keys.contains(userStoryId) {
+                    store.userStoriesVotes[userStoryId] = UserStory.Vote()
                 }
-                return self.store.userStoriesVotes[userStoryId] ?? UserStory.Vote()
+                return store.userStoriesVotes[userStoryId] ?? UserStory.Vote()
             }
     }
 
@@ -52,7 +52,7 @@ struct UserStoryVoteController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .flatMap {
                 guard let userStoryId = $0.id,
-                      let vote = self.store.userStoriesVotes[userStoryId],
+                      let vote = store.userStoriesVotes[userStoryId],
                       vote.participants.contains(participant)
                 else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
 
@@ -84,13 +84,13 @@ struct UserStoryVoteController: RouteCollection {
                 }
             }
 
-        if !self.store.userStoriesVotes.keys.contains(userStoryId) {
-            self.store.userStoriesVotes[userStoryId] = UserStory.Vote()
+        if !store.userStoriesVotes.keys.contains(userStoryId) {
+            store.userStoriesVotes[userStoryId] = UserStory.Vote()
         }
 
         let webSocketId = UUID()
 
-        webSocket.onText { self.onMessageReceived(
+        webSocket.onText { onMessageReceived(
             webSocketId: webSocketId,
             userStoryId: userStoryId,
             webSocket: $0,
@@ -98,7 +98,7 @@ struct UserStoryVoteController: RouteCollection {
         ) }
 
         webSocket.onClose.whenComplete { _ in
-            self.store.updateCallbacks.removeValue(forKey: webSocketId)
+            store.updateCallbacks.removeValue(forKey: webSocketId)
         }
     }
 
@@ -113,17 +113,17 @@ struct UserStoryVoteController: RouteCollection {
     }
 
     private func onConnectionReady(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket) {
-        self.store.updateCallbacks[webSocketId] = {
+        store.updateCallbacks[webSocketId] = {
             let message: String
             do {
-                let data = try JSONEncoder().encode(self.store.userStoriesVotes[userStoryId]?.encoded)
+                let data = try JSONEncoder().encode(store.userStoriesVotes[userStoryId]?.encoded)
                 message = String(data: data, encoding: .utf8) ?? "Error: Cannot convert data to UTF-8 format"
             } catch {
                 message = "Error: \(error)"
             }
             webSocket.send(message)
         }
-        self.store.updateCallbacks[webSocketId]?()
+        store.updateCallbacks[webSocketId]?()
     }
 
     private func onAddVotingParticipant(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
@@ -138,8 +138,8 @@ struct UserStoryVoteController: RouteCollection {
             }
             let votingParticipant = try JSONDecoder().decode(AddVotingParticipant.self, from: data)
 
-            self.store.userStoriesVotes[userStoryId]?.add(participant: votingParticipant.addVotingParticipant)
-            self.store.updateCallbacks[webSocketId]?()
+            store.userStoriesVotes[userStoryId]?.add(participant: votingParticipant.addVotingParticipant)
+            store.updateCallbacks[webSocketId]?()
         } catch {
             webSocket.send("Error: \(error)")
             return
@@ -159,10 +159,10 @@ struct UserStoryVoteController: RouteCollection {
               let setVote = try? JSONDecoder().decode(SetVote.self, from: data)
         else { return }
 
-        self.store.userStoriesVotes[userStoryId]?.set(
+        store.userStoriesVotes[userStoryId]?.set(
             points: setVote.vote.points,
             for: setVote.vote.participant
         )
-        self.store.updateCallbacks[webSocketId]?()
+        store.updateCallbacks[webSocketId]?()
     }
 }

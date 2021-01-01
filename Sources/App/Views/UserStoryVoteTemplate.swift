@@ -61,7 +61,7 @@ struct UserStoryVoteTemplate: HTMLTemplate {
 
     private var form: Form {
         Form {
-            ForEach(in: self.fibonacciSequence, content: line)
+            ForEach(in: fibonacciSequence, content: line)
         }
     }
 
