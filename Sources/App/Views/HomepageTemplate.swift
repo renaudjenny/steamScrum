@@ -27,6 +27,11 @@ struct HomepageTemplate: HTMLTemplate {
                     ),
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
+                Link(attributes: [
+                    HTMLAttribute(attribute: "rel", value: "shortcut icon"),
+                    HTMLAttribute(attribute: "href", value: "favicon.png"),
+                    HTMLAttribute(attribute: "type", value: "image/png")
+                ])
                 Script().source("/script.js")
                 Script { "preventFormSubmit('add-grooming-session-form')" }
             }

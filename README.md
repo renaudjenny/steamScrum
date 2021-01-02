@@ -31,3 +31,7 @@ You can test this right now here: https://steam-scrum.herokuapp.com
 ### A little bit of history
 
 Previously this was done with Vapor 3 (Swift 4), and I used a simple React app, with the strict minimum of libraries and so. Even that, I was quickly overwhelmed with issues on dependencies (warnings about potential security issues). I didn't want to spend a lot of time upgrading and maintaining this. So it's better to stick with normalized JavaScript, that's why the frontend is so raw now 😆.
+
+## Icons and illustrations
+
+The favicon has been made by [Mathilde Seyller](https://instagram.com/myobriel). Go follow her on Instagram!
