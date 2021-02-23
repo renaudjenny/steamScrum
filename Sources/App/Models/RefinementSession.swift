@@ -1,8 +1,8 @@
 import Fluent
 import Vapor
 
-final class GroomingSession: Model, Content {
-    static let schema = "grooming_sessions"
+final class RefinementSession: Model, Content {
+    static let schema = "refinement_sessions"
 
     @ID(key: .id)
     var id: UUID?
@@ -13,7 +13,7 @@ final class GroomingSession: Model, Content {
     @Field(key: "date")
     var date: Date
 
-    @Children(for: \.$groomingSession)
+    @Children(for: \.$refinementSession)
     var userStories: [UserStory]
 
     init() { }
@@ -25,6 +25,6 @@ final class GroomingSession: Model, Content {
     }
 }
 
-extension GroomingSession {
+extension RefinementSession {
     static let maximumAllowed = 250
 }

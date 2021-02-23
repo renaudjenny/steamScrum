@@ -3,7 +3,7 @@ import XCTVapor
 
 final class UserStoryVoteTests: XCTestCase {
     private let app = Application(.testing)
-    private var groomingSession: GroomingSession?
+    private var refinementSession: RefinementSession?
     private var userStory: UserStory?
     private var mockedStore: AppStore?
 
@@ -17,17 +17,17 @@ final class UserStoryVoteTests: XCTestCase {
         // Override the route collection to inject the mocked store
         try app.register(collection: UserStoryVoteController(store: store()))
 
-        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session test",
                 "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            groomingSession = try res.content.decode(GroomingSession.self)
+            refinementSession = try res.content.decode(RefinementSession.self)
         })
 
-        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
                 "name": "User Story test",
             ])
@@ -42,7 +42,7 @@ final class UserStoryVoteTests: XCTestCase {
         super.tearDown()
     }
 
-    func groomingSessionId() throws -> UUID { try XCTUnwrap(try XCTUnwrap(groomingSession).id) }
+    func refinementSessionId() throws -> UUID { try XCTUnwrap(try XCTUnwrap(refinementSession).id) }
     func userStoryId() throws -> UUID { try XCTUnwrap(try XCTUnwrap(userStory).id) }
     func store() throws -> AppStore { try XCTUnwrap(mockedStore) }
 
@@ -50,7 +50,7 @@ final class UserStoryVoteTests: XCTestCase {
         // Check first that the store is empty
         XCTAssertEqual(try store().userStoriesVotes.count, 0)
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(try store().userStoriesVotes.count, 1)
         }
@@ -63,13 +63,13 @@ final class UserStoryVoteTests: XCTestCase {
             points: [:]
         )
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
             XCTAssertEqual(res.status, .ok)
         }
     }
 
     func testVoteViewWithoutValidParticipant() throws {
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
             XCTAssertEqual(res.status, .badRequest)
         }
 
@@ -78,7 +78,7 @@ final class UserStoryVoteTests: XCTestCase {
             points: [:]
         )
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
             XCTAssertEqual(res.status, .badRequest)
         }
     }

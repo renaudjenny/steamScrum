@@ -32,7 +32,7 @@ struct UserStoryTemplate: HTMLTemplate {
             Body {
                 Div {
                     Div {
-                        H2 { "Grooming Session: " + context.userStory.groomingSession.name }
+                        H2 { "Refinement Session: " + context.userStory.refinementSession.name }
                         H1 { context.userStory.name }
                     }
                     .class("float-left")

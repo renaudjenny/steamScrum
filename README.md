@@ -2,23 +2,21 @@
 
 ![CI](https://github.com/renaudjenny/steamScrum/workflows/Swift/badge.svg)
 
-**Steam Scrum** is a project to provide a simple interface to do Scrum Groomings.
+**Steam Scrum** is a project to provide a simple interface to do Scrum Refinements.
 
 The API is written in `Swift` 5.3 thanks to [Vapor](https://vapor.codes).
 
 The final goal of the Scrum part is to list User Stories and compute amount of Story points an US reach.
 
-1. You can create a Grooming Session
-2. Inside a Grooming Session, you can create one or more User Story
+1. You can create a Refinement Session
+2. Inside a Refinement Session, you can create one or more User Story
 3. Inside an User Story, you can vote by adding Participants
 4. All participants will have their own interface to vote, and they can see in **real time** who has already voted (thanks to WebSocket).
   * Usually, you will use a video projector to display the User Story, and every voters can scan the QR Code available on the top right to connect to this User Story quickly with their phone or tablet.
 5. When all participants have voted, the average score is revealed
 6. You can save the vote (persisting the vote is *Work in progress*)
 
-All Grooming Sessions and User Stories are saved on the database.
-
-For now, there is just simple API to manage Grooming Sessions and User Stories (without managing story point, it's still WIP).
+All Refinement Sessions and User Stories are saved on the database, persisting votes is still *WIP*.
 
 ## Website
 
