@@ -2,7 +2,7 @@ import HTMLKit
 
 struct RefinementSessionData {
     let refinementSession: RefinementSession
-    let maximumAllowed = UserStoryContext.maximumAllowed
+    let maximumAllowed = UserStory.maximumAllowed
 }
 
 struct RefinementSessionTemplate: HTMLTemplate {

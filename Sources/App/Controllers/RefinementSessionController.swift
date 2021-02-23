@@ -11,6 +11,7 @@ struct RefinementSessionController: RouteCollection {
             refinementSession.get(use: get)
             refinementSession.delete(use: delete)
         }
+        refinementSessions.get("context", use: context)
     }
 
     func index(req: Request) throws -> EventLoopFuture<[RefinementSession]> {
@@ -26,7 +27,7 @@ struct RefinementSessionController: RouteCollection {
         }
 
         return RefinementSession.query(on: req.db).count().flatMap({
-            guard $0 < RefinementSessionContext.maximumAllowed else {
+            guard $0 < RefinementSession.maximumAllowed else {
                 return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Too many data already provided."))
             }
             return refinementSession.save(on: req.db).map { refinementSession }
@@ -58,13 +59,19 @@ struct RefinementSessionController: RouteCollection {
             }
     }
 
-    func context(req: Request) throws -> EventLoopFuture<RefinementSessionContext> {
+    func context(req: Request) throws -> EventLoopFuture<Context> {
         RefinementSession.query(on: req.db).count().map {
-            let context = RefinementSessionContext(
-                refinementSessionsCount: $0,
-                maximumRefinementSessionsCount: RefinementSessionContext.maximumAllowed
+            Context(
+                count: $0,
+                maximum: RefinementSession.maximumAllowed
             )
-            return context
         }
+    }
+}
+
+extension RefinementSessionController {
+    struct Context: Content {
+        var count: Int
+        var maximum: Int
     }
 }

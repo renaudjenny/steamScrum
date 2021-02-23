@@ -19,7 +19,6 @@ func routes(_ app: Application) throws {
     }
 
     try app.register(collection: RefinementSessionController())
-    app.get("refinementSessionsContext", use: RefinementSessionController().context(req:))
     try app.register(collection: UserStoryController())
     try app.register(collection: UserStoryVoteController(store: AppStore()))
 }

@@ -69,7 +69,7 @@ final class UserStoryTests: XCTestCase {
     }
 
     func testMaximumUserStoryPost() throws {
-        for i in 0..<UserStoryContext.maximumAllowed {
+        for i in 0..<UserStory.maximumAllowed {
             try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
                 try req.content.encode([
                     "name": "User Story \(i + 1)",
@@ -79,7 +79,7 @@ final class UserStoryTests: XCTestCase {
 
         try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories") { res in
             let userStories = try res.content.decode([UserStory].self)
-            XCTAssertEqual(userStories.count, UserStoryContext.maximumAllowed)
+            XCTAssertEqual(userStories.count, UserStory.maximumAllowed)
         }
 
         try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in

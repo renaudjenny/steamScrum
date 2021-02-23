@@ -40,12 +40,12 @@ final class RefinementSessionTests: XCTestCase {
     }
 
     func testRefinementSessionsContextGet() throws {
-        let maximumRefinementSessionsCount = RefinementSessionContext.maximumAllowed
+        let maximumRefinementSessionsCount = RefinementSession.maximumAllowed
 
-        try app.test(.GET, "refinementSessionsContext") { res in
-            let context = try res.content.decode(RefinementSessionContext.self)
-            XCTAssertEqual(context.refinementSessionsCount, 0)
-            XCTAssertEqual(context.maximumRefinementSessionsCount, maximumRefinementSessionsCount)
+        try app.test(.GET, "refinement_sessions/context") { res in
+            let context = try res.content.decode(RefinementSessionController.Context.self)
+            XCTAssertEqual(context.count, 0)
+            XCTAssertEqual(context.maximum, maximumRefinementSessionsCount)
         }
 
         try app.test(.POST, "refinement_sessions", beforeRequest: { req in
@@ -54,9 +54,9 @@ final class RefinementSessionTests: XCTestCase {
                 "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         })
-        try app.test(.GET, "refinementSessionsContext") { res in
-            let context = try res.content.decode(RefinementSessionContext.self)
-            XCTAssertEqual(context.refinementSessionsCount, 1)
+        try app.test(.GET, "refinement_sessions/context") { res in
+            let context = try res.content.decode(RefinementSessionController.Context.self)
+            XCTAssertEqual(context.count, 1)
         }
 
         for i in 0..<10 {
@@ -67,9 +67,9 @@ final class RefinementSessionTests: XCTestCase {
                 ])
             })
         }
-        try app.test(.GET, "refinementSessionsContext") { res in
-            let context = try res.content.decode(RefinementSessionContext.self)
-            XCTAssertEqual(context.refinementSessionsCount, 11)
+        try app.test(.GET, "refinement_sessions/context") { res in
+            let context = try res.content.decode(RefinementSessionController.Context.self)
+            XCTAssertEqual(context.count, 11)
         }
     }
 
@@ -97,7 +97,7 @@ final class RefinementSessionTests: XCTestCase {
     }
 
     func testMaximumRefinementSessionsPost() throws {
-        for i in 0..<RefinementSessionContext.maximumAllowed {
+        for i in 0..<RefinementSession.maximumAllowed {
             try app.test(.POST, "refinement_sessions", beforeRequest: { req in
                 try req.content.encode([
                     "name": "Session \(i + 1)",
@@ -108,7 +108,7 @@ final class RefinementSessionTests: XCTestCase {
 
         try app.test(.GET, "refinement_sessions") { res in
             let refinementSessions = try res.content.decode([RefinementSession].self)
-            XCTAssertEqual(refinementSessions.count, RefinementSessionContext.maximumAllowed)
+            XCTAssertEqual(refinementSessions.count, RefinementSession.maximumAllowed)
         }
 
         try app.test(.POST, "refinement_sessions", beforeRequest: { req in
