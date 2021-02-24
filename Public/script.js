@@ -3,7 +3,7 @@ const setRefinementSessionDateToNow = () => {
     document.getElementById("date").setAttribute("value", formattedDate)
 }
 
-const removeRefinementSession = (RefinementSessionId) =>
+const removeRefinementSession = (refinementSessionId) =>
     fetch(`refinement_sessions/${refinementSessionId}`, { method: "DELETE" })
         .then(() => location.reload())
 
@@ -34,7 +34,7 @@ const ids = () => {
 
 const createUserStory = () => {
     const name = document.getElementById('name').value
-    const { RefinementSessionId } = ids()
+    const { refinementSessionId } = ids()
     fetch(`${refinementSessionId}/user_stories`, {
         method: 'POST',
         headers: {

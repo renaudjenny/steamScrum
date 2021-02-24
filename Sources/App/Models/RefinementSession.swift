@@ -2,7 +2,9 @@ import Fluent
 import Vapor
 
 final class RefinementSession: Model, Content {
-    static let schema = "refinement_sessions"
+    // grooming_session* is used in the database because it was the old name for Refinement. But this term is inappropriate.
+    // we will keep it for this version of SteamScrum. See https://github.com/renaudjenny/steamScrum/issues/34
+    static let schema = "grooming_sessions"
 
     @ID(key: .id)
     var id: UUID?
