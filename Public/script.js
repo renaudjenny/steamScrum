@@ -1,16 +1,16 @@
-const setGroomingSessionDateToNow = () => {
+const setRefinementSessionDateToNow = () => {
     const formattedDate = new Date().toJSON().slice(0, 10)
     document.getElementById("date").setAttribute("value", formattedDate)
 }
 
-const removeGroomingSession = (groomingSessionId) =>
-    fetch(`grooming_sessions/${groomingSessionId}`, { method: "DELETE" })
+const removeRefinementSession = (refinementSessionId) =>
+    fetch(`refinement_sessions/${refinementSessionId}`, { method: "DELETE" })
         .then(() => location.reload())
 
-const createGroomingSession = () => {
+const createRefinementSession = () => {
     const name = document.getElementById("name").value
     const date = document.getElementById("date").value
-    fetch("grooming_sessions", {
+    fetch("refinement_sessions", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -23,19 +23,19 @@ const createGroomingSession = () => {
 const ids = () => {
     const url = new URL(window.location.href)
     const paths = url.pathname.split("/")
-    const groomingSessionId = paths[paths.indexOf("grooming_sessions") + 1]
+    const refinementSessionId = paths[paths.indexOf("refinement_sessions") + 1]
     const userStoryId = paths[paths.indexOf("user_stories") + 1]
 
     return {
-        groomingSessionId,
+        refinementSessionId,
         userStoryId,
     }
 }
 
 const createUserStory = () => {
     const name = document.getElementById('name').value
-    const { groomingSessionId } = ids()
-    fetch(`${groomingSessionId}/user_stories`, {
+    const { refinementSessionId } = ids()
+    fetch(`${refinementSessionId}/user_stories`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const createUserStory = () => {
 }
 
 const removeUserStory = (userStoryId) =>
-    fetch(`${ids().groomingSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
+    fetch(`${ids().refinementSessionId}/user_stories/${userStoryId}`, { method: 'DELETE' })
         .then(() => window.location.reload())
 
 // TODO: Extract this part into its own file (See https://github.com/renaudjenny/steamScrum/issues/26)
@@ -58,10 +58,10 @@ const isWebSocketReady = () => {
 }
 
 const connectToTheUserStoryVoteWebSocket = () => {
-    const { groomingSessionId, userStoryId } = ids()
+    const { refinementSessionId, userStoryId } = ids()
     const url = new URL(window.location.href)
     const protocol = url.protocol === 'http:' ? 'ws' : 'wss'
-    const webSocketURL = `${protocol}://${url.host}/grooming_sessions/${groomingSessionId}/user_stories/${userStoryId}/vote/connect`
+    const webSocketURL = `${protocol}://${url.host}/refinement_sessions/${refinementSessionId}/user_stories/${userStoryId}/vote/connect`
 
     window.addEventListener("DOMContentLoaded", () => {
         webSocket = new WebSocket(webSocketURL)
@@ -196,8 +196,8 @@ const preventFormSubmit = (id) => {
         form.addEventListener("submit", (event) => {
             event.preventDefault()
             switch (id) {
-                case "add-grooming-session-form":
-                    createGroomingSession()
+                case "add-refinement-session-form":
+                    createRefinementSession()
                     break
                 case "add-user-story-form":
                     createUserStory()

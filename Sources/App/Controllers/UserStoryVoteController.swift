@@ -5,15 +5,15 @@ struct UserStoryVoteController: RouteCollection {
     let store: AppStore
 
     func boot(routes: RoutesBuilder) throws {
-        let vote = routes.grouped("grooming_sessions", ":groomingSessionID", "user_stories", ":userStoryID", "vote")
+        let vote = routes.grouped("refinement_sessions", ":refinementSessionID", "user_stories", ":userStoryID", "vote")
         vote.get(use: index)
         vote.get(":participant", use: voteView)
         vote.webSocket("connect", onUpgrade: upgrade)
     }
 
     private func index(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
-        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+        guard let refinementSessionIdString = req.parameters.get("refinementSessionID"),
+              let refinementSessionId = UUID(uuidString: refinementSessionIdString),
               let userStoryIdString = req.parameters.get("userStoryID"),
               let userStoryId = UUID(uuidString: userStoryIdString)
         else {
@@ -22,8 +22,8 @@ struct UserStoryVoteController: RouteCollection {
 
         return UserStory.query(on: req.db)
             .filter(\.$id == userStoryId)
-            .with(\.$groomingSession)
-            .filter(\.$groomingSession.$id == groomingSessionId)
+            .with(\.$refinementSession)
+            .filter(\.$refinementSession.$id == refinementSessionId)
             .first()
             .unwrap(or: Abort(.notFound))
             .map { _ in
@@ -35,8 +35,8 @@ struct UserStoryVoteController: RouteCollection {
     }
 
     private func voteView(req: Request) throws -> EventLoopFuture<View> {
-        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+        guard let refinementSessionIdString = req.parameters.get("refinementSessionID"),
+              let refinementSessionId = UUID(uuidString: refinementSessionIdString),
               let userStoryIdString = req.parameters.get("userStoryID"),
               let userStoryId = UUID(uuidString: userStoryIdString),
               let participant = req.parameters.get("participant")
@@ -46,8 +46,8 @@ struct UserStoryVoteController: RouteCollection {
 
         return UserStory.query(on: req.db)
             .filter(\.$id == userStoryId)
-            .with(\.$groomingSession)
-            .filter(\.$groomingSession.$id == groomingSessionId)
+            .with(\.$refinementSession)
+            .filter(\.$refinementSession.$id == refinementSessionId)
             .first()
             .unwrap(or: Abort(.notFound))
             .flatMap {
@@ -61,8 +61,8 @@ struct UserStoryVoteController: RouteCollection {
     }
 
     private func upgrade(req: Request, webSocket: WebSocket) {
-        guard let groomingSessionIdString = req.parameters.get("groomingSessionID"),
-              let groomingSessionId = UUID(uuidString: groomingSessionIdString),
+        guard let refinementSessionIdString = req.parameters.get("refinementSessionID"),
+              let refinementSessionId = UUID(uuidString: refinementSessionIdString),
               let userStoryIdString = req.parameters.get("userStoryID"),
               let userStoryId = UUID(uuidString: userStoryIdString)
         else {
@@ -74,8 +74,8 @@ struct UserStoryVoteController: RouteCollection {
         // If the User Story is not available, close the connection
         _ = UserStory.query(on: req.db)
             .filter(\.$id == userStoryId)
-            .with(\.$groomingSession)
-            .filter(\.$groomingSession.$id == groomingSessionId)
+            .with(\.$refinementSession)
+            .filter(\.$refinementSession.$id == refinementSessionId)
             .first()
             .map {
                 if $0 == nil {

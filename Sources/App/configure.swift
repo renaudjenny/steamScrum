@@ -13,7 +13,7 @@ public func configure(_ app: Application) throws {
         publicDirectory: app.directory.publicDirectory
     )
     app.middleware.use(fileMiddleware)
-    try app.htmlkit.add(view: GroomingSessionTemplate())
+    try app.htmlkit.add(view: RefinementSessionTemplate())
 
     if app.environment == .testing {
         #if canImport(FluentSQLiteDriver)
@@ -30,7 +30,7 @@ public func configure(_ app: Application) throws {
         ), as: .psql)
     }
 
-    app.migrations.add(CreateGroomingSession())
+    app.migrations.add(CreateRefinementSession())
     app.migrations.add(CreateUserStory())
 
     // register routes

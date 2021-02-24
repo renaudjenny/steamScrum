@@ -1,17 +1,17 @@
 import HTMLKit
 
-struct GroomingSessionData {
-    let groomingSession: GroomingSession
-    let maximumAllowed = UserStoryContext.maximumAllowed
+struct RefinementSessionData {
+    let refinementSession: RefinementSession
+    let maximumAllowed = UserStory.maximumAllowed
 }
 
-struct GroomingSessionTemplate: HTMLTemplate {
-    @TemplateValue(GroomingSessionData.self) var context
+struct RefinementSessionTemplate: HTMLTemplate {
+    @TemplateValue(RefinementSessionData.self) var context
 
     var body: HTML {
         Document(type: .html5) {
             Head {
-                Title { context.groomingSession.name }
+                Title { context.refinementSession.name }
                 Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
@@ -30,17 +30,17 @@ struct GroomingSessionTemplate: HTMLTemplate {
             }
             Body {
                 Div {
-                    H1 { "Grooming Session: " + context.groomingSession.name }.singleColumn
+                    H1 { "Refinement Session: " + context.refinementSession.name }.singleColumn
                     H2 { "Add a User Story" }.singleColumn
-                    P { Bold { context.groomingSession.userStories.count + "/" + context.maximumAllowed } }.singleColumn
+                    P { Bold { context.refinementSession.userStories.count + "/" + context.maximumAllowed } }.singleColumn
                     form
                     H2 { "User Stories" }.singleColumn
-                    ForEach(in: context.groomingSession.userStories) { userStory in
+                    ForEach(in: context.refinementSession.userStories) { userStory in
                         Div {
                             Div {
                                 H3 {
                                     Anchor { userStory.name }
-                                        .href(context.groomingSession.id + "/user_stories/" + userStory.id)
+                                        .href(context.refinementSession.id + "/user_stories/" + userStory.id)
                                 }
                             }.class("column")
                             Div {

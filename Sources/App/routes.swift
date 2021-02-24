@@ -13,13 +13,12 @@ final class AppStore {
 
 func routes(_ app: Application) throws {
     app.get { req in
-        GroomingSession.query(on: req.db).sort(\.$date, .descending).all().map {
-            HomepageTemplate().render(with: HomepageData(groomingSessions: $0), for: req)
+        RefinementSession.query(on: req.db).sort(\.$date, .descending).all().map {
+            HomepageTemplate().render(with: HomepageData(refinementSessions: $0), for: req)
         }
     }
 
-    try app.register(collection: GroomingSessionController())
-    app.get("groomingSessionsContext", use: GroomingSessionController().context(req:))
+    try app.register(collection: RefinementSessionController())
     try app.register(collection: UserStoryController())
     try app.register(collection: UserStoryVoteController(store: AppStore()))
 }
