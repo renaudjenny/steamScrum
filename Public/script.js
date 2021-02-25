@@ -187,25 +187,3 @@ const saveVote = () => {
     alert("Sorry the save vote feature is still work in progress. It will be implemented soon!\n"
           + "See https://github.com/renaudjenny/steamScrum/issues/27")
 }
-
-const preventFormSubmit = (id) => {
-    window.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById(id)
-        if (form == null) { return }
-
-        form.addEventListener("submit", (event) => {
-            event.preventDefault()
-            switch (id) {
-                case "add-refinement-session-form":
-                    createRefinementSession()
-                    break
-                case "add-user-story-form":
-                    createUserStory()
-                    break
-                case "add-participant-form":
-                    addVotingParticipant()
-                    break
-            }
-        })
-    })
-}
