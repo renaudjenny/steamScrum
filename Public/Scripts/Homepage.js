@@ -14,14 +14,14 @@ const createRefinementSession = () => {
 }
 
 const removeRefinementSession = (refinementSessionId) =>
-    fetch(`refinement_sessions/${refinementSessionId}`, { method: "DELETE" })
-        .then(() => location.reload())
+fetch(`refinement_sessions/${refinementSessionId}`, { method: "DELETE" })
+.then(() => location.reload())
 
 document.querySelectorAll("button.remove-refinement-session-button")
-    .forEach(button => {
-        const id = button.dataset.id
-        button.addEventListener("click", () => removeRefinementSession(id))
-    })
+.forEach(button => {
+    const id = button.dataset.id
+    button.addEventListener("click", () => removeRefinementSession(id))
+})
 
 const setRefinementSessionDateToNow = () => {
     const formattedDate = new Date().toJSON().slice(0, 10)
@@ -29,6 +29,6 @@ const setRefinementSessionDateToNow = () => {
 }
 
 document.getElementById("refinement-session-date-now-button")
-    .addEventListener("click", setRefinementSessionDateToNow)
+.addEventListener("click", setRefinementSessionDateToNow)
 
 preventFormSubmit("add-refinement-session-form", createRefinementSession)
