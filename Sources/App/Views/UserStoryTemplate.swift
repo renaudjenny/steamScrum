@@ -25,9 +25,7 @@ struct UserStoryTemplate: HTMLTemplate {
                             + "lN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="),
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
-                Script().source("/script.js")
-                Script { "connectToTheUserStoryVoteWebSocket()" }
-                Script { "preventFormSubmit('add-participant-form')" }
+                Script().source("/Scripts/UserStory.js").type("module")
             }
             Body {
                 Div {
@@ -72,7 +70,6 @@ struct UserStoryTemplate: HTMLTemplate {
                                 }
                                 .add(attributes: [HTMLAttribute(attribute: "disabled", value: "true")])
                                 .id("save-button")
-                                .on(click: "saveVote()")
                             }.class("column")
 
                             P {

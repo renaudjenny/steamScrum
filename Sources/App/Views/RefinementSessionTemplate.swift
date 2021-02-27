@@ -25,8 +25,7 @@ struct RefinementSessionTemplate: HTMLTemplate {
                             + "lN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="),
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
-                Script().source("/script.js")
-                Script { "preventFormSubmit('add-user-story-form')" }
+                Script().source("/Scripts/RefinementSession.js").type("module")
             }
             Body {
                 Div {
@@ -48,7 +47,8 @@ struct RefinementSessionTemplate: HTMLTemplate {
                                     "❌"
                                 }
                                 .type(.button)
-                                .on(click: "removeUserStory(\"" + userStory.id + "\")")
+                                .class("remove-user-story-button")
+                                .data(for: "id", value: userStory.id)
                             }.class("column")
                         }.class("row")
                     }

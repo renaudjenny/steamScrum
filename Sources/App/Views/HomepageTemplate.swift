@@ -32,8 +32,7 @@ struct HomepageTemplate: HTMLTemplate {
                     HTMLAttribute(attribute: "href", value: "favicon.png"),
                     HTMLAttribute(attribute: "type", value: "image/png")
                 ])
-                Script().source("/script.js")
-                Script { "preventFormSubmit('add-refinement-session-form')" }
+                Script().source("/Scripts/Homepage.js").type("module")
             }
             Body {
                 Div {
@@ -106,7 +105,9 @@ struct HomepageTemplate: HTMLTemplate {
                                 Input(type: .date, id: "date").name("date").required()
                             }.class("column")
                             Div {
-                                Button { "Now" }.type(.button).on(click: "setRefinementSessionDateToNow()")
+                                Button { "Now" }
+                                    .type(.button)
+                                    .id("refinement-session-date-now-button")
                             }.class("column")
                         }.class("row")
                         Button { "Submit" }.type(.submit)
@@ -134,7 +135,10 @@ struct HomepageTemplate: HTMLTemplate {
                         H3 { Anchor { refinementSession.name }.href("refinement_sessions/" + refinementSession.id) }
                     }.class("column")
                     Div {
-                        Button { "❌" }.type(.button).on(click: "removeRefinementSession(\"" + refinementSession.id + "\")")
+                        Button { "❌" }
+                            .type(.button)
+                            .data(for: "id", value: refinementSession.id)
+                            .class("remove-refinement-session-button")
                     }.class("column")
                 }.class("row")
                 Div {

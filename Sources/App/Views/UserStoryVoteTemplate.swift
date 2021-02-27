@@ -25,8 +25,7 @@ struct UserStoryVoteTemplate: HTMLTemplate {
                             + "lN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="),
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
-                Script().source("/script.js")
-                Script { "connectToTheUserStoryVoteWebSocket()" }
+                Script().source("/Scripts/UserStoryVote.js").type("module")
             }
             Body {
                 Div {
@@ -75,10 +74,9 @@ struct UserStoryVoteTemplate: HTMLTemplate {
     private func button(points: TemplateValue<Int>) -> HTML {
         Button { points }
             .type(.button)
-            .class("button button-outline")
+            .class("button button-outline vote-button")
             .name("points-button")
             .data("points", value: points)
-            .on(click: "setVote(\"" + context.participant + "\", " + points + ")")
             .style(css: "width: 80px; height: 80px; margin: 8px;")
     }
 
