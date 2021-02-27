@@ -1,39 +1,18 @@
-import { preventFormSubmit, ids } from './Common.js'
+import {
+    preventFormSubmit,
+    ids,
+    updateParticipantTable,
+} from './Common.js'
+import { UserStoryWebSocket } from './UserStoryWebSocket.js'
 
-let webSocket = null
-
-const connectToTheUserStoryVoteWebSocket = () => {
-    const { refinementSessionId, userStoryId } = ids()
-    const url = new URL(window.location.href)
-    const protocol = url.protocol === 'http:' ? 'ws' : 'wss'
-    const webSocketURL = `${protocol}://${url.host}/refinement_sessions/${refinementSessionId}/user_stories/${userStoryId}/vote/connect`
-
-    window.addEventListener("DOMContentLoaded", () => {
-        webSocket = new WebSocket(webSocketURL)
-
-        webSocket.addEventListener("open", (event) => {
-            webSocket.send("connection-ready")
-        })
-
-        webSocket.addEventListener("message", (event) => {
-            if (event.data[0] !== "{") {
-                console.error("Error: Cannot parse this message: " + event.data)
-                return
-            }
-            const data = JSON.parse(event.data)
-
-            updateParticipantsButtonsIfNeeded(data, url)
-            updateVoteStatusIfNeeded(data)
-
-            updatePointsButtonIfNeeded(data)
-        })
-    })
-}
-connectToTheUserStoryVoteWebSocket()
+const { isWebSocketReady, send } = UserStoryWebSocket((data) => {
+    updateParticipantsButtons(data)
+    updateVoteStatus(data)
+    updatePointsButton(data)
+})
 
 const addVotingParticipant = () => {
-    const isWebSocketReady = webSocket?.readyState === WebSocket.OPEN
-    if (!isWebSocketReady) {
+    if (!isWebSocketReady()) {
         console.error("Cannot add voting participant, WebSocket isn't ready")
         return
     }
@@ -41,7 +20,7 @@ const addVotingParticipant = () => {
     if (participantInput.value === '') { return }
 
     const addVotingParticipant = { addVotingParticipant: participantInput.value }
-    webSocket.send(JSON.stringify(addVotingParticipant))
+    send(JSON.stringify(addVotingParticipant))
 
     participantInput.value = ""
     participantInput.focus()
@@ -53,10 +32,10 @@ const saveVote = () => {
 }
 document.getElementById("save-button").addEventListener("click", saveVote)
 
-const updateParticipantsButtonsIfNeeded = (data, url) => {
+const updateParticipantsButtons = (data) => {
     const participantsButtons = document.getElementById("participants-buttons")
-    if (participantsButtons == null) { return }
 
+    const url = new URL(window.location.href)
     participantsButtons.innerHTML = data.participants.reduce((result, participant) => {
         return result + `<button
         class="button button-outline"
@@ -68,33 +47,12 @@ const updateParticipantsButtonsIfNeeded = (data, url) => {
     }, '')
 }
 
-const updateVoteStatusIfNeeded = (data) => {
-    const participantsTable = document.getElementById("participants-table")
-    if (participantsTable == null) { return }
-
-    const isVoteFinished = data.avg != null
-
-    participantsTable.innerHTML = data.participants.reduce((result, participant) => {
-        const points = data.points[participant]
-        const hasVoted = points != null
-        return result + `<tr>
-        <td>${participant}</td>
-        <td>${hasVoted ? "✅" : "❓"}</td>
-        <td>${isVoteFinished ? points : "👀"}</td>
-        </tr>`
-    }, '')
-
-    if (isVoteFinished) {
-        participantsTable.innerHTML += `<tr>
-        <td><b>Average points</b></td>
-        <td></td>
-        <td><b>${data.avg.toFixed(2).replace(/[.,]00$/, "")}</b></td>
-        </tr>`
-    }
-
+const updateVoteStatus = (data) => {
+    updateParticipantTable(data)
     const saveButton = document.getElementById("save-button")
     const saveButtonHelp = document.getElementById("save-button-help")
-    if (saveButton == null || saveButtonHelp == null) { return }
+
+    const isVoteFinished = data.avg != null
     if (isVoteFinished) {
         saveButton.removeAttribute("disabled")
         saveButtonHelp.removeAttribute("hidden")
@@ -104,9 +62,8 @@ const updateVoteStatusIfNeeded = (data) => {
     }
 }
 
-const updatePointsButtonIfNeeded = (data) => {
+const updatePointsButton = (data) => {
     const pointsButtons = document.getElementsByName("points-button")
-    if (pointsButtons == null) { return }
 
     const url = new URL(window.location.href)
     const paths = url.pathname.split("/")

@@ -21,3 +21,27 @@ export const ids = () => {
         userStoryId,
     }
 }
+
+export const updateParticipantTable = (data) => {
+    const participantsTable = document.getElementById("participants-table")
+
+    const isVoteFinished = data.avg != null
+
+    participantsTable.innerHTML = data.participants.reduce((result, participant) => {
+        const points = data.points[participant]
+        const hasVoted = points != null
+        return result + `<tr>
+        <td>${participant}</td>
+        <td>${hasVoted ? "✅" : "❓"}</td>
+        <td>${isVoteFinished ? points : "👀"}</td>
+        </tr>`
+    }, '')
+
+    if (isVoteFinished) {
+        participantsTable.innerHTML += `<tr>
+        <td><b>Average points</b></td>
+        <td></td>
+        <td><b>${data.avg.toFixed(2).replace(/[.,]00$/, "")}</b></td>
+        </tr>`
+    }
+}
