@@ -2,8 +2,8 @@ import Foundation
 import HTMLKit
 
 struct HomepageData {
-    let groomingSessions: [GroomingSession]
-    let groomingSessionsMaximumAllowed: Int = GroomingSession.maximumAllowed
+    let refinementSessions: [RefinementSession]
+    let refinementSessionsMaximumAllowed: Int = RefinementSession.maximumAllowed
 }
 
 struct HomepageTemplate: HTMLTemplate {
@@ -27,13 +27,19 @@ struct HomepageTemplate: HTMLTemplate {
                     ),
                     HTMLAttribute(attribute: "crossorigin", value: "anonymous"),
                 ])
+                Link(attributes: [
+                    HTMLAttribute(attribute: "rel", value: "shortcut icon"),
+                    HTMLAttribute(attribute: "href", value: "favicon.png"),
+                    HTMLAttribute(attribute: "type", value: "image/png")
+                ])
                 Script().source("/script.js")
+                Script { "preventFormSubmit('add-refinement-session-form')" }
             }
             Body {
                 Div {
                     title
-                    groomingForm
-                    groomingSessionList
+                    refinementForm
+                    refinementSessionList
                 }.class("container")
             }
         }
@@ -82,17 +88,17 @@ struct HomepageTemplate: HTMLTemplate {
         }
     }
 
-    private var groomingForm: HTML {
+    private var refinementForm: HTML {
         Div {
             Div {
                 Div {
-                    H2 { "Add a Grooming Session" }
+                    H2 { "Add a Refinement Session" }
                 }.class("column")
             }.class("row")
             Div {
                 Div {
                     Form {
-                        Label { "Grooming Session name" }.for("name")
+                        Label { "Refinement Session name" }.for("name")
                         Input(type: .text, id: "name").name("name").required()
                         Label { "Date of the session" }.for("date")
                         Div {
@@ -100,40 +106,40 @@ struct HomepageTemplate: HTMLTemplate {
                                 Input(type: .date, id: "date").name("date").required()
                             }.class("column")
                             Div {
-                                Button { "Now" }.type(.button).on(click: "setGroomingSessionDateToNow()")
+                                Button { "Now" }.type(.button).on(click: "setRefinementSessionDateToNow()")
                             }.class("column")
                         }.class("row")
-                        Button { "Submit" }.type(.button).on(click: "createGroomingSession()")
-                    }
+                        Button { "Submit" }.type(.submit)
+                    }.id("add-refinement-session-form")
                 }.class("column")
             }.class("row")
         }
     }
 
-    private var groomingSessionList: HTML {
+    private var refinementSessionList: HTML {
         Div {
             Div {
                 Div {
-                    H2 { "Grooming Sessions" }
+                    H2 { "Refinement Sessions" }
                 }.class("column")
             }.class("row")
             Div {
                 Div {
-                    P { Bold { context.groomingSessions.count + "/" + context.groomingSessionsMaximumAllowed } }
+                    P { Bold { context.refinementSessions.count + "/" + context.refinementSessionsMaximumAllowed } }
                 }.class("column")
             }.class("row")
-            ForEach(in: context.groomingSessions) { (groomingSession: TemplateValue<GroomingSession>) in
+            ForEach(in: context.refinementSessions) { (refinementSession: TemplateValue<RefinementSession>) in
                 Div {
                     Div {
-                        H3 { Anchor { groomingSession.name }.href("grooming_sessions/" + groomingSession.id) }
+                        H3 { Anchor { refinementSession.name }.href("refinement_sessions/" + refinementSession.id) }
                     }.class("column")
                     Div {
-                        Button { "❌" }.type(.button).on(click: "removeGroomingSession(\"" + groomingSession.id + "\")")
+                        Button { "❌" }.type(.button).on(click: "removeRefinementSession(\"" + refinementSession.id + "\")")
                     }.class("column")
                 }.class("row")
                 Div {
                     Div {
-                        H4 { groomingSession.date.style(date: .full, time: .none) }
+                        H4 { refinementSession.date.style(date: .full, time: .none) }
                     }.class("column")
                 }.class("row")
             }

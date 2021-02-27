@@ -3,21 +3,21 @@ import XCTVapor
 
 final class UserStoryTests: XCTestCase {
     private let app = Application(.testing)
-    private var groomingSession: GroomingSession?
+    private var refinementSession: RefinementSession?
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         try configure(app)
         try app.autoMigrate().wait()
 
-        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session test",
                 "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            groomingSession = try res.content.decode(GroomingSession.self)
+            refinementSession = try res.content.decode(RefinementSession.self)
         })
     }
 
@@ -26,10 +26,10 @@ final class UserStoryTests: XCTestCase {
         super.tearDown()
     }
 
-    func groomingSessionId() throws -> UUID { try XCTUnwrap((try XCTUnwrap(groomingSession)).id) }
+    func refinementSessionId() throws -> UUID { try XCTUnwrap((try XCTUnwrap(refinementSession)).id) }
 
     func testUserStoriesGet() throws {
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories") { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(res.body.string, "[]")
         }
@@ -38,7 +38,7 @@ final class UserStoryTests: XCTestCase {
     func testUserStoryPost() throws {
         let userStoryName = "User Story"
 
-        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
                 "name": userStoryName,
             ])
@@ -48,7 +48,7 @@ final class UserStoryTests: XCTestCase {
             XCTAssertEqual(receivedUserStory.name, userStoryName)
         })
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories") { res in
             XCTAssertEqual(res.status, .ok)
             let userStories = try res.content.decode([UserStory].self)
             XCTAssertEqual(userStories.count, 1)
@@ -59,7 +59,7 @@ final class UserStoryTests: XCTestCase {
     func testUserStoryPostAnEmptyName() throws {
         let userStoryName = ""
 
-        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
                 "name": userStoryName,
             ])
@@ -69,20 +69,20 @@ final class UserStoryTests: XCTestCase {
     }
 
     func testMaximumUserStoryPost() throws {
-        for i in 0..<UserStoryContext.maximumAllowed {
-            try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+        for i in 0..<UserStory.maximumAllowed {
+            try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
                 try req.content.encode([
                     "name": "User Story \(i + 1)",
                 ])
             })
         }
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories") { res in
             let userStories = try res.content.decode([UserStory].self)
-            XCTAssertEqual(userStories.count, UserStoryContext.maximumAllowed)
+            XCTAssertEqual(userStories.count, UserStory.maximumAllowed)
         }
 
-        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
                 "name": "User Story ... too much",
             ])
@@ -93,7 +93,7 @@ final class UserStoryTests: XCTestCase {
 
     func testUserStoryDelete() throws {
         var id: UUID?
-        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
                 "name": "User Story to delete",
             ])
@@ -103,18 +103,18 @@ final class UserStoryTests: XCTestCase {
             id = receivedUserStory.id
         })
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories") { res in
             XCTAssertEqual(res.status, .ok)
             let userStories = try res.content.decode([UserStory].self)
             XCTAssertEqual(userStories.count, 1)
         }
 
         let userStoryId = try XCTUnwrap(id)
-        try app.test(.DELETE, "grooming_sessions/\(try groomingSessionId())/user_stories/\(userStoryId)") { res in
+        try app.test(.DELETE, "refinement_sessions/\(try refinementSessionId())/user_stories/\(userStoryId)") { res in
             XCTAssertEqual(res.status, .ok)
         }
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories") { res in
             let userStories = try res.content.decode([UserStory].self)
             XCTAssertEqual(userStories.count, 0)
         }
@@ -122,7 +122,7 @@ final class UserStoryTests: XCTestCase {
 
     func testUserStoryCannotDeleteFromAnotherUserStory() throws {
         var id: UUID?
-        try app.test(.POST, "grooming_sessions/\(try groomingSessionId())/user_stories", beforeRequest: { req in
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories", beforeRequest: { req in
             try req.content.encode([
                 "name": "User Story to delete",
             ])
@@ -132,30 +132,30 @@ final class UserStoryTests: XCTestCase {
             id = receivedUserStory.id
         })
 
-        var anotherGroomingSessionId: UUID?
-        try app.test(.POST, "grooming_sessions", beforeRequest: { req in
+        var anotherRefinementSessionId: UUID?
+        try app.test(.POST, "refinement_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Another Session",
                 "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
-            anotherGroomingSessionId = try res.content.decode(GroomingSession.self).id
+            anotherRefinementSessionId = try res.content.decode(RefinementSession.self).id
         })
 
-        try app.test(.GET, "grooming_sessions/\(XCTUnwrap(anotherGroomingSessionId))/user_stories") { res in
+        try app.test(.GET, "refinement_sessions/\(XCTUnwrap(anotherRefinementSessionId))/user_stories") { res in
             XCTAssertEqual(res.status, .ok)
             let userStories = try res.content.decode([UserStory].self)
             XCTAssertEqual(userStories.count, 0)
         }
 
         let userStoryId = try XCTUnwrap(id)
-        let url = "grooming_sessions/\(try XCTUnwrap(anotherGroomingSessionId))/user_stories/\(userStoryId)"
+        let url = "refinement_sessions/\(try XCTUnwrap(anotherRefinementSessionId))/user_stories/\(userStoryId)"
         try app.test(.DELETE, url) { res in
             XCTAssertEqual(res.status, .notFound)
         }
 
-        try app.test(.GET, "grooming_sessions/\(try groomingSessionId())/user_stories") { res in
+        try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories") { res in
             let userStories = try res.content.decode([UserStory].self)
             XCTAssertEqual(userStories.count, 1)
         }

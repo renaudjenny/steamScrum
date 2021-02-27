@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 import PackageDescription
 
 var dependencies: [PackageDescription.Package.Dependency] = [
@@ -7,6 +7,7 @@ var dependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.1.0"),
     .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "2.0.0"),
     .package(name: "HTMLKitVaporProvider", url: "https://github.com/MatsMoll/htmlkit-vapor-provider.git", from: "1.0.0"),
+    .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", .branch("master"))
 ]
 
 #if os(macOS)
@@ -19,6 +20,7 @@ var appTargetDependencies: [PackageDescription.Target.Dependency] = [
     .product(name: "Vapor", package: "vapor"),
     .product(name: "HTMLKit", package: "HTMLKit"),
     .product(name: "HTMLKitVaporProvider", package: "HTMLKitVaporProvider"),
+    .product(name: "QRCodeGenerator", package: "swift-qrcode-generator"),
 ]
 
 #if os(macOS)
