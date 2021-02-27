@@ -1,7 +1,7 @@
 import XCTest
 
-import WebAppTests
+import TokamakAppTests
 
 var tests = [XCTestCaseEntry]()
-tests += WebAppTests.allTests()
+tests += TokamakAppTests.allTests()
 XCTMain(tests)
