@@ -59,6 +59,7 @@ final class UserStoryVoteTests: XCTestCase {
     func testVoteView() throws {
         // Mock that a participant has already been added to the store
         try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+            userStory: try XCTUnwrap(userStory),
             participants: ["Mario"],
             points: [:]
         )
@@ -74,12 +75,31 @@ final class UserStoryVoteTests: XCTestCase {
         }
 
         try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+            userStory: try XCTUnwrap(userStory),
             participants: ["Luigi"],
             points: [:]
         )
 
         try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote/Mario") { res in
             XCTAssertEqual(res.status, .badRequest)
+        }
+    }
+
+    func testSaveVote() throws {
+        // Mock that a participant has already been added to the store
+        try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+            userStory: try XCTUnwrap(userStory),
+            participants: ["Mario", "Luigi"],
+            points: ["Mario": 3, "Luigi": 5]
+        )
+
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
+            XCTAssertEqual(res.status, .ok)
+            let userStoryVote = try XCTUnwrap(res.content.decode(UserStory.Vote.self))
+            XCTAssert(userStoryVote.participants.contains("Mario"), "Mario should be a participant")
+            XCTAssert(userStoryVote.participants.contains("Luigi"), "Luigi should be a participant")
+            XCTAssertEqual(userStoryVote.points["Mario"], 3, "Mario points should be 3")
+            XCTAssertEqual(userStoryVote.points["Luigi"], 5, "Mario points should be 5")
         }
     }
 }

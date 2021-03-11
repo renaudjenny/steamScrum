@@ -1,19 +1,44 @@
+import Fluent
 import Vapor
 
 extension UserStory {
-    struct Vote: Content {
-        var participants: [String] = []
-        var points: [String: Int] = [:]
+    final class Vote: Content, Model {
+        static let schema = "user_story_votes"
 
-        mutating func add(participant: String) {
+        @ID(key: .id)
+        var id: UUID?
+
+        @Field(key: "participants")
+        var participants: [String]
+
+        @Field(key: "points")
+        var points: [String: Int]
+
+        @Parent(key: "user_story_id")
+        var userStory: UserStory
+
+        init() { }
+
+        init(
+            userStory: UserStory,
+            participants: [String] = [],
+            points: [String: Int] = [:]
+        ) throws {
+            self.$userStory.id = try userStory.requireID()
+            self.participants = participants
+            self.points = points
+        }
+
+        func add(participant: String) {
             guard participants.count < 50,
                   !participants.contains(participant)
             else { return }
             participants.append(participant)
         }
 
-        mutating func set(points: Int, for participant: String) {
-            guard participants.contains(participant) else { return }
+        func set(points: Int, for participant: String) {
+            guard participants.contains(participant)
+            else { return }
             self.points[participant] = points
         }
 

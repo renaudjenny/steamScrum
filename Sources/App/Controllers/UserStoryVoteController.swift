@@ -9,6 +9,7 @@ struct UserStoryVoteController: RouteCollection {
         vote.get(use: index)
         vote.get(":participant", use: voteView)
         vote.webSocket("connect", onUpgrade: upgrade)
+        vote.post(use: save)
     }
 
     private func index(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
@@ -26,11 +27,15 @@ struct UserStoryVoteController: RouteCollection {
             .filter(\.$refinementSession.$id == refinementSessionId)
             .first()
             .unwrap(or: Abort(.notFound))
-            .map { _ in
+            .flatMapThrowing { userStory in
                 if !store.userStoriesVotes.keys.contains(userStoryId) {
-                    store.userStoriesVotes[userStoryId] = UserStory.Vote()
+                    store.userStoriesVotes[userStoryId] = try UserStory.Vote(
+                        userStory: userStory
+                    )
                 }
-                return store.userStoriesVotes[userStoryId] ?? UserStory.Vote()
+                guard let userStoryVote = store.userStoriesVotes[userStoryId]
+                else { throw Abort(.notFound) }
+                return userStoryVote
             }
     }
 
@@ -164,5 +169,36 @@ struct UserStoryVoteController: RouteCollection {
             for: setVote.vote.participant
         )
         store.updateCallbacks[webSocketId]?()
+    }
+
+    private func save(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
+        guard let refinementSessionIdString = req.parameters.get("refinementSessionID"),
+              let refinementSessionId = UUID(uuidString: refinementSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$refinementSession)
+            .filter(\.$refinementSession.$id == refinementSessionId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap { userStory in
+                guard let vote = store.userStoriesVotes[userStoryId]
+                else { return req.eventLoop.makeFailedFuture(Abort(.notFound)) }
+
+                return userStory.$votes.create(vote, on: req.db)
+                    .transform(to: vote)
+            }
+            // TODO: should only save a max amount of votes per US, like 5
+//            .flatMapThrowing({
+//                guard $0.userStories.count < UserStory.maximumAllowed else {
+//                    throw Abort(.badRequest, reason: "Too many data already provided.")
+//                }
+//                return $0
+//            })
     }
 }
