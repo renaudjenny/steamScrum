@@ -58,7 +58,7 @@ final class UserStoryVoteTests: XCTestCase {
 
     func testVoteView() throws {
         // Mock that a participant has already been added to the store
-        try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Mario"],
             points: [:]
@@ -74,7 +74,7 @@ final class UserStoryVoteTests: XCTestCase {
             XCTAssertEqual(res.status, .badRequest)
         }
 
-        try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Luigi"],
             points: [:]
@@ -87,7 +87,7 @@ final class UserStoryVoteTests: XCTestCase {
 
     func testSaveVote() throws {
         // Mock that a participant has already been added to the store
-        try store().userStoriesVotes[try userStoryId()] = UserStory.Vote(
+        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Mario", "Luigi"],
             points: ["Mario": 3, "Luigi": 5]
@@ -95,11 +95,46 @@ final class UserStoryVoteTests: XCTestCase {
 
         try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
             XCTAssertEqual(res.status, .ok)
-            let userStoryVote = try XCTUnwrap(res.content.decode(UserStory.Vote.self))
+            let userStoryVote = try XCTUnwrap(res.content.decode(UserStoryVote.self))
             XCTAssert(userStoryVote.participants.contains("Mario"), "Mario should be a participant")
             XCTAssert(userStoryVote.participants.contains("Luigi"), "Luigi should be a participant")
             XCTAssertEqual(userStoryVote.points["Mario"], 3, "Mario points should be 3")
             XCTAssertEqual(userStoryVote.points["Luigi"], 5, "Mario points should be 5")
+        }
+    }
+
+    func testSaveMoreThanMaxAmountOfVotePerUserStory() throws {
+        let usId = try userStoryId()
+        // You can actually persist the same Vote multiple time
+        try (0..<UserStoryVote.maximumAllowedPerUserStory).forEach { i in
+            // Mock that a participant has already been added to the store
+            try store().userStoriesVotes[usId] = UserStoryVote(
+                userStory: try XCTUnwrap(userStory),
+                participants: ["Mario \(i)"]
+            )
+
+            try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(usId)/vote") { res in
+                XCTAssertEqual(res.status, .ok)
+                XCTAssertNotNil(try res.content.decode(UserStoryVote.self))
+            }
+        }
+
+        // There is no possibility to GET the UserStory to list votes yet,
+        // there is only a View, which is hard to test, so we will use a manual DB request
+        // to check if the count of votes for this US is the expected one
+        let count: Int = try UserStoryVote.query(on: app.db)
+            // For some reason it's not compiling while I try to filter here. It doesn't really matter for this test tho
+            // .filter(\.$userStory.$id == usId)
+            .count()
+            .wait()
+        XCTAssertEqual(count, UserStoryVote.maximumAllowedPerUserStory)
+
+        try store().userStoriesVotes[usId] = UserStoryVote(
+            userStory: try XCTUnwrap(userStory),
+            participants: ["Mario too much"]
+        )
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
+            XCTAssertEqual(res.status, .badRequest)
         }
     }
 }

@@ -4,11 +4,15 @@ import Vapor
 // TODO: this should be changed to be a real Redux like store
 // (See https://github.com/renaudjenny/steamScrum/issues/29)
 final class AppStore {
-    var userStoriesVotes: [UserStory.IDValue: UserStory.Vote] = [:] {
+    var userStoriesVotes: [UserStory.IDValue: UserStoryVote] = [:] {
         didSet { updateCallbacks.values.forEach { $0() } }
     }
 
     var updateCallbacks: [UUID: () -> Void] = [:]
+
+    func updateWebSockets() {
+        updateCallbacks.forEach { (key, callback) in callback() }
+    }
 }
 
 func routes(_ app: Application) throws {
