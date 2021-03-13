@@ -78,6 +78,28 @@ struct UserStoryTemplate: HTMLTemplate {
                             .class("column column-80")
                             .id("save-button-help")
                         }.class("row")
+
+                        Div {
+                            H2 { "Saved votes" }.singleColumn
+                            IF(context.userStory.votes.count <= 0) {
+                                P { "No votes have been saved yet." }.singleColumn
+                            }
+                            ForEach(in: context.userStory.votes) { vote in
+                                Div {
+                                    H3 { vote.id }.class("column")
+                                    Div {
+                                        Button {
+                                            "❌"
+                                        }
+                                        .type(.button)
+                                        .class("remove-user-story-vote-button")
+                                        .data(for: "id", value: vote.id)
+                                    }
+                                    .class("column")
+                                }
+                                .class("row")
+                            }
+                        }
                     }
                     .singleColumn
                 }.class("container")

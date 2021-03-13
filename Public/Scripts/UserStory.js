@@ -27,10 +27,20 @@ const addVotingParticipant = () => {
 }
 
 const saveVote = () => {
-    alert("Sorry the save vote feature is still work in progress. It will be implemented soon!\n"
-          + "See https://github.com/renaudjenny/steamScrum/issues/27")
+    fetch(`${ids().userStoryId}/vote`, { method: "POST" })
+    .then(() => location.reload())
 }
 document.getElementById("save-button").addEventListener("click", saveVote)
+
+const removeVote = (voteId) => {
+    fetch(`${ids().userStoryId}/vote/${voteId}`, { method: "DELETE" })
+    .then(() => location.reload())
+}
+document.querySelectorAll("button.remove-user-story-vote-button")
+.forEach(button => {
+    const id = button.dataset.id
+    button.addEventListener("click", () => removeVote(id))
+})
 
 const updateParticipantsButtons = (data) => {
     const participantsButtons = document.getElementById("participants-buttons")
@@ -55,10 +65,10 @@ const updateVoteStatus = (data) => {
     const isVoteFinished = data.avg != null
     if (isVoteFinished) {
         saveButton.removeAttribute("disabled")
-        saveButtonHelp.removeAttribute("hidden")
+        saveButtonHelp.hidden = true
     } else {
         saveButton.setAttribute("disabled", "true")
-        saveButtonHelp.setAttribute("hidden", "true")
+        saveButtonHelp.hidden = false
     }
 }
 

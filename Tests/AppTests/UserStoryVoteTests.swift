@@ -104,37 +104,64 @@ final class UserStoryVoteTests: XCTestCase {
     }
 
     func testSaveMoreThanMaxAmountOfVotePerUserStory() throws {
-        let usId = try userStoryId()
         // You can actually persist the same Vote multiple time
         try (0..<UserStoryVote.maximumAllowedPerUserStory).forEach { i in
             // Mock that a participant has already been added to the store
-            try store().userStoriesVotes[usId] = UserStoryVote(
+            try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
                 userStory: try XCTUnwrap(userStory),
                 participants: ["Mario \(i)"]
             )
 
-            try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(usId)/vote") { res in
+            try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
                 XCTAssertEqual(res.status, .ok)
                 XCTAssertNotNil(try res.content.decode(UserStoryVote.self))
             }
         }
 
-        // There is no possibility to GET the UserStory to list votes yet,
-        // there is only a View, which is hard to test, so we will use a manual DB request
-        // to check if the count of votes for this US is the expected one
-        let count: Int = try UserStoryVote.query(on: app.db)
-            // For some reason it's not compiling while I try to filter here. It doesn't really matter for this test tho
-            // .filter(\.$userStory.$id == usId)
-            .count()
-            .wait()
+        let count = try numberOfVotes(for: try userStoryId())
         XCTAssertEqual(count, UserStoryVote.maximumAllowedPerUserStory)
 
-        try store().userStoriesVotes[usId] = UserStoryVote(
+        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Mario too much"]
         )
         try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
             XCTAssertEqual(res.status, .badRequest)
         }
+    }
+
+    func testDeleteUserStoryVote() throws {
+        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
+            userStory: try XCTUnwrap(userStory)
+        )
+
+        var id: UUID?
+        try app.test(.POST, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
+            XCTAssertEqual(res.status, .ok)
+            let vote = try res.content.decode(UserStoryVote.self)
+            id = vote.id
+        }
+
+        var count = try numberOfVotes(for: try userStoryId())
+        XCTAssertEqual(count, 1)
+
+        let voteId = try XCTUnwrap(id)
+        try app.test(.DELETE, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote/\(voteId)") { res in
+            XCTAssertEqual(res.status, .ok)
+        }
+
+        count = try numberOfVotes(for: try userStoryId())
+        XCTAssertEqual(count, 0)
+    }
+
+    private func numberOfVotes(for userStoryId: UUID) throws -> Int {
+        // There is no possibility to GET the UserStory to list votes yet,
+        // there is only a View, which is hard to test, so we will use a manual DB request
+        // to check if the count of votes for this US is the expected one
+        return try UserStoryVote.query(on: app.db)
+            // For some reason it's not compiling while I try to filter here. It doesn't really matter for this test tho
+            // .filter(\.$userStory.$id == usId)
+            .count()
+            .wait()
     }
 }

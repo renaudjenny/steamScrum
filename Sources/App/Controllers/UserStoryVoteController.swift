@@ -10,6 +10,7 @@ struct UserStoryVoteController: RouteCollection {
         vote.get(":participant", use: voteView)
         vote.webSocket("connect", onUpgrade: upgrade)
         vote.post(use: save)
+        vote.delete(":voteID", use: delete)
     }
 
     private func index(req: Request) throws -> EventLoopFuture<UserStoryVote> {
@@ -200,8 +201,28 @@ struct UserStoryVoteController: RouteCollection {
                 guard let vote = store.userStoriesVotes[userStoryId]
                 else { return req.eventLoop.makeFailedFuture(Abort(.notFound)) }
 
+                // Erase the id in case the vote is saved more than once
+                vote.id = nil
                 return userStory.$votes.create(vote, on: req.db)
                     .transform(to: vote)
             }
+    }
+
+    private func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        guard let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString),
+              let voteIdString = req.parameters.get("voteID"),
+              let voteId = UUID(uuidString: voteIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStoryVote.query(on: req.db)
+            .filter(\.$id == voteId)
+            .filter(\.$userStory.$id == userStoryId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap { $0.delete(on: req.db) }
+            .transform(to: .ok)
     }
 }
