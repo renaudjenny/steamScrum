@@ -86,7 +86,18 @@ struct UserStoryTemplate: HTMLTemplate {
                             }
                             ForEach(in: context.userStory.votes) { vote in
                                 Div {
-                                    H3 { vote.id }.class("column")
+                                    H4 { vote.date.style(date: .full, time: .short) }.class("column")
+                                    Div {
+                                        P { Bold { "Participants" } }
+                                        P { vote.participantsListed }
+                                    }
+                                    .class("column")
+                                    P {
+                                        Span { "Average: " }
+                                        Bold { vote.avgRounded }
+                                        Span { " points" }
+                                    }
+                                    .class("column")
                                     Div {
                                         Button {
                                             "❌"
@@ -122,5 +133,16 @@ struct UserStoryTemplate: HTMLTemplate {
                 + "If you just want to be spectator, you can just stay on this page "
                 + "(you don't need to refresh the page to see voting status changing)"
         }
+    }
+}
+
+private extension UserStoryVote {
+    var avgRounded: String? {
+        guard let avg = avg else { return nil }
+        return String(format: "%.2f", avg)
+    }
+
+    var participantsListed: String {
+        participants.joined(separator: ", ")
     }
 }

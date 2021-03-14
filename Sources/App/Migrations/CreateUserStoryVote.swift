@@ -6,6 +6,7 @@ struct CreateUserStoryVote: Migration {
             .id()
             .field("participants", .array(of: .string), .required)
             .field("points", .dictionary(of: .int), .required)
+            .field("date", .datetime, .required)
             .field("user_story_id", .uuid, .required, .references("user_stories", .id))
             .create()
     }

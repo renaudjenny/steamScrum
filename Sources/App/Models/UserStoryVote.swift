@@ -13,6 +13,9 @@ final class UserStoryVote: Content, Model {
     @Field(key: "points")
     var points: [String: Int]
 
+    @Field(key: "date")
+    var date: Date
+
     @Parent(key: "user_story_id")
     var userStory: UserStory
 
@@ -21,11 +24,13 @@ final class UserStoryVote: Content, Model {
     init(
         userStory: UserStory,
         participants: [String] = [],
-        points: [String: Int] = [:]
+        points: [String: Int] = [:],
+        date: Date = Date()
     ) throws {
         self.$userStory.id = try userStory.requireID()
         self.participants = participants
         self.points = points
+        self.date = date
     }
 
     func add(participant: String) {
@@ -63,11 +68,13 @@ extension UserStoryVote {
         var points: [String: Int]
         var sum: Int?
         var avg: Double?
+        var date: Date
     }
     var encoded: Encoded { Encoded(
         participants: participants,
         points: points,
         sum: sum,
-        avg: avg
+        avg: avg,
+        date: date
     )}
 }

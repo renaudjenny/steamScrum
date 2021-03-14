@@ -12,6 +12,6 @@ struct CreateRefinementSession: Migration {
     }
 
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        database.schema("refinement_sessions").delete()
+        database.schema("grooming_sessions").delete()
     }
 }
