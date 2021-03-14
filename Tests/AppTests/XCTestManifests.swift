@@ -35,6 +35,8 @@ extension UserStoryVoteTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__UserStoryVoteTests = [
+        ("testDeleteUserStoryVote", testDeleteUserStoryVote),
+        ("testSaveMoreThanMaxAmountOfVotePerUserStory", testSaveMoreThanMaxAmountOfVotePerUserStory),
         ("testSaveVote", testSaveVote),
         ("testVoteGet", testVoteGet),
         ("testVoteView", testVoteView),
