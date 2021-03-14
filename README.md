@@ -14,13 +14,13 @@ The final goal of the Scrum part is to list User Stories and compute amount of S
 4. All participants will have their own interface to vote, and they can see in **real time** who has already voted (thanks to WebSocket).
   * Usually, you will use a video projector to display the User Story, and every voters can scan the QR Code available on the top right to connect to this User Story quickly with their phone or tablet.
 5. When all participants have voted, the average score is revealed
-6. You can save the vote (persisting the vote is *Work in progress*)
+6. You can save the vote (actually, you can save several votes if needed, with the average of voted points, so you can easily compare each voting sessions)
 
 All Refinement Sessions and User Stories are saved on the database, persisting votes is still *WIP*.
 
 ## Website
 
-The interface is pure HTML and a minimum of script (so using VanillaJS), with a minimalistic style (using Milligram to no reinventing the wheel).
+The interface is pure HTML and a minimum of script (so using VanillaJS), with a minimalistic style (using Milligram to not reinventing the wheel).
 
 It looks very raw, especially in the code for now, but soon or later, I will use [Tokamak](https://github.com/swiftwasm/Tokamak) which allow you to use a subset of SwiftUI to simplify HTML and CSS interaction, and it relies on SwiftWasm for that, which is very promising.
 
