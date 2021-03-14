@@ -9,9 +9,11 @@ struct UserStoryVoteController: RouteCollection {
         vote.get(use: index)
         vote.get(":participant", use: voteView)
         vote.webSocket("connect", onUpgrade: upgrade)
+        vote.post(use: save)
+        vote.delete(":voteID", use: delete)
     }
 
-    private func index(req: Request) throws -> EventLoopFuture<UserStory.Vote> {
+    private func index(req: Request) throws -> EventLoopFuture<UserStoryVote> {
         guard let refinementSessionIdString = req.parameters.get("refinementSessionID"),
               let refinementSessionId = UUID(uuidString: refinementSessionIdString),
               let userStoryIdString = req.parameters.get("userStoryID"),
@@ -26,11 +28,15 @@ struct UserStoryVoteController: RouteCollection {
             .filter(\.$refinementSession.$id == refinementSessionId)
             .first()
             .unwrap(or: Abort(.notFound))
-            .map { _ in
+            .flatMapThrowing { userStory in
                 if !store.userStoriesVotes.keys.contains(userStoryId) {
-                    store.userStoriesVotes[userStoryId] = UserStory.Vote()
+                    store.userStoriesVotes[userStoryId] = try UserStoryVote(
+                        userStory: userStory
+                    )
                 }
-                return store.userStoriesVotes[userStoryId] ?? UserStory.Vote()
+                guard let userStoryVote = store.userStoriesVotes[userStoryId]
+                else { throw Abort(.notFound) }
+                return userStoryVote
             }
     }
 
@@ -71,23 +77,6 @@ struct UserStoryVoteController: RouteCollection {
             return
         }
 
-        // If the User Story is not available, close the connection
-        _ = UserStory.query(on: req.db)
-            .filter(\.$id == userStoryId)
-            .with(\.$refinementSession)
-            .filter(\.$refinementSession.$id == refinementSessionId)
-            .first()
-            .map {
-                if $0 == nil {
-                    webSocket.send("Error: Cannot connect to the vote you asked for")
-                    _ = webSocket.close()
-                }
-            }
-
-        if !store.userStoriesVotes.keys.contains(userStoryId) {
-            store.userStoriesVotes[userStoryId] = UserStory.Vote()
-        }
-
         let webSocketId = UUID()
 
         webSocket.onText { onMessageReceived(
@@ -100,6 +89,26 @@ struct UserStoryVoteController: RouteCollection {
         webSocket.onClose.whenComplete { _ in
             store.updateCallbacks.removeValue(forKey: webSocketId)
         }
+
+        // If the User Story is not available, close the connection
+        // If the User Story doesn't have a Vote session already, create one for it
+        _ = UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$refinementSession)
+            .filter(\.$refinementSession.$id == refinementSessionId)
+            .first()
+            .flatMapThrowing { userStory in
+                guard let userStory = userStory
+                else {
+                    webSocket.send("Error: Cannot connect to the vote you asked for")
+                    _ = webSocket.close()
+                    return
+                }
+
+                if !store.userStoriesVotes.keys.contains(userStoryId) {
+                    store.userStoriesVotes[userStoryId] = try UserStoryVote(userStory: userStory)
+                }
+            }
     }
 
     private func onMessageReceived(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
@@ -123,7 +132,7 @@ struct UserStoryVoteController: RouteCollection {
             }
             webSocket.send(message)
         }
-        store.updateCallbacks[webSocketId]?()
+        store.updateWebSockets()
     }
 
     private func onAddVotingParticipant(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
@@ -139,7 +148,7 @@ struct UserStoryVoteController: RouteCollection {
             let votingParticipant = try JSONDecoder().decode(AddVotingParticipant.self, from: data)
 
             store.userStoriesVotes[userStoryId]?.add(participant: votingParticipant.addVotingParticipant)
-            store.updateCallbacks[webSocketId]?()
+            store.updateWebSockets()
         } catch {
             webSocket.send("Error: \(error)")
             return
@@ -163,6 +172,57 @@ struct UserStoryVoteController: RouteCollection {
             points: setVote.vote.points,
             for: setVote.vote.participant
         )
-        store.updateCallbacks[webSocketId]?()
+        store.updateWebSockets()
+    }
+
+    private func save(req: Request) throws -> EventLoopFuture<UserStoryVote> {
+        guard let refinementSessionIdString = req.parameters.get("refinementSessionID"),
+              let refinementSessionId = UUID(uuidString: refinementSessionIdString),
+              let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStory.query(on: req.db)
+            .filter(\.$id == userStoryId)
+            .with(\.$refinementSession)
+            .with(\.$votes)
+            .filter(\.$refinementSession.$id == refinementSessionId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMapThrowing { userStory -> UserStory in
+                guard userStory.votes.count < UserStoryVote.maximumAllowedPerUserStory else {
+                    throw Abort(.badRequest, reason: "Too many data already provided.")
+                }
+                return userStory
+            }
+            .flatMap { userStory in
+                guard let vote = store.userStoriesVotes[userStoryId]
+                else { return req.eventLoop.makeFailedFuture(Abort(.notFound)) }
+
+                // Erase the id in case the vote is saved more than once
+                vote.id = nil
+                return userStory.$votes.create(vote, on: req.db)
+                    .transform(to: vote)
+            }
+    }
+
+    private func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        guard let userStoryIdString = req.parameters.get("userStoryID"),
+              let userStoryId = UUID(uuidString: userStoryIdString),
+              let voteIdString = req.parameters.get("voteID"),
+              let voteId = UUID(uuidString: voteIdString)
+        else {
+            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
+        }
+
+        return UserStoryVote.query(on: req.db)
+            .filter(\.$id == voteId)
+            .filter(\.$userStory.$id == userStoryId)
+            .first()
+            .unwrap(or: Abort(.notFound))
+            .flatMap { $0.delete(on: req.db) }
+            .transform(to: .ok)
     }
 }

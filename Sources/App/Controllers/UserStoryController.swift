@@ -86,6 +86,7 @@ struct UserStoryController: RouteCollection {
             .filter(\.$id == userStoryId)
             .with(\.$refinementSession)
             .filter(\.$refinementSession.$id == refinementSessionId)
+            .with(\.$votes)
             .first()
             .unwrap(or: Abort(.notFound))
             .flatMap {

@@ -78,6 +78,39 @@ struct UserStoryTemplate: HTMLTemplate {
                             .class("column column-80")
                             .id("save-button-help")
                         }.class("row")
+
+                        Div {
+                            H2 { "Saved votes" }.singleColumn
+                            IF(context.userStory.votes.count <= 0) {
+                                P { "No votes have been saved yet." }.singleColumn
+                            }
+                            ForEach(in: context.userStory.votes) { vote in
+                                Div {
+                                    H4 { vote.date.style(date: .full, time: .short) }.class("column")
+                                    Div {
+                                        P { Bold { "Participants" } }
+                                        P { vote.participantsListed }
+                                    }
+                                    .class("column")
+                                    P {
+                                        Span { "Average: " }
+                                        Bold { vote.avgRounded }
+                                        Span { " points" }
+                                    }
+                                    .class("column")
+                                    Div {
+                                        Button {
+                                            "❌"
+                                        }
+                                        .type(.button)
+                                        .class("remove-user-story-vote-button")
+                                        .data(for: "id", value: vote.id)
+                                    }
+                                    .class("column")
+                                }
+                                .class("row")
+                            }
+                        }
                     }
                     .singleColumn
                 }.class("container")
@@ -100,5 +133,16 @@ struct UserStoryTemplate: HTMLTemplate {
                 + "If you just want to be spectator, you can just stay on this page "
                 + "(you don't need to refresh the page to see voting status changing)"
         }
+    }
+}
+
+private extension UserStoryVote {
+    var avgRounded: String? {
+        guard let avg = avg else { return nil }
+        return String(format: "%.2f", avg)
+    }
+
+    var participantsListed: String {
+        participants.joined(separator: ", ")
     }
 }

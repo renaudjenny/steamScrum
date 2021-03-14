@@ -32,6 +32,7 @@ public func configure(_ app: Application) throws {
 
     app.migrations.add(CreateRefinementSession())
     app.migrations.add(CreateUserStory())
+    app.migrations.add(CreateUserStoryVote())
 
     // register routes
     try routes(app)
