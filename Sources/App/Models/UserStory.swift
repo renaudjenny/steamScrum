@@ -13,9 +13,7 @@ final class UserStory: Model, Content, Hashable {
     @Children(for: \.$userStory)
     var votes: [UserStoryVote]
 
-    // grooming_session* is used in the database because it was the old name for Refinement. But this term is inappropriate.
-    // we will keep it for this version of SteamScrum. See https://github.com/renaudjenny/steamScrum/issues/34
-    @Parent(key: "grooming_session_id")
+    @Parent(key: "refinement_session_id")
     var refinementSession: RefinementSession
 
     init() { }
