@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
           "branch": null,
-          "revision": "8ccba7328d178ac05a1a9803cf3f2c6660d2f826",
-          "version": "1.3.0"
+          "revision": "3fd0658dd91864099481b23740afd1757d1f0634",
+          "version": "1.4.0"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/multipart-kit.git",
         "state": {
           "branch": null,
-          "revision": "2376b4949e8a1675f7c495224029498194eecf61",
-          "version": "4.0.3"
+          "revision": "c9ea04017b7fb3b1f034ad7a77f8e53d3e080be5",
+          "version": "4.2.1"
         }
       },
       {
@@ -204,8 +204,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-extras.git",
         "state": {
           "branch": null,
-          "revision": "de1c80ad1fdff1ba772bcef6b392c3ef735f39a6",
-          "version": "1.8.0"
+          "revision": "29e4c0a2b4ceaa26c41fed765835a1d1cfb5aafd",
+          "version": "1.9.1"
         }
       },
       {
@@ -249,8 +249,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "bc194e3868cbd9cf3cd41392e9b10d6fad089bc4",
-          "version": "4.45.7"
+          "revision": "605d8c86cfc51cf875b9e09b3c8f55e4137b0b55",
+          "version": "4.47.0"
         }
       },
       {
