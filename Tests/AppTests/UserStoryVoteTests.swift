@@ -5,17 +5,11 @@ final class UserStoryVoteTests: XCTestCase {
     private let app = Application(.testing)
     private var refinementSession: RefinementSession?
     private var userStory: UserStory?
-    private var mockedStore: AppStore?
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         try configure(app)
         try app.autoMigrate().wait()
-
-        mockedStore = AppStore()
-
-        // Override the route collection to inject the mocked store
-        try app.register(collection: UserStoryVoteController(store: store()))
 
         try app.test(.POST, "refinement_sessions", beforeRequest: { req in
             try req.content.encode([
@@ -44,21 +38,20 @@ final class UserStoryVoteTests: XCTestCase {
 
     func refinementSessionId() throws -> UUID { try XCTUnwrap(try XCTUnwrap(refinementSession).id) }
     func userStoryId() throws -> UUID { try XCTUnwrap(try XCTUnwrap(userStory).id) }
-    func store() throws -> AppStore { try XCTUnwrap(mockedStore) }
 
     func testVoteGet() throws {
         // Check first that the store is empty
-        XCTAssertEqual(try store().userStoriesVotes.count, 0)
+        XCTAssertEqual(app.userStoriesVotes.count, 0)
 
         try app.test(.GET, "refinement_sessions/\(try refinementSessionId())/user_stories/\(try userStoryId())/vote") { res in
             XCTAssertEqual(res.status, .ok)
-            XCTAssertEqual(try store().userStoriesVotes.count, 1)
+            XCTAssertEqual(app.userStoriesVotes.count, 1)
         }
     }
 
     func testVoteView() throws {
         // Mock that a participant has already been added to the store
-        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
+        try app.userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Mario"],
             points: [:]
@@ -74,7 +67,7 @@ final class UserStoryVoteTests: XCTestCase {
             XCTAssertEqual(res.status, .badRequest)
         }
 
-        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
+        try app.userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Luigi"],
             points: [:]
@@ -87,7 +80,7 @@ final class UserStoryVoteTests: XCTestCase {
 
     func testSaveVote() throws {
         // Mock that a participant has already been added to the store
-        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
+        try app.userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Mario", "Luigi"],
             points: ["Mario": 3, "Luigi": 5]
@@ -107,7 +100,7 @@ final class UserStoryVoteTests: XCTestCase {
         // You can actually persist the same Vote multiple time
         try (0..<UserStoryVote.maximumAllowedPerUserStory).forEach { i in
             // Mock that a participant has already been added to the store
-            try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
+            try app.userStoriesVotes[try userStoryId()] = UserStoryVote(
                 userStory: try XCTUnwrap(userStory),
                 participants: ["Mario \(i)"]
             )
@@ -121,7 +114,7 @@ final class UserStoryVoteTests: XCTestCase {
         let count = try numberOfVotes(for: try userStoryId())
         XCTAssertEqual(count, UserStoryVote.maximumAllowedPerUserStory)
 
-        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
+        try app.userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory),
             participants: ["Mario too much"]
         )
@@ -131,7 +124,7 @@ final class UserStoryVoteTests: XCTestCase {
     }
 
     func testDeleteUserStoryVote() throws {
-        try store().userStoriesVotes[try userStoryId()] = UserStoryVote(
+        try app.userStoriesVotes[try userStoryId()] = UserStoryVote(
             userStory: try XCTUnwrap(userStory)
         )
 
