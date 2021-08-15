@@ -21,7 +21,8 @@ public func configure(_ app: Application) throws {
         #endif
     } else if let databaseURL = Environment.get("DATABASE_URL"),
               var postgresConfig = PostgresConfiguration(url: databaseURL) {
-        postgresConfig.tlsConfiguration = .forClient(certificateVerification: .none)
+        postgresConfig.tlsConfiguration = .makeClientConfiguration()
+        postgresConfig.tlsConfiguration?.certificateVerification = .none
         app.databases.use(.postgres(
             configuration: postgresConfig
         ), as: .psql)

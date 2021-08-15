@@ -2,8 +2,6 @@ import Fluent
 import Vapor
 
 struct UserStoryVoteController: RouteCollection {
-    let store: AppStore
-
     func boot(routes: RoutesBuilder) throws {
         let vote = routes.grouped("refinement_sessions", ":refinementSessionID", "user_stories", ":userStoryID", "vote")
         vote.get(use: index)
@@ -29,12 +27,12 @@ struct UserStoryVoteController: RouteCollection {
             .first()
             .unwrap(or: Abort(.notFound))
             .flatMapThrowing { userStory in
-                if !store.userStoriesVotes.keys.contains(userStoryId) {
-                    store.userStoriesVotes[userStoryId] = try UserStoryVote(
+                if !req.application.userStoriesVotes.keys.contains(userStoryId) {
+                    req.application.userStoriesVotes[userStoryId] = try UserStoryVote(
                         userStory: userStory
                     )
                 }
-                guard let userStoryVote = store.userStoriesVotes[userStoryId]
+                guard let userStoryVote = req.application.userStoriesVotes[userStoryId]
                 else { throw Abort(.notFound) }
                 return userStoryVote
             }
@@ -58,7 +56,7 @@ struct UserStoryVoteController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .flatMap {
                 guard let userStoryId = $0.id,
-                      let vote = store.userStoriesVotes[userStoryId],
+                      let vote = req.application.userStoriesVotes[userStoryId],
                       vote.participants.contains(participant)
                 else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
 
@@ -83,11 +81,12 @@ struct UserStoryVoteController: RouteCollection {
             webSocketId: webSocketId,
             userStoryId: userStoryId,
             webSocket: $0,
-            text: $1
+            text: $1,
+            application: req.application
         ) }
 
         webSocket.onClose.whenComplete { _ in
-            store.updateCallbacks.removeValue(forKey: webSocketId)
+            req.application.updateCallbacks.removeValue(forKey: webSocketId)
         }
 
         // If the User Story is not available, close the connection
@@ -105,37 +104,75 @@ struct UserStoryVoteController: RouteCollection {
                     return
                 }
 
-                if !store.userStoriesVotes.keys.contains(userStoryId) {
-                    store.userStoriesVotes[userStoryId] = try UserStoryVote(userStory: userStory)
+                if !req.application.userStoriesVotes.keys.contains(userStoryId) {
+                    req.application.userStoriesVotes[userStoryId] = try UserStoryVote(
+                        userStory: userStory
+                    )
                 }
             }
     }
 
-    private func onMessageReceived(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
+    private func onMessageReceived(
+        webSocketId: UUID,
+        userStoryId: UUID,
+        webSocket: WebSocket,
+        text: String,
+        application: Application
+    ) {
         if text == "connection-ready" {
-            onConnectionReady(webSocketId: webSocketId, userStoryId: userStoryId, webSocket: webSocket)
+            onConnectionReady(
+                webSocketId: webSocketId,
+                userStoryId: userStoryId,
+                webSocket: webSocket,
+                application: application
+            )
         } else if text.contains("addVotingParticipant") {
-            onAddVotingParticipant(webSocketId: webSocketId, userStoryId: userStoryId, webSocket: webSocket, text: text)
+            onAddVotingParticipant(
+                webSocketId: webSocketId,
+                userStoryId: userStoryId,
+                webSocket: webSocket,
+                text: text,
+                application: application
+            )
         } else if text.contains("vote") {
-            onVote(webSocketId: webSocketId, userStoryId: userStoryId, webSocket: webSocket, text: text)
+            onVote(
+                webSocketId: webSocketId,
+                userStoryId: userStoryId,
+                webSocket: webSocket,
+                text: text,
+                application: application
+            )
         }
     }
 
-    private func onConnectionReady(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket) {
-        store.updateCallbacks[webSocketId] = {
+    private func onConnectionReady(
+        webSocketId: UUID,
+        userStoryId: UUID,
+        webSocket: WebSocket,
+        application: Application
+    ) {
+        application.updateCallbacks[webSocketId] = {
             let message: String
             do {
-                let data = try JSONEncoder().encode(store.userStoriesVotes[userStoryId]?.encoded)
+                let data = try JSONEncoder().encode(
+                    application.userStoriesVotes[userStoryId]?.encoded
+                )
                 message = String(data: data, encoding: .utf8) ?? "Error: Cannot convert data to UTF-8 format"
             } catch {
                 message = "Error: \(error)"
             }
             webSocket.send(message)
         }
-        store.updateWebSockets()
+        application.updateWebSockets()
     }
 
-    private func onAddVotingParticipant(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
+    private func onAddVotingParticipant(
+        webSocketId: UUID,
+        userStoryId: UUID,
+        webSocket: WebSocket,
+        text: String,
+        application: Application
+    ) {
         struct AddVotingParticipant: Decodable {
             var addVotingParticipant: String
         }
@@ -147,15 +184,21 @@ struct UserStoryVoteController: RouteCollection {
             }
             let votingParticipant = try JSONDecoder().decode(AddVotingParticipant.self, from: data)
 
-            store.userStoriesVotes[userStoryId]?.add(participant: votingParticipant.addVotingParticipant)
-            store.updateWebSockets()
+            application.userStoriesVotes[userStoryId]?.add(participant: votingParticipant.addVotingParticipant)
+            application.updateWebSockets()
         } catch {
             webSocket.send("Error: \(error)")
             return
         }
     }
 
-    private func onVote(webSocketId: UUID, userStoryId: UUID, webSocket: WebSocket, text: String) {
+    private func onVote(
+        webSocketId: UUID,
+        userStoryId: UUID,
+        webSocket: WebSocket,
+        text: String,
+        application: Application
+    ) {
         struct SetVote: Decodable {
             struct Vote: Decodable {
                 var participant: String
@@ -168,11 +211,11 @@ struct UserStoryVoteController: RouteCollection {
               let setVote = try? JSONDecoder().decode(SetVote.self, from: data)
         else { return }
 
-        store.userStoriesVotes[userStoryId]?.set(
+        application.userStoriesVotes[userStoryId]?.set(
             points: setVote.vote.points,
             for: setVote.vote.participant
         )
-        store.updateWebSockets()
+        application.updateWebSockets()
     }
 
     private func save(req: Request) throws -> EventLoopFuture<UserStoryVote> {
@@ -198,7 +241,7 @@ struct UserStoryVoteController: RouteCollection {
                 return userStory
             }
             .flatMap { userStory in
-                guard let vote = store.userStoriesVotes[userStoryId]
+                guard let vote = req.application.userStoriesVotes[userStoryId]
                 else { return req.eventLoop.makeFailedFuture(Abort(.notFound)) }
 
                 // Erase the id in case the vote is saved more than once
