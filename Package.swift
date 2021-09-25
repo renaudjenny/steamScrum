@@ -7,7 +7,7 @@ var dependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.1.0"),
     .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "2.0.0"),
     .package(name: "HTMLKitVaporProvider", url: "https://github.com/MatsMoll/htmlkit-vapor-provider.git", from: "1.0.0"),
-    .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", .branch("master"))
+    .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "1.0.3")
 ]
 
 #if os(macOS)
