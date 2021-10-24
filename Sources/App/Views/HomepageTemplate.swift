@@ -9,10 +9,10 @@ struct HomepageData {
 struct HomepageTemplate: HTMLTemplate {
     @TemplateValue(HomepageData.self) var context
 
-    var body: HTML {
+    var body: HTMLContent {
         Document(type: .html5) {
             Head {
-                Title { "SteamScrum" }
+                MetaTitle { "SteamScrum" }
                 Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
@@ -44,7 +44,7 @@ struct HomepageTemplate: HTMLTemplate {
         }
     }
 
-    private var title: HTML {
+    private var title: HTMLContent {
         Div {
             Div {
                 Div {
@@ -59,7 +59,7 @@ struct HomepageTemplate: HTMLTemplate {
                     P {
                         "This project changed a lot. It has been migrated to the last version of Vapor"
                             + " and will sooner be fully rendered in Swift! (See: "
-                            + Anchor { "Tokamak project" }.href("https://github.com/swiftwasm/Tokamak")
+                            + Anchor { "Tokamak project" }.reference("https://github.com/swiftwasm/Tokamak")
                             + ")"
                     }
                 }.class("column")
@@ -69,7 +69,7 @@ struct HomepageTemplate: HTMLTemplate {
                 Div {
                     P {
                         "This is using pure Javascript (without any external libraries), and "
-                            + Anchor { "Milligram" }.href("https://milligram.io")
+                            + Anchor { "Milligram" }.reference("https://milligram.io")
                             + " to give a little bit of style here and there."
                     }
                 }.class("column")
@@ -80,14 +80,14 @@ struct HomepageTemplate: HTMLTemplate {
                     P {
                         "The code is available here: "
                             + Anchor { "SteamScrum on GitHub" }
-                                .href("https://github.com/renaudjenny/steamScrum")
+                                .reference("https://github.com/renaudjenny/steamScrum")
                     }
                 }.class("column")
             }.class("row")
         }
     }
 
-    private var refinementForm: HTML {
+    private var refinementForm: HTMLContent {
         Div {
             Div {
                 Div {
@@ -117,7 +117,7 @@ struct HomepageTemplate: HTMLTemplate {
         }
     }
 
-    private var refinementSessionList: HTML {
+    private var refinementSessionList: HTMLContent {
         Div {
             Div {
                 Div {
@@ -132,7 +132,7 @@ struct HomepageTemplate: HTMLTemplate {
             ForEach(in: context.refinementSessions) { (refinementSession: TemplateValue<RefinementSession>) in
                 Div {
                     Div {
-                        H3 { Anchor { refinementSession.name }.href("refinement_sessions/" + refinementSession.id) }
+                        H3 { Anchor { refinementSession.name }.reference("refinement_sessions/" + refinementSession.id) }
                     }.class("column")
                     Div {
                         Button { "❌" }

@@ -8,10 +8,10 @@ struct UserStoryData {
 struct UserStoryTemplate: HTMLTemplate {
     @TemplateValue(UserStoryData.self) var context
 
-    var body: HTML {
+    var body: HTMLContent {
         Document(type: .html5) {
             Head {
-                Title { context.userStory.name }
+                MetaTitle { context.userStory.name }
                 Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
@@ -53,9 +53,9 @@ struct UserStoryTemplate: HTMLTemplate {
                         Table {
                             TableHead {
                                 TableRow {
-                                    TableHeader { "Participant" }
-                                    TableHeader { "Has voted" }
-                                    TableHeader { "Points" }
+                                    TableHead { "Participant" }
+                                    TableHead { "Has voted" }
+                                    TableHead { "Points" }
                                 }
                             }
                             TableBody {

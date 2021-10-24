@@ -8,10 +8,10 @@ struct RefinementSessionData {
 struct RefinementSessionTemplate: HTMLTemplate {
     @TemplateValue(RefinementSessionData.self) var context
 
-    var body: HTML {
+    var body: HTMLContent {
         Document(type: .html5) {
             Head {
-                Title { context.refinementSession.name }
+                MetaTitle { context.refinementSession.name }
                 Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
@@ -39,7 +39,7 @@ struct RefinementSessionTemplate: HTMLTemplate {
                             Div {
                                 H3 {
                                     Anchor { userStory.name }
-                                        .href(context.refinementSession.id + "/user_stories/" + userStory.id)
+                                        .reference(context.refinementSession.id + "/user_stories/" + userStory.id)
                                 }
                             }.class("column")
                             Div {

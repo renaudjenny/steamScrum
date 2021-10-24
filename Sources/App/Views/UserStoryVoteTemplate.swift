@@ -8,10 +8,10 @@ struct UserStoryVoteData {
 struct UserStoryVoteTemplate: HTMLTemplate {
     @TemplateValue(UserStoryVoteData.self) var context
 
-    var body: HTML {
+    var body: HTMLContent {
         Document(type: .html5) {
             Head {
-                Title { context.userStory.name }
+                MetaTitle { context.userStory.name }
                 Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
@@ -41,9 +41,9 @@ struct UserStoryVoteTemplate: HTMLTemplate {
                                 Table {
                                     TableHead {
                                         TableRow {
-                                            TableHeader { "Participant" }
-                                            TableHeader { "Has voted" }
-                                            TableHeader { "Points" }
+                                            TableHead { "Participant" }
+                                            TableHead { "Has voted" }
+                                            TableHead { "Points" }
                                         }
                                     }
                                     TableBody {
@@ -64,14 +64,14 @@ struct UserStoryVoteTemplate: HTMLTemplate {
         }
     }
 
-    private func line(pointsForLine: TemplateValue<[Int]>) -> HTML {
+    private func line(pointsForLine: TemplateValue<[Int]>) -> HTMLContent {
         Div {
             ForEach(in: pointsForLine, content: button)
         }
         .style(css: "display: flex; flex-flow: row wrap; align-items: center; justify-content: center;")
     }
 
-    private func button(points: TemplateValue<Int>) -> HTML {
+    private func button(points: TemplateValue<Int>) -> HTMLContent {
         Button { points }
             .type(.button)
             .class("button button-outline vote-button")
