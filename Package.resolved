@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
           "branch": null,
-          "revision": "1081b0b0541f535ca088acdb56f5ca5598bc6247",
-          "version": "1.6.3"
+          "revision": "ec2e080d7011a81bd67f10bf41efe6104d7799d6",
+          "version": "1.7.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "9fbef6bad614e0b1bf3083f629b40574c97ab0b9",
-          "version": "1.16.0"
+          "revision": "4dc196da17177d0099510c6a3e8b6db0e33466b5",
+          "version": "1.16.2"
         }
       },
       {
@@ -69,17 +69,17 @@
         "repositoryURL": "https://github.com/vapor-community/HTMLKit.git",
         "state": {
           "branch": null,
-          "revision": "58db8cdcb4d10c49342e10f5295c2b0f0d4aadc2",
-          "version": "2.2.1"
+          "revision": "81091445a6fcca08616c060c0e1089272640fed4",
+          "version": "2.3.0"
         }
       },
       {
         "package": "HTMLKitVaporProvider",
-        "repositoryURL": "https://github.com/MatsMoll/htmlkit-vapor-provider.git",
+        "repositoryURL": "https://github.com/renaudjenny/htmlkit-vapor-provider",
         "state": {
-          "branch": null,
-          "revision": "7d5e02ef20378742049aa297c630f7fb3fa623fd",
-          "version": "1.0.1"
+          "branch": "update-html-kit-2.3.0",
+          "revision": "91835899af81f5aa2dc699ed1505deb3c83dadc7",
+          "version": null
         }
       },
       {
@@ -168,8 +168,8 @@
         "repositoryURL": "https://github.com/apple/swift-crypto.git",
         "state": {
           "branch": null,
-          "revision": "127d3745c37b5705e4bc8d16c7951c48dcc3332c",
-          "version": "2.0.0"
+          "revision": "9b5ef28601a9c745c9cdb54d3f243e28ac830982",
+          "version": "2.0.1"
         }
       },
       {
@@ -195,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "6aa9347d9bc5bbfe6a84983aec955c17ffea96ef",
-          "version": "2.33.0"
+          "revision": "addf69cfe60376c325397c8926589415576b1dd1",
+          "version": "2.34.0"
         }
       },
       {
@@ -222,8 +222,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "5e68c1ded15619bb281b273fa8c2d8fd7f7b2b7d",
-          "version": "2.16.1"
+          "revision": "36f6419f2b1b6490a8c0faa840298e28027cefe9",
+          "version": "2.16.3"
         }
       },
       {
@@ -249,8 +249,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "68233685fd1a943e8772634e02abfec076dcb8f4",
-          "version": "4.52.1"
+          "revision": "c7b4d3f9705645d184a464e191cdb49ca3a48de9",
+          "version": "4.52.5"
         }
       },
       {

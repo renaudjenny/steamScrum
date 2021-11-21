@@ -10,10 +10,9 @@ struct HomepageTemplate: HTMLTemplate {
     @TemplateValue(HomepageData.self) var context
 
     var body: HTMLContent {
-        Document(type: .html5) {
+        Html {
             Head {
                 MetaTitle { "SteamScrum" }
-                Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
                     HTMLAttribute(
@@ -98,19 +97,27 @@ struct HomepageTemplate: HTMLTemplate {
                 Div {
                     Form {
                         Label { "Refinement Session name" }.for("name")
-                        Input(type: .text, id: "name").name("name").required()
+                        Input()
+                        .type("text")
+                        .id("name")
+                        .add(.init(attribute: "name", value: "name"))
+                        .required()
                         Label { "Date of the session" }.for("date")
                         Div {
                             Div {
-                                Input(type: .date, id: "date").name("date").required()
+                                Input()
+                                    .type("date")
+                                    .id("date")
+                                    .add(.init(attribute: "name", value: "date"))
+                                    .required()
                             }.class("column")
                             Div {
                                 Button { "Now" }
-                                    .type(.button)
+                                    .type("button")
                                     .id("refinement-session-date-now-button")
                             }.class("column")
                         }.class("row")
-                        Button { "Submit" }.type(.submit)
+                        Button { "Submit" }.type("submit")
                     }.id("add-refinement-session-form")
                 }.class("column")
             }.class("row")
@@ -136,9 +143,9 @@ struct HomepageTemplate: HTMLTemplate {
                     }.class("column")
                     Div {
                         Button { "❌" }
-                            .type(.button)
-                            .data(for: "id", value: refinementSession.id)
-                            .class("remove-refinement-session-button")
+                        .type("button")
+                        .data(for: "id", value: refinementSession.id)
+                        .class("remove-refinement-session-button")
                     }.class("column")
                 }.class("row")
                 Div {

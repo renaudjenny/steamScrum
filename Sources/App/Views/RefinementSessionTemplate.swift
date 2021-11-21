@@ -9,10 +9,9 @@ struct RefinementSessionTemplate: HTMLTemplate {
     @TemplateValue(RefinementSessionData.self) var context
 
     var body: HTMLContent {
-        Document(type: .html5) {
+        Html {
             Head {
                 MetaTitle { context.refinementSession.name }
-                Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
                     HTMLAttribute(
@@ -46,7 +45,7 @@ struct RefinementSessionTemplate: HTMLTemplate {
                                 Button {
                                     "❌"
                                 }
-                                .type(.button)
+                                .type("button")
                                 .class("remove-user-story-button")
                                 .data(for: "id", value: userStory.id)
                             }.class("column")
@@ -60,8 +59,8 @@ struct RefinementSessionTemplate: HTMLTemplate {
     private var form: Form {
         Form {
             Label { "User Story name" }.for("name")
-            Input(type: .text, id: "name").name("name").required()
-            Button { "Submit" }.type(.submit)
+            Input().type("text").id("name").add(.init(attribute: "name", value: "name")).required()
+            Button { "Submit" }.type("submit")
         }.id("add-user-story-form")
     }
 }

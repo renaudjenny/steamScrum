@@ -9,10 +9,9 @@ struct UserStoryTemplate: HTMLTemplate {
     @TemplateValue(UserStoryData.self) var context
 
     var body: HTMLContent {
-        Document(type: .html5) {
+        Html {
             Head {
                 MetaTitle { context.userStory.name }
-                Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
                     HTMLAttribute(
@@ -102,7 +101,7 @@ struct UserStoryTemplate: HTMLTemplate {
                                         Button {
                                             "❌"
                                         }
-                                        .type(.button)
+                                        .type("button")
                                         .class("remove-user-story-vote-button")
                                         .data(for: "id", value: vote.id)
                                     }
@@ -121,8 +120,8 @@ struct UserStoryTemplate: HTMLTemplate {
     private var form: Form {
         Form {
             Label { "Add participant to the vote" }.for("participant")
-            Input(type: .text, id: "participant").name("participant").required()
-            Button { "Add" }.type(.submit)
+            Input().type("text").id("participant").required()
+            Button { "Add" }.type("submit")
         }.id("add-participant-form")
     }
 

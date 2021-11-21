@@ -9,10 +9,9 @@ struct UserStoryVoteTemplate: HTMLTemplate {
     @TemplateValue(UserStoryVoteData.self) var context
 
     var body: HTMLContent {
-        Document(type: .html5) {
+        Html {
             Head {
                 MetaTitle { context.userStory.name }
-                Author { "Renaud Jenny" }.twitter(handle: "@Renox0")
                 Link(attributes: [
                     HTMLAttribute(attribute: "rel", value: "stylesheet"),
                     HTMLAttribute(
@@ -73,9 +72,9 @@ struct UserStoryVoteTemplate: HTMLTemplate {
 
     private func button(points: TemplateValue<Int>) -> HTMLContent {
         Button { points }
-            .type(.button)
+            .type("button")
             .class("button button-outline vote-button")
-            .name("points-button")
+            .add(.init(attribute: "name", value: "points-button"))
             .data("points", value: points)
             .style(css: "width: 80px; height: 80px; margin: 8px;")
     }
