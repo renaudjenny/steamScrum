@@ -5,6 +5,7 @@ import FluentSQLiteDriver
 #endif
 import Vapor
 import HTMLKitVaporProvider
+import Leaf
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -34,6 +35,8 @@ public func configure(_ app: Application) throws {
             database: Environment.get("DATABASE_NAME") ?? "vapor_database"
         ), as: .psql)
     }
+
+    app.views.use(.leaf)
 
     app.migrations.add(CreateRefinementSession())
     app.migrations.add(CreateUserStory())

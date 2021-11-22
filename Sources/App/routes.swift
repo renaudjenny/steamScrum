@@ -3,8 +3,8 @@ import Vapor
 
 func routes(_ app: Application) throws {
     app.get { req in
-        RefinementSession.query(on: req.db).sort(\.$date, .descending).all().map {
-            HomepageTemplate().render(with: HomepageData(refinementSessions: $0), for: req)
+        RefinementSession.query(on: req.db).sort(\.$date, .descending).all().map { _ in
+            req.view.render("home")
         }
     }
 

@@ -12,6 +12,7 @@ var dependencies: [PackageDescription.Package.Dependency] = [
         url: "https://github.com/renaudjenny/htmlkit-vapor-provider",
         .branch("update-html-kit-2.3.0")
     ),
+    .package(url: "https://github.com/vapor/leaf.git", from: "4.0.0"),
     .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "1.0.3")
 ]
 
@@ -25,6 +26,7 @@ var appTargetDependencies: [PackageDescription.Target.Dependency] = [
     .product(name: "Vapor", package: "vapor"),
     .product(name: "HTMLKit", package: "HTMLKit"),
     .product(name: "HTMLKitVaporProvider", package: "HTMLKitVaporProvider"),
+    .product(name: "Leaf", package: "leaf"),
     .product(name: "QRCodeGenerator", package: "swift-qrcode-generator"),
 ]
 
