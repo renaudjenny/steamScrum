@@ -33,3 +33,28 @@ Previously this was done with Vapor 3 (Swift 4), and I used a simple React app, 
 ## Icons and illustrations
 
 The favicon has been made by [Mathilde Seyller](https://instagram.com/myobriel). Go follow her on Instagram!
+
+## Local development
+
+The easiest way to develop locally Steam Scrum is to use a postgres Docker image.
+
+### Install Docker
+
+Install the last version of Docker, and execute the script named `local-postgres.sh` of this repository. This will install a fresh image of Postgres with name configured and ports so it will be usable with local development version you can run with Swift/Xcode.
+
+### Execute once this command to setup the Database
+
+```bash
+swift run Run migrate
+```
+
+### If you need to connect to the database at some point to edit things manually
+
+```bash
+docker exec -it local-postgres bash
+```
+
+```bash
+psql -U vapor_database -u vapor_username
+\l
+```
