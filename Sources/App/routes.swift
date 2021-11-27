@@ -3,9 +3,13 @@ import Vapor
 
 func routes(_ app: Application) throws {
     app.get { req in
-        RefinementSession.query(on: req.db).sort(\.$date, .descending).all().map { _ in
-            req.view.render("home")
-        }
+        RefinementSession.query(on: req.db)
+            .sort(\.$date, .descending)
+            .all()
+            .map { refinementSessions -> EventLoopFuture<View> in
+                let homepageData = HomepageData(refinementSessions: refinementSessions)
+                return req.view.render("home", homepageData)
+            }
     }
 
     try app.register(collection: RefinementSessionController())

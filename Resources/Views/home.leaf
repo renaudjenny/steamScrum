@@ -38,6 +38,58 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <div class="row">
+                    <div class="column">
+                        <h2>Add a Refinement Session</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <form id="add-refinement-session-form">
+                            <label for="name">Refinement Session name</label>
+                            <input type="text" id="name" name="name" required="">
+                            <label for="date">Date of the session</label>
+                            <div class="row">
+                                <div class="column">
+                                    <input type="date" id="date" name="date" required pattern="\d{4}-\d{2}-\d{2}">
+                                </div>
+                                <div class="column">
+                                    <button type="button" id="refinement-session-date-now-button">Now</button>
+                                </div>
+                            </div>
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="column">
+                            <h2>Refinement Sessions</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <p><b>#count(refinementSessions)/#(refinementSessionsMaximumAllowed)</b></p>
+                        </div>
+                    </div>
+                    #for(refinementSession in refinementSessions):
+                    <div class="row">
+                        <div class="column">
+                            <h3><a href="refinement_sessions/#(refinementSession.id)">#(refinementSession.name)</a></h3>
+                        </div>
+                        <div class="column">
+                            <button type="button" data-id="#(refinementSession.id)" class="remove-refinement-session-button">❌</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <h4>#date(refinementSession.date, "d MMMM Y")</h4>
+                        </div>
+                    </div>
+                    #endfor
+                </div>
+            </div>
         </div>
     </body>
 </html>

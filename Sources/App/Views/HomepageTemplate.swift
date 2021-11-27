@@ -1,10 +1,6 @@
 import Foundation
 import HTMLKit
 
-struct HomepageData {
-    let refinementSessions: [RefinementSession]
-    let refinementSessionsMaximumAllowed: Int = RefinementSession.maximumAllowed
-}
 
 struct HomepageTemplate: HTMLTemplate {
     @TemplateValue(HomepageData.self) var context
