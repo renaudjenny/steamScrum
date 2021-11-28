@@ -14,7 +14,6 @@ public func configure(_ app: Application) throws {
         publicDirectory: app.directory.publicDirectory
     )
     app.middleware.use(fileMiddleware)
-    try app.htmlkit.add(view: RefinementSessionTemplate())
 
     if app.environment == .testing {
         #if canImport(FluentSQLiteDriver)

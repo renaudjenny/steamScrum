@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Renaud Jenny">
+        <meta name="twitter:creator" content="@Renox0">
+        <meta name="description" content="Poker Planning free, without tracking or ads.">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css" integrity="sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g==" crossorigin="anonymous">
+        <link rel="shortcut icon" href="favicon.png" type="image/png">
+        <script src="/Scripts/RefinementSession.js" type="module"></script>
+        <title>SteamScrum</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="column">
+                    <h1>Refinement Session: #(refinementSession.name)</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <h2>Add a User Story</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <p><b>#count(refinementSession.userStories)/#(maximumAllowed)</b></p>
+                </div>
+            </div>
+            <form id="add-user-story-form">
+                <label for="name">User Story name</label>
+                <input type="text" id="name" name="name" required>
+                <button type="submit">Submit</button>
+            </form>
+            <div class="row">
+                <div class="column">
+                    <h2>User Stories</h2>
+                </div>
+            </div>
+            #for(userStory in refinementSession.userStories):
+            <div class="row">
+                <div class="column">
+                    <h3><a href="#(refinementSession.id)/user_stories/#(userStory.id)">#(userStory.name)</a></h3>
+                </div>
+                <div class="column">
+                    <button type="button" class="remove-user-story-button" data-id="#(userStory.id)">❌</button>
+                </div>
+            </div>
+            #endfor
+        </div>
+    </body>
+</html>

@@ -55,7 +55,8 @@ struct RefinementSessionController: RouteCollection {
             .first()
             .unwrap(or: Abort(.notFound))
             .flatMap {
-                RefinementSessionTemplate().render(with: RefinementSessionData(refinementSession: $0), for: req)
+                let refinementSessionData = RefinementSessionData(refinementSession: $0)
+                return req.view.render("refinementSession", refinementSessionData)
             }
     }
 
