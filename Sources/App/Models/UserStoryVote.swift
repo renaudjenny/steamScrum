@@ -70,11 +70,8 @@ extension UserStoryVote {
         var avg: Double?
         var date: Date
     }
-    var encoded: Encoded { Encoded(
-        participants: participants,
-        points: points,
-        sum: sum,
-        avg: avg,
-        date: date
-    )}
+
+    var encoded: Encoded {
+        Encoded(participants: participants, points: points, sum: sum, avg: avg, date: date)
+    }
 }
