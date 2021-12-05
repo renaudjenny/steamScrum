@@ -60,7 +60,14 @@ struct UserStoryVoteController: RouteCollection {
                       vote.participants.contains(participant)
                 else { return req.eventLoop.makeFailedFuture(Abort(.badRequest)) }
 
-                return UserStoryVoteTemplate().render(with: UserStoryVoteData(userStory: $0, participant: participant), for: req)
+                return req.view.render(
+                    "userStoryVote",
+                    UserStoryVoteData(
+                        userStoryName: $0.name,
+                        refinementSessionName: $0.refinementSession.name,
+                        participantName: participant
+                    )
+                )
             }
     }
 

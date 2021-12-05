@@ -53,12 +53,10 @@
                                             <th>Participant</th>
                                             <th>Has voted</th>
                                             <th>Points</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody id="participants-table">
                                         <tr>
-                                            <td>-</td>
                                             <td>-</td>
                                             <td>-</td>
                                             <td>-</td>
