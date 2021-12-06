@@ -4,7 +4,6 @@ import FluentPostgresDriver
 import FluentSQLiteDriver
 #endif
 import Vapor
-import HTMLKitVaporProvider
 import Leaf
 
 // configures your application

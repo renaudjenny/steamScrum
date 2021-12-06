@@ -1,6 +1,5 @@
 import Fluent
 import Vapor
-import HTMLKit
 
 struct RefinementSessionController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
