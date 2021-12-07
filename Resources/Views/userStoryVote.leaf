@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Renaud Jenny">
+        <meta name="twitter:creator" content="@Renox0">
+        <meta name="description" content="Poker Planning free, without tracking or ads.">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css" integrity="sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g==" crossorigin="anonymous">
+        <link rel="shortcut icon" href="favicon.png" type="image/png">
+        <script src="/Scripts/UserStoryVote.js" type="module"></script>
+        <title>#(userStoryName)</title>
+    </head>
+    <body>
+    <div class="container">
+    <div class="row">
+        <div class="column">
+            <h3>Refinement Session: <b>#(refinementSessionName)</b></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="row">
+                <div class="column">
+                    <h2><b>#(participantName)</b> vote for #(userStoryName)</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <form>
+                        <div style="display: flex; flex-flow: row wrap; align-items: center; justify-content: center;">
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="1" style="width: 80px; height: 80px; margin: 8px;">1</button>
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="2" style="width: 80px; height: 80px; margin: 8px;">2</button>
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="3" style="width: 80px; height: 80px; margin: 8px;">3</button>
+                        </div>
+                        <div style="display: flex; flex-flow: row wrap; align-items: center; justify-content: center;">
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="5" style="width: 80px; height: 80px; margin: 8px;">5</button>
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="8" style="width: 80px; height: 80px; margin: 8px;">8</button>
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="13" style="width: 80px; height: 80px; margin: 8px;">13</button>
+                        </div>
+                        <div style="display: flex; flex-flow: row wrap; align-items: center; justify-content: center;">
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="21" style="width: 80px; height: 80px; margin: 8px;">21</button>
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="34" style="width: 80px; height: 80px; margin: 8px;">34</button>
+                            <button type="button" class="button button-outline vote-button" name="points-button" data-points="55" style="width: 80px; height: 80px; margin: 8px;">55</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="row">
+                <div class="column">
+                    <h2>Vote results</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Has voted</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="participants-table">
+                            <tr>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </body>
+</html>

@@ -23,6 +23,11 @@ export const ids = () => {
 export const updateParticipantTable = (data) => {
     const participantsTable = document.getElementById("participants-table")
 
+    if (data.participants.length == 0) {
+        participantsTable.innerHTML = "<tr><td>-</td><td>-</td><td>-</td></tr>"
+        return
+    }
+
     const isVoteFinished = data.avg != null
 
     participantsTable.innerHTML = data.participants.reduce((result, participant) => {

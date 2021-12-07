@@ -65,30 +65,21 @@
         }
       },
       {
-        "package": "HTMLKit",
-        "repositoryURL": "https://github.com/vapor-community/HTMLKit.git",
+        "package": "leaf",
+        "repositoryURL": "https://github.com/vapor/leaf.git",
         "state": {
           "branch": null,
-          "revision": "81091445a6fcca08616c060c0e1089272640fed4",
-          "version": "2.3.0"
+          "revision": "c0359c49d616135a0735a0a5d4fb0f59c8f6618f",
+          "version": "4.1.3"
         }
       },
       {
-        "package": "HTMLKitVaporProvider",
-        "repositoryURL": "https://github.com/renaudjenny/htmlkit-vapor-provider",
-        "state": {
-          "branch": "update-html-kit-2.3.0",
-          "revision": "91835899af81f5aa2dc699ed1505deb3c83dadc7",
-          "version": null
-        }
-      },
-      {
-        "package": "Lingo",
-        "repositoryURL": "https://github.com/miroslavkovac/Lingo.git",
+        "package": "leaf-kit",
+        "repositoryURL": "https://github.com/vapor/leaf-kit.git",
         "state": {
           "branch": null,
-          "revision": "e4b032f65bde917209a1cb0962c0fd13fa0add2f",
-          "version": "3.1.0"
+          "revision": "983fcbe89e7153c4d5870bdc76bf57a56817225f",
+          "version": "1.4.0"
         }
       },
       {

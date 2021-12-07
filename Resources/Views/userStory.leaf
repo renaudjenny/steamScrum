@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Renaud Jenny">
+        <meta name="twitter:creator" content="@Renox0">
+        <meta name="description" content="Poker Planning free, without tracking or ads.">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css" integrity="sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g==" crossorigin="anonymous">
+        <link rel="shortcut icon" href="favicon.png" type="image/png">
+        <script src="/Scripts/UserStory.js" type="module"></script>
+        <title>#(userStoryName)</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="float-left">
+                <h2>Refinement Session: #(refinementSessionName)</h2>
+                <h1>#(userStoryName)</h1>
+            </div>
+
+            <div class="float-right">
+                #unsafeHTML(QRCodeSVG)
+            </div>
+            <div class="row">
+                <div class="column">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <h3>Vote session</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <h4>Participants</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <p>Select your name on the list to vote. If you're name isn't here yet, use the form above to add it. If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)</p>
+                                <div id="participants-buttons"></div>
+                            </div>
+                            <form id="add-participant-form" class="column">
+                                <label for="participant">Add participant to the vote</label>
+                                <input type="text" id="participant" required="">
+                                <button type="submit">Add</button>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Participant</th>
+                                            <th>Has voted</th>
+                                            <th>Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="participants-table">
+                                        <tr>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <button disabled="true" id="save-button">Save this vote</button>
+                            </div>
+                            <p class="column column-80" id="save-button-help">
+                            You'll be able to save the vote when everyone has voted. You also need at least one vote.
+                            </p>
+                        </div>
+                        <div>
+                            <div class="row">
+                                <div class="column">
+                                    <h2>Saved votes</h2>
+                                </div>
+                            </div>
+                            #if(count(votes) > 0):
+                            #for(vote in votes):
+                            <div class="row">
+                                <h4 class="column">#date(vote.date, , "d MMMM Y HH:mm")</h4>
+                                <div class="column">
+                                    <p><b>Participants</b></p>
+                                    <p>#(vote.participants)</p>
+                                </div>
+                                <p class="column">Average: <b>#(vote.average)</b> points</p>
+                                <div class="column">
+                                    <button
+                                        type="button"
+                                        class="remove-user-story-vote-button"
+                                        data-id="#(vote.id)">
+                                        ❌
+                                    </button>
+                                </div>
+                            </div>
+                            #endfor
+                            #else:
+                            <div class="row">
+                                <div class="column">
+                                    <p>No votes have been saved yet.</p>
+                                </div>
+                            </div>
+                            #endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

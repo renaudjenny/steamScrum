@@ -1,6 +1,5 @@
 import Fluent
 import Vapor
-import HTMLKit
 
 struct RefinementSessionController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
@@ -55,7 +54,8 @@ struct RefinementSessionController: RouteCollection {
             .first()
             .unwrap(or: Abort(.notFound))
             .flatMap {
-                RefinementSessionTemplate().render(with: RefinementSessionData(refinementSession: $0), for: req)
+                let refinementSessionData = RefinementSessionData(refinementSession: $0)
+                return req.view.render("refinementSession", refinementSessionData)
             }
     }
 
