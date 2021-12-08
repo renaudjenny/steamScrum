@@ -1,95 +1,83 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8"></meta>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="author" content="Renaud Jenny">
-        <meta name="twitter:creator" content="@Renox0">
-        <meta name="description" content="Poker Planning free, without tracking or ads.">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css" integrity="sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g==" crossorigin="anonymous">
-        <link rel="shortcut icon" href="favicon.png" type="image/png">
-        <script src="/Scripts/Homepage.js" type="module"></script>
-        <title>SteamScrum</title>
-    </head>
-    <body>
-        <div class="container">
-            <div>
-                <div class="row" style="margin-top: 2em">
-                    <div class="column">
-                        <h1>Steam Scrum</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <p>This project changed a lot. It has been migrated to the last version of Vapor and will sooner be fully rendered in Swift! (See: <a href="https://github.com/swiftwasm/Tokamak">Tokamak project</a>)
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <p>This is using pure Javascript (without any external libraries), and <a href="https://milligram.io">Milligram</a> to give a little bit of style here and there.
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <p>The code is available here: <a href="https://github.com/renaudjenny/steamScrum">SteamScrum on GitHub</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="row">
-                    <div class="column">
-                        <h2>Add a Refinement Session</h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <form id="add-refinement-session-form">
-                            <label for="name">Refinement Session name</label>
-                            <input type="text" id="name" name="name" required="">
-                            <label for="date">Date of the session</label>
-                            <div class="row">
-                                <div class="column">
-                                    <input type="date" id="date" name="date" required pattern="\d{4}-\d{2}-\d{2}">
-                                </div>
-                                <div class="column">
-                                    <button type="button" id="refinement-session-date-now-button">Now</button>
-                                </div>
-                            </div>
-                            <button type="submit">Submit</button>
-                        </form>
-                    </div>
-                </div>
-                <div>
-                    <div class="row">
-                        <div class="column">
-                            <h2>Refinement Sessions</h2>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="column">
-                            <p><b>#count(refinementSessions)/#(refinementSessionsMaximumAllowed)</b></p>
-                        </div>
-                    </div>
-                    #for(refinementSession in refinementSessions):
-                    <div class="row">
-                        <div class="column">
-                            <h3><a href="refinement_sessions/#(refinementSession.id)">#(refinementSession.name)</a></h3>
-                        </div>
-                        <div class="column">
-                            <button type="button" data-id="#(refinementSession.id)" class="remove-refinement-session-button">❌</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="column">
-                            <h4>#date(refinementSession.date, "d MMMM Y")</h4>
-                        </div>
-                    </div>
-                    #endfor
-                </div>
+#extend("bodyEnvelope"):
+#export("body"):
+<div class="container">
+    <div>
+        <div class="row" style="margin-top: 2em">
+            <div class="column">
+                <h1>Steam Scrum</h1>
             </div>
         </div>
-    </body>
-</html>
+        <div class="row">
+            <div class="column">
+                <p>This project changed a lot. It has been migrated to the last version of Vapor and will sooner be fully rendered in Swift! (See: <a href="https://github.com/swiftwasm/Tokamak">Tokamak project</a>)
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <p>This is using pure Javascript (without any external libraries), and <a href="https://milligram.io">Milligram</a> to give a little bit of style here and there.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <p>The code is available here: <a href="https://github.com/renaudjenny/steamScrum">SteamScrum on GitHub</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="row">
+            <div class="column">
+                <h2>Add a Refinement Session</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <form id="add-refinement-session-form">
+                    <label for="name">Refinement Session name</label>
+                    <input type="text" id="name" name="name" required="">
+                        <label for="date">Date of the session</label>
+                        <div class="row">
+                            <div class="column">
+                                <input type="date" id="date" name="date" required pattern="\d{4}-\d{2}-\d{2}">
+                            </div>
+                            <div class="column">
+                                <button type="button" id="refinement-session-date-now-button">Now</button>
+                            </div>
+                        </div>
+                        <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="column">
+                    <h2>Refinement Sessions</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <p><b>#count(refinementSessions)/#(refinementSessionsMaximumAllowed)</b></p>
+                </div>
+            </div>
+            #for(refinementSession in refinementSessions):
+            <div class="row">
+                <div class="column">
+                    <h3><a href="refinement_sessions/#(refinementSession.id)">#(refinementSession.name)</a></h3>
+                </div>
+                <div class="column">
+                    <button type="button" data-id="#(refinementSession.id)" class="remove-refinement-session-button">❌</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <h4>#date(refinementSession.date, "d MMMM Y")</h4>
+                </div>
+            </div>
+            #endfor
+        </div>
+    </div>
+</div>
+#endexport
+#endextend

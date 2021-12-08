@@ -1,4 +1,6 @@
-struct HomepageData: Codable {
+struct HomepageData: Encodable {
+    let title = "SteamScrum"
+    let scriptFilename = "Homepage.js"
     let refinementSessions: [RefinementSession]
-    var refinementSessionsMaximumAllowed: Int = RefinementSession.maximumAllowed
+    let refinementSessionsMaximumAllowed: Int = RefinementSession.maximumAllowed
 }
