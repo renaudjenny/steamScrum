@@ -8,6 +8,8 @@ struct UserStoryData: Encodable {
         let average: String
     }
 
+    var title: String { userStoryName }
+    let scriptFilename = "UserStory.js"
     let refinementSessionName: String
     let userStoryName: String
     let QRCodeSVG: String?
