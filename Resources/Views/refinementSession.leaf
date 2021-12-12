@@ -8,6 +8,19 @@
     </div>
     <div class="row">
         <div class="column">
+            <form id="add-participant-form" class="column">
+                <label for="participant">Add participant to the session</label>
+                <input type="text" id="participant" required="">
+                    <button type="submit">Add</button>
+            </form>
+        </div>
+        <div class="column">
+            <h4>Participants</h4>
+            <div id="participants"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
             <h2>Add a User Story</h2>
         </div>
     </div>

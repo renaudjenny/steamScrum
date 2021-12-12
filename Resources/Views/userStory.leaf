@@ -27,11 +27,6 @@
                         <p>Select your name on the list to vote. If you're name isn't here yet, use the form above to add it. If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)</p>
                         <div id="participants-buttons"></div>
                     </div>
-                    <form id="add-participant-form" class="column">
-                        <label for="participant">Add participant to the vote</label>
-                        <input type="text" id="participant" required="">
-                            <button type="submit">Add</button>
-                    </form>
                 </div>
                 <div class="row">
                     <div class="column">

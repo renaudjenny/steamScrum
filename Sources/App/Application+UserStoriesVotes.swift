@@ -1,6 +1,14 @@
 import Vapor
 
 extension Application {
+    var refinementSessionParticipants: [RefinementSession.IDValue: [String]] {
+        get { storage.get(RefinementSessionStorageKey.self) ?? [:] }
+        set {
+            storage.set(RefinementSessionStorageKey.self, to: newValue)
+            updateWebSockets()
+        }
+    }
+
     var userStoriesVotes: [UserStory.IDValue: UserStoryVote] {
         get { storage.get(UserStoryStorageKey.self) ?? [:] }
         set {
@@ -19,6 +27,10 @@ extension Application {
     func updateWebSockets() {
         updateCallbacks.values.forEach { $0() }
     }
+}
+
+struct RefinementSessionStorageKey: StorageKey {
+    typealias Value = [RefinementSession.IDValue: [String]]
 }
 
 struct UserStoryStorageKey: StorageKey {

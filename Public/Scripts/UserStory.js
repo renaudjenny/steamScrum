@@ -11,21 +11,6 @@ const { isWebSocketReady, send } = UserStoryWebSocket((data) => {
     updatePointsButton(data)
 })
 
-const addVotingParticipant = () => {
-    if (!isWebSocketReady()) {
-        console.error("Cannot add voting participant, WebSocket isn't ready")
-        return
-    }
-    const participantInput = document.getElementById("participant")
-    if (participantInput.value === '') { return }
-
-    const addVotingParticipant = { addVotingParticipant: participantInput.value }
-    send(JSON.stringify(addVotingParticipant))
-
-    participantInput.value = ""
-    participantInput.focus()
-}
-
 const saveVote = () => {
     fetch(`${ids().userStoryId}/vote`, { method: "POST" })
     .then(() => location.reload())
@@ -92,5 +77,3 @@ const updatePointsButton = (data) => {
         }
     })
 }
-
-preventFormSubmit('add-participant-form', addVotingParticipant)
