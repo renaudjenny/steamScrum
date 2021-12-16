@@ -89,11 +89,32 @@ struct UserStoryController: RouteCollection {
             .with(\.$votes)
             .first()
             .unwrap(or: Abort(.notFound))
+            .flatMapThrowing { userStory -> UserStory in
+                try populateParticipants(req: req, userStory: userStory)
+                return userStory
+            }
             .flatMap {
                 let address = "\(req.application.environment.host)\(req.url.string)"
                 let QRCodeSVG = (try? QRCode.encode(text: address, ecl: .medium))?
                     .toSVGString(border: 4, width: 200)
                 return req.view.render("userStory", $0.viewData(QRCodeSVG: QRCodeSVG))
             }
+    }
+
+    private func populateParticipants(req: Request, userStory: UserStory) throws {
+        if req.application.userStoriesVotes[userStory.id!]?.participants.count == 0 {
+            let participants = req.application
+                .refinementSessionParticipants[userStory.refinementSession.id!] ?? []
+
+            struct CannotRetrieveUserStoryId: Error {}
+            guard let userStoryId = userStory.id else { throw CannotRetrieveUserStoryId() }
+
+            req.application.userStoriesVotes[userStoryId] = try UserStoryVote(
+                userStory: userStory,
+                participants: participants,
+                points: [:],
+                date: Date()
+            )
+        }
     }
 }
