@@ -94,10 +94,18 @@ struct UserStoryController: RouteCollection {
                 return userStory
             }
             .flatMap {
+                let refinementSessionPath = req.url.string.pathComponents
+                    .dropLast(2)
+                    .map(\.description)
+                    .joined(separator: "/")
+                let refinementSessionURL = "\(req.application.environment.host)/\(refinementSessionPath)"
                 let address = "\(req.application.environment.host)\(req.url.string)"
                 let QRCodeSVG = (try? QRCode.encode(text: address, ecl: .medium))?
                     .toSVGString(border: 4, width: 200)
-                return req.view.render("userStory", $0.viewData(QRCodeSVG: QRCodeSVG))
+                return req.view.render("userStory", $0.viewData(
+                    refinementSessionURL: refinementSessionURL,
+                    QRCodeSVG: QRCodeSVG
+                ))
             }
     }
 

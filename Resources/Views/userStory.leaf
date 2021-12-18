@@ -24,7 +24,7 @@
                 </div>
                 <div class="row">
                     <div class="column">
-                        <p>Select your name on the list to vote. If you're name isn't here yet, use the form above to add it. If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)</p>
+                        <p>Select your name on the list to vote. If you're name isn't here yet, go back to the refinement session <a href="#(refinementSessionURL)">#(refinementSessionName)</a> to add it. If you just want to be spectator, you can just stay on this page (you don't need to refresh the page to see voting status changing)</p>
                         <div id="participants-buttons"></div>
                     </div>
                 </div>
