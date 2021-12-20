@@ -110,19 +110,25 @@ struct UserStoryController: RouteCollection {
     }
 
     private func populateParticipants(req: Request, userStory: UserStory) throws {
-        if req.application.userStoriesVotes[userStory.id!]?.participants.count == 0 {
-            let participants = req.application
-                .refinementSessionParticipants[userStory.refinementSession.id!] ?? []
+        struct CannotRetrieveUserStoryId: Error {}
+        struct CannotRetrieveRefinementSessionId: Error {}
 
-            struct CannotRetrieveUserStoryId: Error {}
-            guard let userStoryId = userStory.id else { throw CannotRetrieveUserStoryId() }
-
-            req.application.userStoriesVotes[userStoryId] = try UserStoryVote(
-                userStory: userStory,
-                participants: participants,
-                points: [:],
-                date: Date()
-            )
+        guard let userStoryId = userStory.id else { throw CannotRetrieveUserStoryId() }
+        guard let refinementSessionId = userStory.refinementSession.id else {
+            throw CannotRetrieveRefinementSessionId()
         }
+
+        let currentParticipants = req.application.userStoriesVotes[userStoryId]?.participants ?? []
+
+        let participants = req.application
+            .refinementSessionParticipants[refinementSessionId] ?? []
+        + currentParticipants
+
+        req.application.userStoriesVotes[userStoryId] = try UserStoryVote(
+            userStory: userStory,
+            participants: participants,
+            points: [:],
+            date: Date()
+        )
     }
 }
