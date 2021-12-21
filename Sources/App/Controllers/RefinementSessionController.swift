@@ -9,6 +9,7 @@ struct RefinementSessionController: RouteCollection {
         refinementSessions.group(":refinementSessionID") { refinementSession in
             refinementSession.get(use: get)
             refinementSession.delete(use: delete)
+            refinementSession.webSocket("connect", onUpgrade: upgrade)
         }
         refinementSessions.get("context", use: context)
     }
@@ -65,6 +66,111 @@ struct RefinementSessionController: RouteCollection {
                 count: $0,
                 maximum: RefinementSession.maximumAllowed
             )
+        }
+    }
+
+    private func upgrade(req: Request, webSocket: WebSocket) {
+        guard let refinementSessionIdString = req.parameters.get("refinementSessionID"),
+              let refinementSessionId = UUID(uuidString: refinementSessionIdString)
+        else {
+            webSocket.send("Bad request")
+            _ = webSocket.close()
+            return
+        }
+
+        let webSocketId = UUID()
+
+        webSocket.onText { onMessageReceived(
+            webSocketId: webSocketId,
+            refinementSessionId: refinementSessionId,
+            webSocket: $0,
+            text: $1,
+            application: req.application
+        ) }
+
+        webSocket.onClose.whenComplete { _ in
+            req.application.updateCallbacks.removeValue(forKey: webSocketId)
+        }
+    }
+
+    private func onMessageReceived(
+        webSocketId: UUID,
+        refinementSessionId: UUID,
+        webSocket: WebSocket,
+        text: String,
+        application: Application
+    ) {
+        if text == "connection-ready" {
+            onConnectionReady(
+                webSocketId: webSocketId,
+                refinementSessionId: refinementSessionId,
+                webSocket: webSocket,
+                application: application
+            )
+        } else if text.contains("addParticipant") {
+            onAddParticipant(
+                webSocketId: webSocketId,
+                refinementSessionId: refinementSessionId,
+                webSocket: webSocket,
+                text: text,
+                application: application
+            )
+        }
+    }
+
+    private func onConnectionReady(
+        webSocketId: UUID,
+        refinementSessionId: UUID,
+        webSocket: WebSocket,
+        application: Application
+    ) {
+        struct Participants: Encodable {
+            var participants: [String]
+        }
+
+        application.updateCallbacks[webSocketId] = {
+            let message: String
+            do {
+                let participants = application.refinementSessionParticipants[refinementSessionId]
+                ?? []
+                let data = try JSONEncoder().encode(Participants(participants: participants))
+                message = String(data: data, encoding: .utf8) ?? "Error: Cannot convert data to UTF-8 format"
+            } catch {
+                message = "Error: \(error)"
+            }
+            webSocket.send(message)
+        }
+        application.updateWebSockets()
+    }
+
+    private func onAddParticipant(
+        webSocketId: UUID,
+        refinementSessionId: UUID,
+        webSocket: WebSocket,
+        text: String,
+        application: Application
+    ) {
+        struct AddParticipant: Decodable {
+            var addParticipant: String
+        }
+
+        do {
+            guard let data = text.data(using: .utf8) else {
+                webSocket.send("Error: Cannot convert '\(text)' to UTF-8 Data")
+                return
+            }
+            let addParticipant = try JSONDecoder().decode(AddParticipant.self, from: data)
+
+            if application.refinementSessionParticipants[refinementSessionId] == nil {
+                application.refinementSessionParticipants[refinementSessionId] = []
+            }
+
+            application.refinementSessionParticipants[refinementSessionId]?.append(
+                addParticipant.addParticipant
+            )
+        } catch {
+            webSocket.send("Error: \(error)")
+            return
         }
     }
 }

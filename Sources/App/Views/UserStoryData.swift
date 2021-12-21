@@ -11,15 +11,17 @@ struct UserStoryData: Encodable {
     var title: String { userStoryName }
     let scriptFilename = "UserStory.js"
     let refinementSessionName: String
+    let refinementSessionURL: String
     let userStoryName: String
     let QRCodeSVG: String?
     let votes: [Vote]
 }
 
 extension UserStory {
-    func viewData(QRCodeSVG: String?) -> UserStoryData {
+    func viewData(refinementSessionURL: String, QRCodeSVG: String?) -> UserStoryData {
         UserStoryData(
             refinementSessionName: refinementSession.name,
+            refinementSessionURL: refinementSessionURL,
             userStoryName: name,
             QRCodeSVG: QRCodeSVG,
             votes: votes.map { vote in

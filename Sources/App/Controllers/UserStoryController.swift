@@ -89,11 +89,46 @@ struct UserStoryController: RouteCollection {
             .with(\.$votes)
             .first()
             .unwrap(or: Abort(.notFound))
+            .flatMapThrowing { userStory -> UserStory in
+                try populateParticipants(req: req, userStory: userStory)
+                return userStory
+            }
             .flatMap {
+                let refinementSessionPath = req.url.string.pathComponents
+                    .dropLast(2)
+                    .map(\.description)
+                    .joined(separator: "/")
+                let refinementSessionURL = "\(req.application.environment.host)/\(refinementSessionPath)"
                 let address = "\(req.application.environment.host)\(req.url.string)"
                 let QRCodeSVG = (try? QRCode.encode(text: address, ecl: .medium))?
                     .toSVGString(border: 4, width: 200)
-                return req.view.render("userStory", $0.viewData(QRCodeSVG: QRCodeSVG))
+                return req.view.render("userStory", $0.viewData(
+                    refinementSessionURL: refinementSessionURL,
+                    QRCodeSVG: QRCodeSVG
+                ))
             }
+    }
+
+    private func populateParticipants(req: Request, userStory: UserStory) throws {
+        struct CannotRetrieveUserStoryId: Error {}
+        struct CannotRetrieveRefinementSessionId: Error {}
+
+        guard let userStoryId = userStory.id else { throw CannotRetrieveUserStoryId() }
+        guard let refinementSessionId = userStory.refinementSession.id else {
+            throw CannotRetrieveRefinementSessionId()
+        }
+
+        let currentParticipants = req.application.userStoriesVotes[userStoryId]?.participants ?? []
+
+        let participants = req.application
+            .refinementSessionParticipants[refinementSessionId] ?? []
+        + currentParticipants
+
+        req.application.userStoriesVotes[userStoryId] = try UserStoryVote(
+            userStory: userStory,
+            participants: participants,
+            points: req.application.userStoriesVotes[userStoryId]?.points ?? [:],
+            date: Date()
+        )
     }
 }
