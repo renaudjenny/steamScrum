@@ -127,7 +127,7 @@ struct UserStoryController: RouteCollection {
         req.application.userStoriesVotes[userStoryId] = try UserStoryVote(
             userStory: userStory,
             participants: participants,
-            points: [:],
+            points: req.application.userStoriesVotes[userStoryId]?.points ?? [:],
             date: Date()
         )
     }
