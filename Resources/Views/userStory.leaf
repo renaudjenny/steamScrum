@@ -65,7 +65,7 @@
                     #if(count(votes) > 0):
                     #for(vote in votes):
                     <div class="row">
-                        <h4 class="column">#date(vote.date, , "d MMMM Y HH:mm")</h4>
+                        <h4 class="column">#date(vote.date, , "d MMMM y HH:mm")</h4>
                         <div class="column">
                             <p><b>Participants</b></p>
                             <p>#(vote.participants)</p>
