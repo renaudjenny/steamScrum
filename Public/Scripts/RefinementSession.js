@@ -45,9 +45,9 @@ const updateParticipants = (data) => {
     const participants = document.getElementById("participants")
 
     const url = new URL(window.location.href)
-    participants.innerHTML = data.participants.reduce((result, participant) => {
-        return result + `<button class="button button-outline">${participant}</button>`
-    }, '')
+
+    const items = data.participants.map((participant) => `<li>${participant}</li>`)
+    participants.innerHTML = ["<ul>", ...items, "</ul>"].join("\n")
 }
 
 const createUserStory = () => {
