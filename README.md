@@ -58,3 +58,13 @@ docker exec -it local-postgres bash
 psql -U vapor_database -u vapor_username
 \l
 ```
+
+### Maintenance routine
+
+It's good to maintain package to the last version (and fix the deprecated stuff if some appears in build warnings)
+
+```bash
+./maintenance_routine.sh
+```
+
+After the packages are update, please run `swift run` and start and exploration test to check everything's working as expected.
