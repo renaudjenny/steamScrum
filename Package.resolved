@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "3c06388997a1ee72e97bcd752aff47d5b64722f5",
-          "version": "1.23.2"
+          "revision": "63c13b1fcc5266d35df676a8e75bbb602497f12b",
+          "version": "1.23.4"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
           "branch": null,
-          "revision": "9cc30f8cef132e91a07e36005612b37f918731fc",
-          "version": "3.16.0"
+          "revision": "afc74d888649f2b2a2f8cc7963be5eb179409610",
+          "version": "3.17.0"
         }
       },
       {
@@ -240,8 +240,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "5861bf9e2cff2c4cb0dcfb0c15ecfaa8bc5630e0",
-          "version": "4.55.3"
+          "revision": "a2c1e5d9903103e6f0c458e84e6bd11effd0e4a1",
+          "version": "4.55.4"
         }
       },
       {
@@ -249,8 +249,8 @@
         "repositoryURL": "https://github.com/vapor/websocket-kit.git",
         "state": {
           "branch": null,
-          "revision": "ff8fbce837ef01a93d49c6fb49a72be0f150dac7",
-          "version": "2.3.0"
+          "revision": "e32033ad3c68ebec1b761bc961be7bd56bad02f8",
+          "version": "2.3.1"
         }
       }
     ]
