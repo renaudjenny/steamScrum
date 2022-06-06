@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/vapor/console-kit.git",
         "state": {
           "branch": null,
-          "revision": "98d6e72ea7e756da9f87184c7239650223f95800",
-          "version": "4.3.0"
+          "revision": "bd25f0f29620eb3aad4d7d21c08a10d5324d4894",
+          "version": "4.4.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "8958da5e2aec8d56ad45c340683117a074e2885a",
-          "version": "1.25.0"
+          "revision": "644a2a0d5c676a3930e2378b88d315915269fa94",
+          "version": "1.26.1"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "221e3e39e9c7d9b4999f38038c6b5f3122f4d438",
-          "version": "2.6.0"
+          "revision": "fdb1820ed14c3e5b15a3c80d34e6cdbfc287e6bd",
+          "version": "2.7.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-nio.git",
         "state": {
           "branch": null,
-          "revision": "a7a160bb861ca88b0c8f1cc11e15c4892ab897bf",
-          "version": "1.10.0"
+          "revision": "d648c5b4594ffbc2f6173318f70f5531e05ccb4e",
+          "version": "1.11.0"
         }
       },
       {
@@ -143,6 +143,15 @@
           "branch": null,
           "revision": "6481dd0b01112d082dd7eb362782126e81964138",
           "version": "1.1.0"
+        }
+      },
+      {
+        "package": "swift-algorithms",
+        "repositoryURL": "https://github.com/apple/swift-algorithms.git",
+        "state": {
+          "branch": null,
+          "revision": "b14b7f4c528c942f121c8b860b9410b2bf57825e",
+          "version": "1.0.0"
         }
       },
       {
@@ -186,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-metrics.git",
         "state": {
           "branch": null,
-          "revision": "eadb828f878fed144387e3845866225bb7082c56",
-          "version": "2.3.0"
+          "revision": "1c1408bf8fc21be93713e897d2badf500ea38419",
+          "version": "2.3.1"
         }
       },
       {
@@ -236,6 +245,15 @@
         }
       },
       {
+        "package": "swift-numerics",
+        "repositoryURL": "https://github.com/apple/swift-numerics",
+        "state": {
+          "branch": null,
+          "revision": "0a5bc04095a675662cf24757cc0640aa2204253b",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "swift-qrcode-generator",
         "repositoryURL": "https://github.com/fwcd/swift-qrcode-generator.git",
         "state": {
@@ -249,8 +267,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "ca823e66f8efd4dec7f5b996776d0ccc4cb34585",
-          "version": "4.60.0"
+          "revision": "6c63226a4ab82ce53730eb1afb9ca63866fcf033",
+          "version": "4.61.1"
         }
       },
       {
@@ -258,8 +276,8 @@
         "repositoryURL": "https://github.com/vapor/websocket-kit.git",
         "state": {
           "branch": null,
-          "revision": "e32033ad3c68ebec1b761bc961be7bd56bad02f8",
-          "version": "2.3.1"
+          "revision": "e0faccd92570d4df5c58d0f1ada928320795f7ff",
+          "version": "2.4.0"
         }
       }
     ]
