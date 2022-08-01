@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "a5360d8e500bc73d8f6b007cc0dc39dabd05318c",
-          "version": "1.33.1"
+          "revision": "a0cae5b53521e7f003a044f3a38aa125be074130",
+          "version": "1.34.0"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
           "branch": null,
-          "revision": "89b0a0a5f110e77272fb5a775064a31bfc1f155c",
-          "version": "3.18.0"
+          "revision": "0df1585d9898661b5ce7acf92a12804e2af74141",
+          "version": "3.20.0"
         }
       },
       {
@@ -195,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-metrics.git",
         "state": {
           "branch": null,
-          "revision": "1c1408bf8fc21be93713e897d2badf500ea38419",
-          "version": "2.3.1"
+          "revision": "53be78637ecd165d1ddedc4e20de69b8f43ec3b7",
+          "version": "2.3.2"
         }
       },
       {
@@ -267,8 +267,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "cd91a66c7dd2d8658c9fc43ee9d96d7a259bbc5c",
-          "version": "4.62.1"
+          "revision": "b5181996f104d09a0bb52a6ddf5f21d79b9ceb4d",
+          "version": "4.64.0"
         }
       },
       {
@@ -276,8 +276,8 @@
         "repositoryURL": "https://github.com/vapor/websocket-kit.git",
         "state": {
           "branch": null,
-          "revision": "d8230eae70650652661f360f322db0cc22955b2f",
-          "version": "2.5.0"
+          "revision": "efb1bd5adab0381e521a50b11d3107081cdb5615",
+          "version": "2.6.0"
         }
       }
     ]
