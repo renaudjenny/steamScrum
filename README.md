@@ -24,7 +24,7 @@ The interface is pure HTML and a minimum of script (so using VanillaJS), with a 
 
 It looks very raw, especially in the code for now, but soon or later, I will use [Tokamak](https://github.com/swiftwasm/Tokamak) which allow you to use a subset of SwiftUI to simplify HTML and CSS interaction, and it relies on SwiftWasm for that, which is very promising.
 
-You can test this right now here: https://steam-scrum.herokuapp.com
+~~You can test this right now here: https://steam-scrum.herokuapp.com~~ Unfortunately, this URL isn't available anymore as Heroku was free for a long while and very convenient for a demo purpose. Until I'm getting my own server, no demo websites are available. Please see below on how to install your own instance, even locally with ease.
 
 ### A little bit of history
 
