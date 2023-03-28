@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
           "branch": null,
-          "revision": "4db22cc7797b3a687de65e32e11108cf92fb32da",
-          "version": "4.7.0"
+          "revision": "8d6015096200b4c2f17b884eb966defc42a2ad1d",
+          "version": "4.7.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "dd6b7f8fb71b83d832ab88270704a29c63d8bd91",
-          "version": "1.40.0"
+          "revision": "21d99b0c66cf86867a779bac831d800aac22f5e6",
+          "version": "1.41.0"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-postgres-driver.git",
         "state": {
           "branch": null,
-          "revision": "4808c539f08306ae6002f6106813a9350baa141b",
-          "version": "2.5.0"
+          "revision": "f2b084417472e6a153d555905796f0ef0bb6fc37",
+          "version": "2.5.1"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/vapor/leaf-kit.git",
         "state": {
           "branch": null,
-          "revision": "62169b44cc79734e11bf44b8d7154865dee5936b",
-          "version": "1.10.1"
+          "revision": "13f2fc4c8479113cd23876d9a434ef4573e368bb",
+          "version": "1.10.2"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/vapor/multipart-kit.git",
         "state": {
           "branch": null,
-          "revision": "0d55c35e788451ee27222783c7d363cb88092fab",
-          "version": "4.5.2"
+          "revision": "3a31859efeb054cdcd407fe152802ddc5c58bbce",
+          "version": "4.5.3"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "1174d9bc57798aba7a99451e5380c0eb0fb796d8",
-          "version": "2.9.0"
+          "revision": "8ea9274633374d01bdef10da3206db74f3e261d6",
+          "version": "2.9.1"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/vapor/routing-kit.git",
         "state": {
           "branch": null,
-          "revision": "ffac7b3a127ce1e85fb232f1a6271164628809ad",
-          "version": "4.6.0"
+          "revision": "bdc9c25adbf77ba2b02113077ae8f355d87df83e",
+          "version": "4.7.1"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/vapor/sqlite-nio.git",
         "state": {
           "branch": null,
-          "revision": "596b680292adf5597741ab3ce92b3a1946fd4216",
-          "version": "1.4.0"
+          "revision": "a22db45a3418a067a61551a9cd0959cc0a7bf3dc",
+          "version": "1.4.3"
         }
       },
       {
@@ -213,8 +213,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "45167b8006448c79dda4b7bd604e07a034c15c49",
-          "version": "2.48.0"
+          "revision": "9b2848d76f5caad08b97e71a04345aa5bdb23a06",
+          "version": "2.49.0"
         }
       },
       {
@@ -222,8 +222,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-extras.git",
         "state": {
           "branch": null,
-          "revision": "d75ed708d00353acf173ca23018b6bd46f949464",
-          "version": "1.17.0"
+          "revision": "cc1e5275079380c859417dbea8588531f1a90ec3",
+          "version": "1.18.0"
         }
       },
       {
@@ -276,8 +276,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "d1a89f8f54c409751a5891a3dd22f78171be5741",
-          "version": "4.74.1"
+          "revision": "f39218ec4998654c59251b282cbf4bb9b2cf2629",
+          "version": "4.74.2"
         }
       },
       {
