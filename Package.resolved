@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-postgres-driver.git",
         "state": {
           "branch": null,
-          "revision": "c7e39767bc2440461a37ecd6d1cdfb21c959c272",
-          "version": "2.6.2"
+          "revision": "bb3ab8e861152157f712cd08fc473e885bd0b4df",
+          "version": "2.7.2"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "3a4e63e49534589fe682e934e898211debd7d10e",
-          "version": "2.10.1"
+          "revision": "875e8c191ea776802fddf6773146349803629754",
+          "version": "2.11.2"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/vapor/sqlite-nio.git",
         "state": {
           "branch": null,
-          "revision": "fb7e739f55cdcc9793f947ff23f9277166d752b6",
-          "version": "1.5.0"
+          "revision": "2b7bcf3d2e4d2f68d52a66d12d2057867cee383a",
+          "version": "1.5.2"
         }
       },
       {
@@ -213,8 +213,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "546eaa261ec5028b9cc5c7fa883fba9dd5881a3b",
-          "version": "2.52.0"
+          "revision": "2d8e6ca36fe3e8ed74b0883f593757a45463c34d",
+          "version": "2.53.0"
         }
       },
       {
@@ -276,8 +276,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "f4b00a5350238fe896d865d96d64f12fcbbeda95",
-          "version": "4.76.0"
+          "revision": "b42287f2c3909930be6329922906a6a8092943d2",
+          "version": "4.76.2"
         }
       },
       {
@@ -285,8 +285,8 @@
         "repositoryURL": "https://github.com/vapor/websocket-kit.git",
         "state": {
           "branch": null,
-          "revision": "2166cbe932b29b6419f9cd751e8b27c647e1238e",
-          "version": "2.8.0"
+          "revision": "17c0afbf24f4e288e183bc34317dc97b5cd084bd",
+          "version": "2.9.0"
         }
       }
     ]
