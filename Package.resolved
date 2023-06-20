@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "04691f8d523830c49c0bf261c2d48d7bd11ec313",
-          "version": "1.42.3"
+          "revision": "2d7dce5cb04156eecdb17e7349f4eac4206e8a17",
+          "version": "1.42.4"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "875e8c191ea776802fddf6773146349803629754",
-          "version": "2.11.2"
+          "revision": "a88d025748edd3a2f9f2e74091ecccc20d20fe30",
+          "version": "2.11.3"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-nio.git",
         "state": {
           "branch": null,
-          "revision": "f87709218c4e444cb9593dd4dd4a3a0420950ee5",
-          "version": "1.15.0"
+          "revision": "061a0836d7c1887e04a975d1d2eaa2ef5fd7dfab",
+          "version": "1.16.0"
         }
       },
       {
