@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "3ae5187487718486f6bef7159eead11bc7f1d8d0",
-          "version": "1.47.0"
+          "revision": "bb47433520116b3cf7f3567137c81106b398b77e",
+          "version": "1.47.1"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/vapor/sqlite-nio.git",
         "state": {
           "branch": null,
-          "revision": "e998284b4e29ad902179bb501e108ac6d71d2e38",
-          "version": "1.8.5"
+          "revision": "f3164216b0161f63e609e75f9a28a6f542dd9123",
+          "version": "1.8.6"
         }
       },
       {
@@ -285,8 +285,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "664a06346c5429025d3ffdfa63b93978a8cdd096",
-          "version": "4.92.2"
+          "revision": "3a7da193a2937472b252b8db210897e7abf37b47",
+          "version": "4.92.4"
         }
       },
       {
