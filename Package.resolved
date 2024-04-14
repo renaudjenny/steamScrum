@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
           "branch": null,
-          "revision": "291438696abdd48d2a83b52465c176efbd94512b",
-          "version": "1.20.1"
+          "revision": "fb308ee72f3d4c082a507033f94afa7395963ef3",
+          "version": "1.21.0"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "475bf6f04ee1840917a70c32b48e4a724df4ccaf",
-          "version": "2.12.3"
+          "revision": "e26763a6cb8d852f7ce01b1cd5925b3d8d084801",
+          "version": "2.13.1"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-nio.git",
         "state": {
           "branch": null,
-          "revision": "6f0fc054babeed13850f9014e03ced7a1d714868",
-          "version": "1.21.0"
+          "revision": "e345cbb9cf6052b37b27c0c4f976134fc01dbe15",
+          "version": "1.21.1"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
           "branch": null,
-          "revision": "b2f128cb62a3abfbb1e3b2893ff3ee69e70f4f0f",
-          "version": "3.28.0"
+          "revision": "f1263a2e4e9c9f925d3fe891ca41261b71dad28d",
+          "version": "3.29.0"
         }
       },
       {
@@ -303,8 +303,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "11cdb29614a5c7f8c5289f3c97b3398c3d89b395",
-          "version": "4.92.5"
+          "revision": "8409c3c296e7f8965df14e906dbcd44eb68f54a9",
+          "version": "4.92.6"
         }
       },
       {
