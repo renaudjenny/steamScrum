@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
           "branch": null,
-          "revision": "fb308ee72f3d4c082a507033f94afa7395963ef3",
-          "version": "1.21.0"
+          "revision": "a22083713ee90808d527d0baa290c2fb13ca3096",
+          "version": "1.21.1"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
           "branch": null,
-          "revision": "a586a5d4164f23a0ee4e02e1f467b9bbef0c9f1c",
-          "version": "4.9.0"
+          "revision": "d831ac5e6a514dd8aa8d5499bb04be3983be1112",
+          "version": "4.10.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "4fffbaaa32f7a45ce6d2f07f70ffc22f64b4406d",
-          "version": "1.48.0"
+          "revision": "ed4cfa9edcadda3bf1b02a9842cfb60b8cf9b77b",
+          "version": "1.48.3"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-postgres-driver.git",
         "state": {
           "branch": null,
-          "revision": "a538fc647f82d915eb84e0a12ca9b08c513e57c4",
-          "version": "2.8.0"
+          "revision": "2cc10e86a743c66cd60082174f602e3c223543dc",
+          "version": "2.9.0"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "3d34228c695341b4e7e8f52db466316be7c5dd4c",
-          "version": "2.13.2"
+          "revision": "ad8ae1eb12f953ec7c8180535b81a715a06ebbc6",
+          "version": "2.13.3"
         }
       },
       {
@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/vapor/routing-kit.git",
         "state": {
           "branch": null,
-          "revision": "2a92a7eac411a82fb3a03731be5e76773ebe1b3e",
-          "version": "4.9.0"
+          "revision": "8c9a227476555c55837e569be71944e02a056b72",
+          "version": "4.9.1"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
           "branch": null,
-          "revision": "b97168805638b9f92d4f04b17cc23f0d1f928c79",
-          "version": "3.29.2"
+          "revision": "9afdc96113b673819ccdc4819f77e901c698a87a",
+          "version": "3.29.3"
         }
       },
       {
@@ -303,8 +303,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "e5cb0abdadff95ef996fafd6268f2f5f8cba6325",
-          "version": "4.94.1"
+          "revision": "af86ea4402c65dfbe70ac1bb9fd1d3fd9501a3f6",
+          "version": "4.96.0"
         }
       },
       {
