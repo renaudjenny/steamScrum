@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/vapor/async-kit.git",
         "state": {
           "branch": null,
-          "revision": "7ece208cd401687641c88367a00e3ea2b04311f1",
-          "version": "1.19.0"
+          "revision": "15b3fb7b2437f9db11f6ddcf365c5b5db8c3a346",
+          "version": "1.19.1"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-sqlite-driver",
         "state": {
           "branch": null,
-          "revision": "40303a20bc39c270c8e50339ada30f9750e2a681",
-          "version": "4.7.3"
+          "revision": "9cc162da8516a8869adeb1e887bc3f6f9af727d8",
+          "version": "4.7.4"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/vapor/leaf.git",
         "state": {
           "branch": null,
-          "revision": "0be8765af9991823c854d97faa4a97db1cfa2643",
-          "version": "4.3.0"
+          "revision": "dd799be2a92e7207ad86c567e4fc7dd37413ff60",
+          "version": "4.4.0"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-nio.git",
         "state": {
           "branch": null,
-          "revision": "5c268768890b062803a49f1358becc478f954265",
-          "version": "1.21.5"
+          "revision": "d18b137640222fe29a22568077c4799d213fdf96",
+          "version": "1.22.0"
         }
       },
       {
@@ -195,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-http-types",
         "state": {
           "branch": null,
-          "revision": "1ddbea1ee34354a6a2532c60f98501c35ae8edfa",
-          "version": "1.2.0"
+          "revision": "ae67c8178eb46944fd85e4dc6dd970e1f3ed6ccd",
+          "version": "1.3.0"
         }
       },
       {
@@ -222,8 +222,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "fc79798d5a150d61361a27ce0c51169b889e23de",
-          "version": "2.68.0"
+          "revision": "e4abde8be0e49dc7d66e6eed651254accdcd9533",
+          "version": "2.69.0"
         }
       },
       {
@@ -285,8 +285,8 @@
         "repositoryURL": "https://github.com/swift-server/swift-service-lifecycle.git",
         "state": {
           "branch": null,
-          "revision": "d58e6bf2b1ae2884cf204a8b5bcaaa7aae3c1ff0",
-          "version": "2.6.0"
+          "revision": "24c800fb494fbee6e42bc156dc94232dc08971af",
+          "version": "2.6.1"
         }
       },
       {
@@ -294,8 +294,8 @@
         "repositoryURL": "https://github.com/apple/swift-system.git",
         "state": {
           "branch": null,
-          "revision": "6a9e38e7bd22a3b8ba80bddf395623cf68f57807",
-          "version": "1.3.1"
+          "revision": "d2ba781702a1d8285419c15ee62fd734a9437ff5",
+          "version": "1.3.2"
         }
       },
       {
