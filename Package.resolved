@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-nio.git",
         "state": {
           "branch": null,
-          "revision": "cd5318a01a1efcb1e0b3c82a0ce5c9fefaf1cb2d",
-          "version": "1.22.1"
+          "revision": "fd0e415a705c490499f983639b04f491a2ed9d99",
+          "version": "1.23.0"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/vapor/sqlite-nio.git",
         "state": {
           "branch": null,
-          "revision": "40bf9b9fa938290176ec933540e08f39fc887f06",
-          "version": "1.10.4"
+          "revision": "0c6a711c9779b5493364631e4f014618ef12a40a",
+          "version": "1.10.5"
         }
       },
       {
@@ -312,8 +312,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "3aeeb6fab5112fb10ce699b5a80207e5cf571c32",
-          "version": "4.106.7"
+          "revision": "ec23f07eb2eda35f6f179a8c4607769287073f8d",
+          "version": "4.107.0"
         }
       },
       {
