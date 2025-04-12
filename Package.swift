@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 import PackageDescription
 
 var dependencies: [PackageDescription.Package.Dependency] = [
@@ -28,19 +28,13 @@ appTargetDependencies.append(.product(name: "FluentSQLiteDriver", package: "flue
 let package = Package(
     name: "SteamScrum",
     platforms: [
-       .macOS(.v10_15)
+       .macOS(.v13)
     ],
     dependencies: dependencies,
     targets: [
         .target(
             name: "App",
-            dependencies: appTargetDependencies,
-            swiftSettings: [
-                // Enable better optimizations when building in Release configuration. Despite the use of
-                // the `.unsafeFlags` construct required by SwiftPM, this flag is recommended for Release
-                // builds. See <https://github.com/swift-server/guides#building-for-production> for details.
-                .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))
-            ]
+            dependencies: appTargetDependencies
         ),
         .target(name: "Run", dependencies: [.target(name: "App")]),
         .testTarget(name: "AppTests", dependencies: [
