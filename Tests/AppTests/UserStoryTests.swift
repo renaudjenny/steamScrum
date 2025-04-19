@@ -2,28 +2,29 @@
 import XCTVapor
 
 final class UserStoryTests: XCTestCase {
-    private let app = Application(.testing)
+    private var app: Application!
     private var refinementSession: RefinementSession?
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    override func setUp() async throws {
+        try await super.setUp()
+        app = try await Application.make(.testing)
         try configure(app)
-        try app.autoMigrate().wait()
+        try await app.autoMigrate()
 
-        try app.test(.POST, "refinement_sessions", beforeRequest: { req in
+        try await app.test(.POST, "refinement_sessions", beforeRequest: { req in
             try req.content.encode([
                 "name": "Session test",
                 "date": DateFormatter.yyyyMMdd.string(from: Date()),
             ])
-        }, afterResponse: { res in
+        }, afterResponse: { res async throws in
             XCTAssertEqual(res.status, .ok)
             refinementSession = try res.content.decode(RefinementSession.self)
         })
     }
 
-    override func tearDown() {
-        app.shutdown()
-        super.tearDown()
+    override func tearDown() async throws {
+        try await app.asyncShutdown()
+        try await super.tearDown()
     }
 
     func refinementSessionId() throws -> UUID { try XCTUnwrap((try XCTUnwrap(refinementSession)).id) }

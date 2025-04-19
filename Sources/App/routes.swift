@@ -2,14 +2,12 @@ import Fluent
 import Vapor
 
 func routes(_ app: Application) throws {
-    app.get { req in
-        RefinementSession.query(on: req.db)
+    app.get { req -> View in
+        let refinementSessions = try await RefinementSession.query(on: req.db)
             .sort(\.$date, .descending)
             .all()
-            .map { refinementSessions -> EventLoopFuture<View> in
-                let homepageData = HomepageData(refinementSessions: refinementSessions)
-                return req.view.render("home", homepageData)
-            }
+        let homepageData = HomepageData(refinementSessions: refinementSessions)
+        return try await req.view.render("home", homepageData)
     }
 
     try app.register(collection: RefinementSessionController())

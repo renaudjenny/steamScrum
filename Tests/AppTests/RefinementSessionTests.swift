@@ -2,17 +2,18 @@
 import XCTVapor
 
 final class RefinementSessionTests: XCTestCase {
-    private let app = Application(.testing)
+    private var app: Application!
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    override func setUp() async throws {
+        try await super.setUp()
+        app = try await Application.make(.testing)
         try configure(app)
-        try app.autoMigrate().wait()
+        try await app.autoMigrate()
     }
 
-    override func tearDown() {
-        app.shutdown()
-        super.tearDown()
+    override func tearDown() async throws {
+        try await app.asyncShutdown()
+        try await super.tearDown()
     }
 
     func testRefinementSessionsGet() throws {
