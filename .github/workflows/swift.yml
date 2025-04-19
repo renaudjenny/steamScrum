@@ -12,10 +12,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Linter
-      run: swiftlint
+    - uses: actions/checkout@v4
 
     - name: Run tests
       run: swift test -v

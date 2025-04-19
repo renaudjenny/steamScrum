@@ -4,7 +4,7 @@
 
 **Steam Scrum** is a project to provide a simple interface to do Scrum Refinements.
 
-The API is written in `Swift` 5.3 thanks to [Vapor](https://vapor.codes).
+The API is written in `Swift` 5.9 thanks to [Vapor](https://vapor.codes).
 
 The final goal of the Scrum part is to list User Stories and compute amount of Story points an US reach.
 
