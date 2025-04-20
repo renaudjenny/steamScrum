@@ -14,50 +14,47 @@ struct RefinementSessionController: RouteCollection {
         refinementSessions.get("context", use: context)
     }
 
-    func index(req: Request) throws -> EventLoopFuture<[RefinementSession]> {
-        RefinementSession.query(on: req.db).sort(\.$date, .descending).all()
+    func index(req: Request) async throws -> [RefinementSession] {
+        try await RefinementSession.query(on: req.db).sort(\.$date, .descending).all()
     }
 
-    func create(req: Request) throws -> EventLoopFuture<RefinementSession> {
+    func create(req: Request) async throws -> RefinementSession {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.yyyyMMdd)
         let refinementSession = try req.content.decode(RefinementSession.self, using: jsonDecoder)
         guard !refinementSession.name.isEmpty else {
-            return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Refinement Session name cannot be empty"))
+            throw Abort(.badRequest, reason: "Refinement Session name cannot be empty")
         }
 
-        return RefinementSession.query(on: req.db).count().flatMap({
-            guard $0 < RefinementSession.maximumAllowed else {
-                return req.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "Too many data already provided."))
-            }
-            return refinementSession.save(on: req.db).map { refinementSession }
-        })
+        let count = try await RefinementSession.query(on: req.db).count()
+        guard count < RefinementSession.maximumAllowed else {
+            throw Abort(.badRequest, reason: "Too many data already provided.")
+        }
+        try await refinementSession.save(on: req.db)
+        return  refinementSession
     }
 
-    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        RefinementSession.find(req.parameters.get("refinementSessionID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap { $0.delete(on: req.db) }
-            .transform(to: .ok)
+    func delete(req: Request) async throws -> HTTPStatus {
+        guard let refinementSession = try await RefinementSession
+            .find(req.parameters.get("refinementSessionID"), on: req.db)
+        else { throw Abort(.notFound) }
+        try await refinementSession.delete(on: req.db)
+        return .ok
     }
 
-    func get(req: Request) throws -> EventLoopFuture<View> {
+    func get(req: Request) async throws -> View {
         guard
         let refinementSessionIdString = req.parameters.get("refinementSessionID"),
         let refinementSessionId = UUID(uuidString: refinementSessionIdString)
-        else {
-            return req.eventLoop.makeFailedFuture(Abort(.badRequest))
-        }
+        else { throw Abort(.badRequest) }
 
-        return RefinementSession.query(on: req.db)
+        let refinementSession = try await RefinementSession.query(on: req.db)
             .filter(\.$id == refinementSessionId)
             .with(\.$userStories)
             .first()
-            .unwrap(or: Abort(.notFound))
-            .flatMap {
-                let refinementSessionData = RefinementSessionData(refinementSession: $0)
-                return req.view.render("refinementSession", refinementSessionData)
-            }
+        guard let refinementSession else { throw Abort(.notFound) }
+        let refinementSessionData = RefinementSessionData(refinementSession: refinementSession)
+        return try await req.view.render("refinementSession", refinementSessionData)
     }
 
     func context(req: Request) throws -> EventLoopFuture<Context> {
