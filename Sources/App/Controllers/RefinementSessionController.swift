@@ -57,13 +57,12 @@ struct RefinementSessionController: RouteCollection {
         return try await req.view.render("refinementSession", refinementSessionData)
     }
 
-    func context(req: Request) throws -> EventLoopFuture<Context> {
-        RefinementSession.query(on: req.db).count().map {
-            Context(
-                count: $0,
-                maximum: RefinementSession.maximumAllowed
-            )
-        }
+    func context(req: Request) async throws -> Context {
+        let count = try await RefinementSession.query(on: req.db).count()
+        return Context(
+            count: count,
+            maximum: RefinementSession.maximumAllowed
+        )
     }
 
     private func upgrade(req: Request, webSocket: WebSocket) {
